@@ -5,6 +5,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+/**
+ * @author Qi Zhang
+ * Persistent Object for Category (and defining the data model)
+ */
 @Entity
 public class TaskCategory {
     @Id

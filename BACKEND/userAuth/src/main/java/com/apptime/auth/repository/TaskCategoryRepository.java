@@ -6,6 +6,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
+/**
+ * @author Qi Zhang
+ * The DAO to access data of Category
+ */
 public interface TaskCategoryRepository extends JpaRepository<TaskCategory, Integer> {
     List<TaskCategory> findByOwner(Users owner);
     List<TaskCategory> findByIsPublic(boolean isPublic);

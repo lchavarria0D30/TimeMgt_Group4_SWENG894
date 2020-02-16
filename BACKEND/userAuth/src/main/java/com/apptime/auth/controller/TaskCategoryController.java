@@ -19,6 +19,10 @@ import java.security.Principal;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
+/**
+ * @author Qi Zhang
+ * This is the entry for category APIs
+ */
 @RestController
 @RequestMapping(value = "/category")
 public class TaskCategoryController {

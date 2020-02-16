@@ -5,6 +5,10 @@ import com.apptime.auth.model.TaskCategory;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
+/**
+ * @author Qi Zhang
+ * This is a TO (Transient Object) for Category
+ */
 public class Category {
     private int id;
     private String name;

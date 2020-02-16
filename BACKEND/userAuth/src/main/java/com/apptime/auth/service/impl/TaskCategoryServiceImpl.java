@@ -11,6 +11,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
+/**
+ * @author Qi Zhang
+ * The implementation of TaskCategoryService
+ */
 @Service
 public class TaskCategoryServiceImpl implements TaskCategoryService {
     @Autowired
