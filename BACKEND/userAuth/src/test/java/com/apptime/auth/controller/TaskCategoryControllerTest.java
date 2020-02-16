@@ -1,6 +1,7 @@
 package com.apptime.auth.controller;
 
 import com.apptime.auth.model.ResetPasswordRequest;
+import com.apptime.auth.model.Roles;
 import com.apptime.auth.model.TaskCategory;
 import com.apptime.auth.model.Users;
 import com.apptime.auth.model.to.Category;
@@ -10,6 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.internal.util.collections.Sets;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -44,7 +46,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class TaskCategoryControllerTest {
     private static final String USERNAME = "username";
-
+    private static final String ADMIN_USERNAME = "admin";
     @Autowired
     private MockMvc mockMvc;
 
@@ -62,6 +64,7 @@ public class TaskCategoryControllerTest {
         userRepository.deleteAll();
         categoryRepository.deleteAll();
         createUser(USERNAME);
+        createAdminUser(ADMIN_USERNAME);
     }
 
     private void createUser(String username) {
@@ -69,6 +72,19 @@ public class TaskCategoryControllerTest {
         Users user = new Users();
         user.setUsername(username);
         user.setPassword(pEncoder.encode(password));
+        userRepository.save(user);
+    }
+
+    private void createAdminUser(String username) {
+        String password = UUID.randomUUID().toString();
+        Users user = new Users();
+        user.setUsername(username);
+        user.setPassword(pEncoder.encode(password));
+        Roles userRole = new Roles();
+        userRole.setRole("USER");
+        Roles adminRole = new Roles();
+        adminRole.setRole("ADMIN");
+        user.setRoles(Sets.newSet(userRole, adminRole));
         userRepository.save(user);
     }
 
@@ -129,4 +145,60 @@ public class TaskCategoryControllerTest {
         }
     }
 
+    @Test
+    @WithMockUser(username = ADMIN_USERNAME, authorities = {"USER", "ADMIN"})
+    public void testCreatePublicCategory() throws Exception {
+        Category request = new Category();
+        String name = UUID.randomUUID().toString();
+        request.setName(name);
+        mockMvc.perform(MockMvcRequestBuilders.post("/category/public")
+                .content(asJsonString(request))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isCreated());
+
+        List<TaskCategory> categories = categoryRepository.findAll();
+        assertFalse(categories.isEmpty());
+        assertEquals(1, categories.size());
+        assertEquals(name, categories.iterator().next().getName());
+        assertTrue(categories.iterator().next().isPublic());
+
+        // create a category with same name
+        mockMvc.perform(MockMvcRequestBuilders.post("/category/public")
+                .content(asJsonString(request))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isConflict());
+        categories = categoryRepository.findAll();
+        assertFalse(categories.isEmpty());
+        assertEquals(1, categories.size());
+
+        // create another category with different name
+        String name2 = UUID.randomUUID().toString();
+        Category request2 = new Category();
+        request2.setName(name2);
+        mockMvc.perform(MockMvcRequestBuilders.post("/category/public")
+                .content(asJsonString(request2))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isCreated());
+
+        categories = categoryRepository.findAll();
+        assertFalse(categories.isEmpty());
+        assertEquals(2, categories.size());
+
+        // get public categories
+        ResultActions actions = mockMvc.perform(MockMvcRequestBuilders.get("/category/public")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+        MvcResult result = actions.andReturn();
+        String content = result.getResponse().getContentAsString();
+        ObjectMapper mapper = new ObjectMapper();
+        List list = mapper.readValue(content, List.class);
+        assertEquals(2, list.size());
+        for (Object obj : list) {
+            Map<String, Object> map = (Map<String, Object>) obj;
+            String cname = (String) map.get("name");
+            boolean isPublic = (Boolean) map.get("public");
+            assertTrue(cname.equals(name) || cname.equals(name2));
+            assertTrue(isPublic);
+        }
+    }
 }

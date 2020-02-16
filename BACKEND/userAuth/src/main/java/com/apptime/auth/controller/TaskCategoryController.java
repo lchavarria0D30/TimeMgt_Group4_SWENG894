@@ -121,6 +121,10 @@ public class TaskCategoryController {
         }
 
         TaskCategory createdCategory = categoryService.createCategory(category.getName(), user, true);
+        if (createdCategory == null) {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
+        
         return new ResponseEntity<>(Category.parse(createdCategory), HttpStatus.CREATED);
     }
 
