@@ -34,7 +34,7 @@ export class TasksComponent implements OnInit {
     const headers = { 'Authorization': 'Bearer my-token', 'My-Custom-Header': 'foobar' }
     const body = { title: 'Angular POST Request Example' }
     this.http.get<any>('localhost:8001/tasks', { headers }).subscribe({
-    next: data => this.name = data.id,
+    next: data => name = data.id,
     error: error => console.error('There was an error!', error)
     })
   }
@@ -123,8 +123,6 @@ export class DialogOverviewExampleDialog {
 })
 export class ConfirmDeleteDialog {
   postId;
-  number;
-  name;
 
 
   constructor(
@@ -138,7 +136,7 @@ export class ConfirmDeleteDialog {
     const headers = { 'Authorization': 'Bearer my-token', 'My-Custom-Header': 'foobar' }
     const body = { title: 'Angular POST Request Example' }
     this.http.post<any>('https://jsonplaceholder.typicode.com/invalid-url', body, { headers }).subscribe({
-    next: data => this.name = data.id,
+    next: data => name = data.id,
     error: error => console.error('There was an error!', error)
     })
 
