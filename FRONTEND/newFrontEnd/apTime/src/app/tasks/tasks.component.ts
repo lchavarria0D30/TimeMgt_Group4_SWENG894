@@ -138,7 +138,7 @@ export class ConfirmDeleteDialog {
     const headers = { 'Authorization': 'Bearer my-token', 'My-Custom-Header': 'foobar' }
     const body = { title: 'Angular POST Request Example' }
     this.http.post<any>('https://jsonplaceholder.typicode.com/invalid-url', body, { headers }).subscribe({
-    next: data => name = data.id,
+    next: data => this.name = data.id,
     error: error => console.error('There was an error!', error)
     })
 
