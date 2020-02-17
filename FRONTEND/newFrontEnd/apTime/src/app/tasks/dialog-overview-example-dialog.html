@@ -1,0 +1,55 @@
+
+<mat-toolbar color="primary" style="width:100%;">
+  <mat-toolbar-row>
+    <h1 mat-dialog-title>New Task</h1>
+	<span class="example-spacer"></span>
+    <mat-icon class="example-icon" aria-hidden="false" aria-label="Example user verified icon" (click)="onNoClick()">close</mat-icon>
+  </mat-toolbar-row>
+</mat-toolbar>
+<div mat-dialog-content>
+  <div fxLayout="column">
+  <mat-form-field>
+    <mat-label>Name</mat-label>
+    <input matInput [(ngModel)]="data.name">
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Category</mat-label>
+    <input matInput [(ngModel)]="data.category">
+  </mat-form-field>
+  </div>
+
+  <div fxLayout="row" fxLayoutGap="15px">
+  	<div fxFlex="">
+	  <mat-form-field>
+	    <mat-label>Start Date</mat-label>
+	    <input matInput [(ngModel)]="data.sDate">
+	  </mat-form-field>
+	</div>
+	<div fxFlex="">
+	  <mat-form-field>
+	    <mat-label>Start Time</mat-label>
+	    <input matInput [(ngModel)]="data.sTime">
+	  </mat-form-field>
+	</div>
+  </div>
+
+  <div fxLayout="row">
+  	<div fxFlex="">
+	  <mat-form-field>
+	    <mat-label>End Date</mat-label>
+	    <input matInput [(ngModel)]="data.eDate">
+	  </mat-form-field>
+	</div>
+	<div fxFlex="">
+	  <mat-form-field>
+	    <mat-label>End Time</mat-label>
+	    <input matInput [(ngModel)]="data.eTime">
+	  </mat-form-field>
+	</div>
+  </div>
+</div>
+<div mat-dialog-actions>
+  
+  <button mat-button color="primary" [mat-dialog-close]="data.animal" cdkFocusInitial>Save</button>
+</div>

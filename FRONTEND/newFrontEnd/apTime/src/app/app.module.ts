@@ -9,6 +9,30 @@ import { HomeComponent } from "./home/home.component";
 import { AmplifyAngularModule, AmplifyService } from "aws-amplify-angular";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 //import UI from "@aws-amplify/ui";
+import { HttpClientModule } from '@angular/common/http';
+
+
+
+import {MatToolbarModule} from '@angular/material/toolbar';
+import {MatIconModule} from '@angular/material/icon';
+import { TasksComponent } from './tasks/tasks.component';
+import {MatDialogModule} from '@angular/material/dialog';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import { FormsModule } from '@angular/forms';
+import {MatButtonModule} from '@angular/material/button';
+import {MatInputModule} from '@angular/material';
+import {MatMenuModule} from '@angular/material/menu';
+import {MatCardModule} from '@angular/material/card';
+import {MatDividerModule} from '@angular/material/divider';
+
+import { FlexLayoutModule } from '@angular/flex-layout';
+
+
+
+import { DialogOverviewExampleDialog } from './tasks/tasks.component';
+import { ConfirmDeleteDialog } from './tasks/tasks.component';
+import { EditTaskDialog } from './tasks/tasks.component';
+
 
 @NgModule({
   declarations: [
@@ -16,10 +40,35 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     AuthComponent,
     ProfileComponent,
     SecureComponent,
-    HomeComponent
+    HomeComponent,
+    TasksComponent,
+    DialogOverviewExampleDialog,
+    ConfirmDeleteDialog,
+    EditTaskDialog
   ],
-  imports: [BrowserModule, AppRoutingModule, AmplifyAngularModule, BrowserAnimationsModule],
+  imports: [BrowserModule, 
+  AppRoutingModule, 
+  AmplifyAngularModule, 
+  BrowserAnimationsModule,
+  MatToolbarModule,
+  MatIconModule,
+  MatDialogModule,
+  MatFormFieldModule,
+  FormsModule,
+  MatButtonModule,
+  MatInputModule,
+  FlexLayoutModule,
+  MatMenuModule,
+  MatCardModule,
+  MatDividerModule,
+  HttpClientModule
+  ],
   providers: [AmplifyService],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [
+  DialogOverviewExampleDialog, 
+  ConfirmDeleteDialog,
+  EditTaskDialog
+  ]
 })
 export class AppModule {}
