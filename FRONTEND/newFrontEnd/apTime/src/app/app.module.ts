@@ -24,6 +24,9 @@ import {MatInputModule} from '@angular/material';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatCardModule} from '@angular/material/card';
 import {MatDividerModule} from '@angular/material/divider';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatNativeDateModule} from '@angular/material';
+
 
 import { FlexLayoutModule } from '@angular/flex-layout';
 
@@ -61,9 +64,13 @@ import { EditTaskDialog } from './tasks/tasks.component';
   MatMenuModule,
   MatCardModule,
   MatDividerModule,
-  HttpClientModule
+  HttpClientModule,
+  MatDatepickerModule,
+  MatNativeDateModule
   ],
-  providers: [AmplifyService],
+  providers: [AmplifyService,
+  MatDatepickerModule
+  ],
   bootstrap: [AppComponent],
   entryComponents: [
   DialogOverviewExampleDialog, 

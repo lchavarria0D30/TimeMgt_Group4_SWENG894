@@ -21,10 +21,12 @@
 
   <div fxLayout="row" fxLayoutGap="15px">
   	<div fxFlex="">
-	  <mat-form-field>
-	    <mat-label>Start Date</mat-label>
-	    <input matInput [(ngModel)]="data.sDate">
-	  </mat-form-field>
+	  	<mat-form-field>
+		  <mat-label>Start date</mat-label>
+		  <input matInput [matDatepicker]="picker1" [(ngModel)]="data.sDate">
+		  <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+		  <mat-datepicker #picker1></mat-datepicker>
+		</mat-form-field>
 	</div>
 	<div fxFlex="">
 	  <mat-form-field>
@@ -34,22 +36,26 @@
 	</div>
   </div>
 
-  <div fxLayout="row">
+  <div fxLayout="row" fxLayoutGap="15px">
   	<div fxFlex="">
-	  <mat-form-field>
-	    <mat-label>End Date</mat-label>
-	    <input matInput [(ngModel)]="data.eDate">
-	  </mat-form-field>
+	  	<mat-form-field>
+		  <mat-label>End date</mat-label>
+		  <input matInput [matDatepicker]="picker2" [(ngModel)]="data.eDate">
+		  <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+		  <mat-datepicker #picker2></mat-datepicker>
+		</mat-form-field>
 	</div>
 	<div fxFlex="">
 	  <mat-form-field>
 	    <mat-label>End Time</mat-label>
-	    <input matInput [(ngModel)]="data.eTime">
-	  </mat-form-field>
+	    	<input matInput [(ngModel)]="data.eTime">
+	  	</mat-form-field>
+
+	  	
 	</div>
   </div>
 </div>
 <div mat-dialog-actions>
   
-  <button mat-button color="primary" [mat-dialog-close]="data.animal" cdkFocusInitial>Save</button>
+  <button mat-button color="primary" [mat-dialog-close]="data" cdkFocusInitial>Save</button>
 </div>

@@ -12,7 +12,7 @@ export interface DialogData {
   eDate: string;
   eTime: string;
   number: string;
- 
+  id: number;
 }
 
 @Component({
@@ -29,6 +29,7 @@ export class TasksComponent implements OnInit {
   eDate: string;
   eTime: string;
   number: string;
+  id: number;
 
   ngOnInit() {
     const headers = { 'Authorization': 'Bearer my-token', 'My-Custom-Header': 'foobar' }
@@ -48,26 +49,37 @@ export class TasksComponent implements OnInit {
       data: {
       name: this.name, 
       category: this.category,
-	  sDate: this.sDate,
-	  sTime: this.sTime,
-	  eDate: this.eDate,
-	  eTime: this.eTime
+  	  sDate: this.sDate,
+  	  sTime: this.sTime,
+  	  eDate: this.eDate,
+  	  eTime: this.eTime
       }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
-      this.name = result;
-    });
+      console.log(result);
 
+      const headers = { 'Authorization': 'Bearer my-token', 'My-Custom-Header': 'foobar' }
+      const body = { title: 'Angular POST Request Example' 
+
+      }
+      this.http.post<any>('https://jsonplaceholder.typicode.com/invalid-url', body, { headers }).subscribe({
+      next: data => this.name = data.id,
+      error: error => console.error('There was an error!', error)
+      })
+      
+    });
   }
 
-  openDeleteDialog(): void {
+  openDeleteDialog(i: number): void {
+    
+    console.log();
     const dialogRef = this.dialog.open(
     ConfirmDeleteDialog, {
       //width: '250px',
       data: {
-      number: this.number
+      id: i
       }
     });
 
@@ -77,12 +89,13 @@ export class TasksComponent implements OnInit {
     });
   }
 
-  openEditDialog(): void {
+  openEditDialog(i: number): void {
+    console.log("The index: ", i);
     const dialogRef = this.dialog.open(
     EditTaskDialog, {
       //width: '250px',
       data: {
-      number: this.number
+      id: i
       }
     });
 
@@ -122,7 +135,7 @@ export class DialogOverviewExampleDialog {
   styleUrls: ['./tasks.component.css']
 })
 export class ConfirmDeleteDialog {
-  postId;
+  id;
   number;
   name;
 
@@ -131,7 +144,6 @@ export class ConfirmDeleteDialog {
     public dialogRef: MatDialogRef<ConfirmDeleteDialog>,
     private http: HttpClient,
     @Inject(MAT_DIALOG_DATA) public data: DialogData) {data: {
-      number : this.number
     }}
 
   onNoClick(): void {
@@ -150,6 +162,7 @@ export class ConfirmDeleteDialog {
   }
 
   ngOnInit() {
+    this.id = this.data.id;
   }
 
 }
@@ -162,14 +175,16 @@ export class ConfirmDeleteDialog {
 })
 export class EditTaskDialog {
 
-    id: string;
-    title: string;
+    id: number;
+    name;
+    start;
+    duration;
 
 
   constructor(
     public dialogRef: MatDialogRef<EditTaskDialog>,
+    private http: HttpClient,
     @Inject(MAT_DIALOG_DATA) public data: DialogData) {data: {
-
     }}
 
   onNoClick(): void {
@@ -182,6 +197,21 @@ export class EditTaskDialog {
   }
 
   ngOnInit() {
+    this.id = this.data.id;
+    console.log("The id: ", this.data.id);
+
+    const headers = { 'Authorization': 'Bearer my-token'}
+      const body = { title: 'Angular POST Request Example' 
+
+      }
+      this.http.get<any>('localhost:8001/tasks/' + this.id, { headers }).subscribe({
+      next: data => {
+        this.name = data.name, 
+        this.start = data.start,
+        this.duration = data.duration
+      },
+      error: error => console.error('There was an error!', error)
+      })
   }
 
 }
