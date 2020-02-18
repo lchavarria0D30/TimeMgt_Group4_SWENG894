@@ -26,7 +26,7 @@ export class AppComponent {
                     this.greeting = "Hello " + this.user.username;
                     console.log("AQUI " + this.user);
                     Auth.currentSession()
-    				.then(data => console.log(data))
+    				.then(data => console.log(data.getAccessToken().getJwtToken()))
     				.catch(err => console.log(err));
 
                 }
