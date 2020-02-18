@@ -59,15 +59,6 @@ export class TasksComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
       console.log(result);
-
-      const headers = { 'Authorization': 'Bearer my-token', 'My-Custom-Header': 'foobar' }
-      const body = { title: 'Angular POST Request Example' 
-
-      }
-      this.http.post<any>('https://jsonplaceholder.typicode.com/invalid-url', body, { headers }).subscribe({
-      next: data => this.name = data.id,
-      error: error => console.error('There was an error!', error)
-      })
       
     });
   }
@@ -118,11 +109,29 @@ export class DialogOverviewExampleDialog {
 
   constructor(
     public dialogRef: MatDialogRef<DialogOverviewExampleDialog>,
+    private http: HttpClient,
     @Inject(MAT_DIALOG_DATA) public data: DialogData) {}
 
   onNoClick(): void {
     this.dialogRef.close();
   }
+
+  onYesClick(): void {
+    
+    console.log("Clicked save ", this.data.name, this.data.sDate)
+    const headers = { 'Authorization': 'Bearer my-token' }
+    const body = { name: this.data.name,
+    start: this.data.sDate
+     }
+    this.http.post<any>('localhost:8000/tasks', body, { headers }).subscribe({
+    next: data => data,
+    error: error => console.error('There was an error!', error)
+    })
+
+    this.dialogRef.close();
+  }
+
+
 
   ngOnInit() {
   }
@@ -212,6 +221,9 @@ export class EditTaskDialog {
       },
       error: error => console.error('There was an error!', error)
       })
+
+      console.log("The id: ", this.data);
+
   }
 
 }
