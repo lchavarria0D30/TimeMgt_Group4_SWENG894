@@ -3,7 +3,7 @@
   <mat-toolbar-row>
     <h1 mat-dialog-title>New Task</h1>
 	<span class="example-spacer"></span>
-    <mat-icon class="example-icon" aria-hidden="false" aria-label="Example user verified icon" (click)="onNoClick()">close</mat-icon>
+   <mat-icon class="example-icon" aria-hidden="false" aria-label="Example user verified icon" (click)="onNoClick()">close</mat-icon>
   </mat-toolbar-row>
 </mat-toolbar>
 <div mat-dialog-content>
@@ -23,7 +23,7 @@
   	<div fxFlex="">
 	  	<mat-form-field>
 		  <mat-label>Start date</mat-label>
-		  <input matInput [matDatepicker]="picker1" [(ngModel)]="data.sDate">
+		  <input matInput [matDatepicker]="picker1" [(ngModel)]="data.ssDate">
 		  <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
 		  <mat-datepicker #picker1></mat-datepicker>
 		</mat-form-field>
@@ -31,7 +31,7 @@
 	<div fxFlex="">
 	  <mat-form-field>
 	    <mat-label>Start Time</mat-label>
-	    <input matInput [(ngModel)]="data.sTime">
+	    <input matInput [(ngModel)]="data.ssTime">
 	  </mat-form-field>
 	</div>
   </div>
@@ -40,7 +40,7 @@
   	<div fxFlex="">
 	  	<mat-form-field>
 		  <mat-label>End date</mat-label>
-		  <input matInput [matDatepicker]="picker2" [(ngModel)]="data.eDate">
+		  <input matInput [matDatepicker]="picker2" [(ngModel)]="data.aeDate">
 		  <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
 		  <mat-datepicker #picker2></mat-datepicker>
 		</mat-form-field>
@@ -48,7 +48,7 @@
 	<div fxFlex="">
 	  <mat-form-field>
 	    <mat-label>End Time</mat-label>
-	    	<input matInput [(ngModel)]="data.eTime">
+	    	<input matInput [(ngModel)]="data.aeTime">
 	  	</mat-form-field>
 
 	  	
