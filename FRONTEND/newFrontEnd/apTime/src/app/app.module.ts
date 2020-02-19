@@ -7,8 +7,10 @@ import { ProfileComponent } from "./profile/profile.component";
 import { SecureComponent } from "./secure/secure.component";
 import { HomeComponent } from "./home/home.component";
 import { AmplifyAngularModule, AmplifyService } from "aws-amplify-angular";
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-//import UI from "@aws-amplify/ui";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { TaskCategoryComponent } from "./component/task-category/task-category.component";
+import { CategoryService } from "./services/category.service";
+import { CustomMaterialModule } from "./modules/material.module";
 
 @NgModule({
   declarations: [
@@ -16,9 +18,16 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     AuthComponent,
     ProfileComponent,
     SecureComponent,
-    HomeComponent
+    HomeComponent,
+    TaskCategoryComponent
   ],
-  imports: [BrowserModule, AppRoutingModule, AmplifyAngularModule, BrowserAnimationsModule],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    AmplifyAngularModule,
+    BrowserAnimationsModule,
+    CustomMaterialModule
+  ],
   providers: [AmplifyService],
   bootstrap: [AppComponent]
 })

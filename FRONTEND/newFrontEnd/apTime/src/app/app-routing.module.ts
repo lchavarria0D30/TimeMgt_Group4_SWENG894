@@ -6,11 +6,13 @@ import { ProfileComponent } from "./profile/profile.component";
 import { HomeComponent } from "./home/home.component";
 import { AmplifyAngularModule, AmplifyService } from "aws-amplify-angular";
 import { BrowserModule } from "@angular/platform-browser";
+import { TaskCategoryComponent } from "./component/task-category/task-category.component";
 
 const routes: Routes = [
   { path: "", component: HomeComponent, pathMatch: "full" },
   { path: "login", component: AuthComponent, pathMatch: "full" },
-  { path: "dashboard", component: SecureComponent, pathMatch: "full" }
+  { path: "dashboard", component: SecureComponent, pathMatch: "full" },
+  { path: "category", component: TaskCategoryComponent, pathMatch: "full" }
 ];
 
 @NgModule({
