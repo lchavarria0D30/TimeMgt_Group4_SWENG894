@@ -1,5 +1,6 @@
 package com.apptime.auth.model;
 
+
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -16,7 +17,7 @@ public class Task {
 
 	@Id
 	@GeneratedValue
-	private Integer id;
+	private long id;
 	private String name;
 	  @JsonFormat(pattern="MM-dd-yyyy HH:mm:ss")
 	private LocalDateTime start;
@@ -31,13 +32,13 @@ public class Task {
 		this.userName = userName;
 	}
 	
-	public Integer getId() {
+	public long getId() {
 		return id;
 	}
 
 
 
-	public void setId(Integer id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -72,7 +73,10 @@ public class Task {
 	public Task(String string, Date date, int i) {
 		
 	}
-	
+
+
+
 	
 
 }
+
