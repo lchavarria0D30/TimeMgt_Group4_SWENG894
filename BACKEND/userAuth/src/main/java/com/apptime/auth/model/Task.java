@@ -4,6 +4,7 @@ package com.apptime.auth.model;
 import java.time.LocalDateTime;
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -21,7 +22,16 @@ public class Task {
 	private String name;
 	  @JsonFormat(pattern="MM-dd-yyyy HH:mm:ss")
 	private LocalDateTime start;
+	  @Column(nullable = true)
+	  private LocalDateTime duration;
+	  @Column(nullable = false)
+	  private LocalDateTime endTime;
 	private String userName;
+	private String Description; 
+	
+	public Task() {
+		
+	}
 	public String getUserName() {
 		return userName;
 	}
@@ -72,6 +82,24 @@ public class Task {
 
 	public Task(String string, Date date, int i) {
 		
+	}
+	public LocalDateTime getEndTime() {
+		return endTime;
+	}
+	public void setEndTime(LocalDateTime endTime) {
+		this.endTime = endTime;
+	}
+	public LocalDateTime getDuration() {
+		return duration;
+	}
+	public void setDuration(LocalDateTime duration) {
+		this.duration = duration;
+	}
+	public String getDescription() {
+		return Description;
+	}
+	public void setDescription(String description) {
+		Description = description;
 	}
 
 

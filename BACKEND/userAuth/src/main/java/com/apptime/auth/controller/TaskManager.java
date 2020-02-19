@@ -48,12 +48,16 @@ public class TaskManager {
 	}
 	
 	//create task
-	@PostMapping("/task")
-	public ResponseEntity<Task> createTask(@RequestBody Task task, Principal p) {
+	@PostMapping("/newtask")
+	public ResponseEntity<Object> createTask(@RequestBody Task task, Principal p) {
 		String user = p.getName();
+		if(taskService.getTask(task.getId())==null) {
 		Task result = taskService.createTask(task,user);
-        return new ResponseEntity<Task>(result, HttpStatus.OK);
+        return new ResponseEntity<Object>(result, HttpStatus.OK);
+		} 
+		return new ResponseEntity<Object>("{status: didn't create }", HttpStatus.NOT_FOUND);
 	}
+	//update task with put
 	@PutMapping("/task")
 	public ResponseEntity<Task> updateTask(@RequestBody Task task, Principal p) {
 		
