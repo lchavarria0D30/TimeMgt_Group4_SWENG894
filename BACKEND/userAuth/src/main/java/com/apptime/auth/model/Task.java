@@ -21,13 +21,20 @@ public class Task {
 	private long id;
 	private String name;
 	  @JsonFormat(pattern="MM-dd-yyyy HH:mm:ss")
-	private LocalDateTime start;
-	  @Column(nullable = true)
+	private LocalDateTime scheduledstart;
+	@Column(nullable = true)
 	  private LocalDateTime duration;
-	  @Column(nullable = false)
-	  private LocalDateTime endTime;
+	  @Column(nullable = true)
+	  private LocalDateTime scheduledEndTime;
 	private String userName;
 	private String Description; 
+	
+	  public LocalDateTime getScheduledstart() {
+		return scheduledstart;
+	}
+	public void setScheduledstart(LocalDateTime scheduledstart) {
+		this.scheduledstart = scheduledstart;
+	}
 	
 	public Task() {
 		
@@ -65,30 +72,10 @@ public class Task {
 	}
 
 
-
-	public LocalDateTime getStart() {
-		return start;
-	}
-
-
-
-	public void setStart(LocalDateTime start) {
-		this.start = start;
-	}
-
-
-	 
-	
-
 	public Task(String string, Date date, int i) {
 		
 	}
-	public LocalDateTime getEndTime() {
-		return endTime;
-	}
-	public void setEndTime(LocalDateTime endTime) {
-		this.endTime = endTime;
-	}
+
 	public LocalDateTime getDuration() {
 		return duration;
 	}

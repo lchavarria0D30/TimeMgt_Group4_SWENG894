@@ -1,6 +1,0 @@
-com/apptime/auth/model/MessageDTO.class
-com/apptime/auth/config/OAuth2ResourceServerSecurityConfiguration.class
-com/apptime/auth/ResourceServerApplication.class
-com/apptime/auth/controller/AdminController.class
-com/apptime/auth/controller/PublicController.class
-com/apptime/auth/config/CognitoAccessTokenConverter.class
