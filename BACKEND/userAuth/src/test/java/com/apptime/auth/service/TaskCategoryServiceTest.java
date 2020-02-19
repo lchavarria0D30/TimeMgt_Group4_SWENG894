@@ -169,8 +169,6 @@ public class TaskCategoryServiceTest {
         Users user = new Users();
         final String username = UUID.randomUUID().toString();
         user.setUsername(username);
-        final String password = UUID.randomUUID().toString();
-        user.setPassword(passwordEncoder.encode(password));
         userRepository.save(user);
         return user;
     }

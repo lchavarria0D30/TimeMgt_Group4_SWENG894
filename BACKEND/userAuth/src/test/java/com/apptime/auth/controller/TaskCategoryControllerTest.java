@@ -1,6 +1,5 @@
 package com.apptime.auth.controller;
 
-import com.apptime.auth.model.ResetPasswordRequest;
 import com.apptime.auth.model.Roles;
 import com.apptime.auth.model.TaskCategory;
 import com.apptime.auth.model.Users;
@@ -71,7 +70,6 @@ public class TaskCategoryControllerTest {
         String password = UUID.randomUUID().toString();
         Users user = new Users();
         user.setUsername(username);
-        user.setPassword(pEncoder.encode(password));
         userRepository.save(user);
     }
 
@@ -79,12 +77,10 @@ public class TaskCategoryControllerTest {
         String password = UUID.randomUUID().toString();
         Users user = new Users();
         user.setUsername(username);
-        user.setPassword(pEncoder.encode(password));
         Roles userRole = new Roles();
         userRole.setRole("USER");
         Roles adminRole = new Roles();
         adminRole.setRole("ADMIN");
-        user.setRoles(Sets.newSet(userRole, adminRole));
         userRepository.save(user);
     }
 
