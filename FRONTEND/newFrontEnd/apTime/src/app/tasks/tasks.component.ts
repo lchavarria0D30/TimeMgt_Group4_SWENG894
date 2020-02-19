@@ -7,7 +7,7 @@ import { HttpClient } from '@angular/common/http';
 export interface DialogData {
   name: string;
   category: string;
-  sDate: string;
+  sDate: Date;
   sTime: string;
   eDate: string;
   eTime: string;
@@ -24,7 +24,7 @@ export class TasksComponent implements OnInit {
   
   name: string;
   category: string;
-  sDate: string;
+  sDate: Date;
   sTime: string;
   eDate: string;
   eTime: string;
@@ -117,7 +117,19 @@ export class DialogOverviewExampleDialog {
   }
 
   onYesClick(): void {
+    var time = this.data.sTime;
+    var date = new Date(this.data.sDate);
+    var parts = time.match(/(\d+):(\d+) (AM|PM)/);
+    if (parts) {
+        var hours = parseInt(parts[1]),
+            minutes = parseInt(parts[2]),
+            tt = parts[3];
+        if (tt === 'PM' && hours < 12) hours += 12;
+        date.setHours(hours, minutes, 0, 0);
+    }
     
+    this.data.sDate = date;
+    console.log("Aqui: " + this.data.sDate);
     console.log("Clicked save ", this.data.name, this.data.sDate)
     const headers = { 'Authorization': 'Bearer my-token' }
     const body = { name: this.data.name,

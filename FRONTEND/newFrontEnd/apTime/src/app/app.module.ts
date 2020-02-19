@@ -10,7 +10,7 @@ import { AmplifyAngularModule, AmplifyService } from "aws-amplify-angular";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 //import UI from "@aws-amplify/ui";
 import { HttpClientModule } from '@angular/common/http';
-
+import { Validators, FormBuilder, FormGroup, FormControl } from '@angular/forms';
 
 
 import {MatToolbarModule} from '@angular/material/toolbar';
