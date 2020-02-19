@@ -111,14 +111,14 @@ public class TaskCategoryController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        if (user.getRoles() == null || user.getRoles().isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
-
-        boolean isAdmin = user.getRoles().stream().map(Roles::getRole).collect(Collectors.toSet()).contains(ADMIN_ROLE);
-        if (!isAdmin) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
+//        if (user.getRoles() == null || user.getRoles().isEmpty()) {
+//            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+//        }
+//
+//        boolean isAdmin = user.getRoles().stream().map(Roles::getRole).collect(Collectors.toSet()).contains(ADMIN_ROLE);
+//        if (!isAdmin) {
+//            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+//        }
 
         TaskCategory createdCategory = categoryService.createCategory(category.getName(), user, true);
         if (createdCategory == null) {
