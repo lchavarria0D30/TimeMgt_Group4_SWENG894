@@ -19,14 +19,15 @@ import {
   MatCardModule,
   MatFormField,
   MatFormFieldModule,
+  MatMenuModule,
+  MatDividerModule,
+  MatDatepickerModule,
   MatProgressSpinnerModule,
   MatInputModule
 } from "@angular/material";
-import { MatDatepickerModule } from "@angular/material/datepicker";
 import { MatRadioModule } from "@angular/material/radio";
 import { MatSelectModule } from "@angular/material/select";
 import { MatSliderModule } from "@angular/material/slider";
-import { MatDividerModule } from "@angular/material/divider";
 import { Location } from "@angular/common";
 
 @NgModule({
@@ -52,6 +53,10 @@ import { Location } from "@angular/common";
     MatFormFieldModule,
     MatProgressSpinnerModule,
     MatInputModule,
+    MatMenuModule,
+    MatDividerModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
     MatPaginatorModule,
     FormsModule,
     HttpClientModule

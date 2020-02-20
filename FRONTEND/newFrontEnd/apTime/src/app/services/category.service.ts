@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { Category } from "../component/task-category/Category";
+import { Category } from "../task-category/Category";
 
 @Injectable({
   providedIn: "root"

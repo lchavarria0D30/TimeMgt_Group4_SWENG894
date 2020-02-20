@@ -1,0 +1,98 @@
+
+<mat-toolbar color="primary" style="width:100%;">
+  <mat-toolbar-row>
+    <h1 mat-dialog-title>Edit Task {{ id }}</h1>
+	<span class="example-spacer"></span>
+	<button mat-button  (click)="onNoClick()">
+		<mat-icon class="example-icon" aria-hidden="false" aria-label="Example user verified icon">close</mat-icon>
+	</button>
+</mat-toolbar-row>
+</mat-toolbar>
+<div mat-dialog-content>
+  <div fxLayout="column">
+  <mat-form-field>
+    <mat-label>Name</mat-label>
+    <input matInput [(ngModel)]="data.name">
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Category</mat-label>
+    <input matInput [(ngModel)]="data.category">
+  </mat-form-field>
+  </div>
+
+  <div fxLayout="row" fxLayoutGap="15px">
+  	<div fxFlex="">
+	  <mat-form-field>
+		  <mat-label>Start date</mat-label>
+		  <input matInput [matDatepicker]="picker1" [(ngModel)]="data.ssDate">
+		  <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+		  <mat-datepicker #picker1></mat-datepicker>
+		</mat-form-field>
+	</div>
+	<div fxFlex="" fxLayoutGap="15px">
+	  <mat-form-field>
+	    <mat-label>Start Time</mat-label>
+	    <input matInput [(ngModel)]="data.ssTime">
+	  </mat-form-field>
+	</div>
+  </div>
+
+  <div fxLayout="row"  fxLayoutGap="15px">
+  	<div fxFlex="">
+	  	<mat-form-field>
+		  <mat-label>End date</mat-label>
+		  <input matInput [matDatepicker]="picker2" [(ngModel)]="data.seDate">
+		  <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+		  <mat-datepicker #picker2></mat-datepicker>
+		</mat-form-field>
+	</div>
+	<div fxFlex="" fxLayoutGap="15px">
+	  <mat-form-field>
+	    <mat-label>End Time</mat-label>
+	    <input matInput [(ngModel)]="data.seTime">
+	  </mat-form-field>
+	</div>
+  </div>
+  <button mat-button (click)="onActualsClick()" *ngIf="!showActuals"> Edit actuals <mat-icon class="example-icon" aria-hidden="false" aria-label="Edit actual times icon">edit</mat-icon></button>
+  
+  <div *ngIf="showActuals">
+  <mat-divider></mat-divider>
+  <p style="color:purple; !important">Actual Times</p>
+	<div fxLayout="row"  fxLayoutGap="15px">
+		<div fxFlex="">
+		<mat-form-field>
+			<mat-label>Start date</mat-label>
+			<input matInput [matDatepicker]="picker3" [(ngModel)]="data.asDate">
+			<mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+			<mat-datepicker #picker3></mat-datepicker>
+		  </mat-form-field>
+	  </div>
+	  <div fxFlex="" >
+		<mat-form-field>
+		  <mat-label>Start Time</mat-label>
+		  <input matInput [(ngModel)]="data.asTime">
+		</mat-form-field>
+	  </div>
+	</div>
+  
+	<div fxLayout="row"  fxLayoutGap="15px">
+		<div fxFlex="" >
+			<mat-form-field>
+			<mat-label>End date</mat-label>
+			<input matInput [matDatepicker]="picker4" [(ngModel)]="data.aeDate">
+			<mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
+			<mat-datepicker #picker4></mat-datepicker>
+		  </mat-form-field>
+	  </div>
+	  <div fxFlex="">
+		<mat-form-field>
+		  <mat-label>End Time</mat-label>
+		  <input matInput [(ngModel)]="data.aeTime">
+		</mat-form-field>
+	  </div>
+</div>
+</div>
+<div mat-dialog-actions align="end" class="header-text">
+  <button mat-raised-button color="primary" [mat-dialog-close]="data" cdkFocusInitial>Save</button>
+</div>

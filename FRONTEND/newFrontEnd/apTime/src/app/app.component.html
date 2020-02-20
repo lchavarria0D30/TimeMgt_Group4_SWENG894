@@ -1,11 +1,24 @@
 <div style="text-align:center">
-  <h1>Welcome to {{ title }}!</h1>
+  <!-- <h1>Welcome to {{ title }}!</h1> -->
+  <mat-toolbar color="primary">
+  <mat-toolbar-row>
+    <button mat-button [matMenuTriggerFor]="menu">Menu</button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item routerLink="/">Home</button>
+        <button mat-menu-item routerLink="/login">Login</button>
+        <button mat-menu-item routerLink="/login">Dashboard</button>
+        <button mat-menu-item routerLink="/category">Categories</button>
+        <button mat-menu-item routerLink="/tasks">Tasks</button>
+      </mat-menu>
+    <span class="header-text">TimeMngmt</span>
+  </mat-toolbar-row>
+</mat-toolbar>
 </div>
 
-<h2>Links to the Pages</h2>
+<!-- <h2>Links to the Pages</h2>
 <ul>
   <li>
-    <h2><a routerLink="/">Home</a></h2>
+    <h2><a >Home</a></h2>
   </li>
   <li>
     <h2><a routerLink="/login">login</a></h2>
@@ -16,7 +29,10 @@
       <a routerLink="/category">category</a>
     </h2>
   </li>
-</ul>
-<hr />
+  <li>
+    <h2><a routerLink="/tasks">tasks</a></h2>
+  </li>
+</ul> -->
+<!-- <hr /> -->
 <router-outlet></router-outlet>
-<hr />
+<!-- <hr /> -->
