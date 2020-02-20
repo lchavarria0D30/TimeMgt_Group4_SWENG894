@@ -1,16 +1,20 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
-import { Auth } from 'aws-amplify';
 import { HttpClient } from '@angular/common/http';
+import { SessionService } from "../services/session.service";
 
 
 export interface DialogData {
   name: string;
   category: string;
-  sDate: Date;
-  sTime: string;
-  eDate: string;
-  eTime: string;
+  ssDate: Date;
+  ssTime: string;
+  seDate: string;
+  seTime: string;
+  asDate: Date;
+  asTime: string;
+  aeDate: Date;
+  aeTime: string;
   number: string;
   id: number;
 }
@@ -26,22 +30,26 @@ export class TasksComponent implements OnInit {
   category: string;
   sDate: Date;
   sTime: string;
-  eDate: string;
+  eDate: Date;
   eTime: string;
   number: string;
   id: number;
+  token: string;
 
   ngOnInit() {
-    const headers = { 'Authorization': 'Bearer my-token', 'My-Custom-Header': 'foobar' }
-    const body = { title: 'Angular POST Request Example' }
-    this.http.get<any>('localhost:8001/tasks', { headers }).subscribe({
+    this.token = this.sessionService.getToken();
+    console.log("EL token: " + this.token)
+
+    const headers = { 'Authorization': 'Bearer ' + this.token }
+    this.http.get<any>('localhost:8001/', { headers }).subscribe({
     next: data => this.name = data.id,
     error: error => console.error('There was an error!', error)
     })
   }
 
   //number = "1";
-  constructor(public dialog: MatDialog, private http: HttpClient) {}
+  constructor(public dialog: MatDialog, private http: HttpClient,
+  private sessionService: SessionService ) {}
 
   openDialog(): void {
     const dialogRef = this.dialog.open(DialogOverviewExampleDialog, {
@@ -49,15 +57,15 @@ export class TasksComponent implements OnInit {
       data: {
       name: this.name, 
       category: this.category,
-  	  sDate: this.sDate,
-  	  sTime: this.sTime,
-  	  eDate: this.eDate,
-  	  eTime: this.eTime
+      sDate: this.sDate,
+      sTime: this.sTime,
+      eDate: this.eDate,
+      eTime: this.eTime
       }
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
+      console.log('The create dialog was closed');
       console.log(result);
       
     });
@@ -75,7 +83,7 @@ export class TasksComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
+      console.log('The delete dialog was closed');
       //this.animal = result;
     });
   }
@@ -91,7 +99,8 @@ export class TasksComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
+      console.log('The edit dialog was closed');
+      console.log(result);
       //this.animal = result;
     });
   }
@@ -107,6 +116,7 @@ export class TasksComponent implements OnInit {
 })
 export class DialogOverviewExampleDialog {
 
+
   constructor(
     public dialogRef: MatDialogRef<DialogOverviewExampleDialog>,
     private http: HttpClient,
@@ -117,8 +127,25 @@ export class DialogOverviewExampleDialog {
   }
 
   onYesClick(): void {
-    var time = this.data.sTime;
-    var date = new Date(this.data.sDate);
+  
+    this.dateConversion(this.data.ssTime, this.data.ssDate)
+    this.dateConversion(this.data.aeTime, this.data.aeDate)
+    
+    const headers = { 'Authorization': 'Bearer my-token' }
+    const body = { name: this.data.name,
+    start: this.data.ssDate
+     }
+    this.http.post<any>('localhost:8000/tasks', body, { headers }).subscribe({
+    next: data => data,
+    error: error => console.error('There was an error!', error)
+    })
+
+
+    this.dialogRef.close();
+  }
+
+  dateConversion(time: string, date: Date) : Date {
+    
     var parts = time.match(/(\d+):(\d+) (AM|PM)/);
     if (parts) {
         var hours = parseInt(parts[1]),
@@ -127,23 +154,9 @@ export class DialogOverviewExampleDialog {
         if (tt === 'PM' && hours < 12) hours += 12;
         date.setHours(hours, minutes, 0, 0);
     }
-    
-    this.data.sDate = date;
-    console.log("Aqui: " + this.data.sDate);
-    console.log("Clicked save ", this.data.name, this.data.sDate)
-    const headers = { 'Authorization': 'Bearer my-token' }
-    const body = { name: this.data.name,
-    start: this.data.sDate
-     }
-    this.http.post<any>('localhost:8000/tasks', body, { headers }).subscribe({
-    next: data => data,
-    error: error => console.error('There was an error!', error)
-    })
 
-    this.dialogRef.close();
+    return date;
   }
-
-
 
   ngOnInit() {
   }
@@ -200,12 +213,14 @@ export class EditTaskDialog {
     name;
     start;
     duration;
+    showActuals: boolean;
 
 
   constructor(
     public dialogRef: MatDialogRef<EditTaskDialog>,
     private http: HttpClient,
     @Inject(MAT_DIALOG_DATA) public data: DialogData) {data: {
+
     }}
 
   onNoClick(): void {
@@ -217,7 +232,13 @@ export class EditTaskDialog {
     this.dialogRef.close();
   }
 
+  onActualsClick(): void {
+    this.showActuals = true;
+    console.log("Actual click");
+  }
+
   ngOnInit() {
+    this.showActuals = false;
     this.id = this.data.id;
     console.log("The id: ", this.data.id);
 
@@ -239,5 +260,3 @@ export class EditTaskDialog {
   }
 
 }
-
-
