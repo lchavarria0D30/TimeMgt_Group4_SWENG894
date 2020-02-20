@@ -11,8 +11,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,29 +30,42 @@ import com.apptime.auth.service.TaskManagerService;
 public class TaskManager {
 	@Autowired
 	TaskManagerService taskService;
-	@RequestMapping(value = "/")
-	public ResponseEntity<List> getTasks(Principal p) throws ParseException{
+	
+	//list all task for a user
+	@GetMapping(value = "/")
+	public ResponseEntity<List<Task>> getTasks(Principal p) throws ParseException{
 		String user = p.getName();
-		List<Task> tasks = taskService.getTasks(user);
-        return new ResponseEntity<List>(tasks, HttpStatus.OK);
+		List<Task> tasks = taskService.findUserTasks(user);
+        return new ResponseEntity<List<Task>>(tasks, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/task/{id}")
+	
+	//view task details
+	@GetMapping(value = "/task/{id}")
 	public ResponseEntity<Task> getTask(@PathVariable("id") int taskId, Principal p) throws ParseException{
-		String user = p.getName();
-		Task tasks = taskService.getTaskById(user,taskId);
-		//String sDate = "Thu, Dec 31 1998 23:37:50";  
-		// SimpleDateFormat formatter5=new SimpleDateFormat("E, MMM dd yyyy HH:mm:ss");  
-		// Date date=formatter5.parse(sDate);  
-		//List<Task> tasks = Arrays.asList(new Task("clean",date,5));
-        return new ResponseEntity<Task>(tasks, HttpStatus.OK);
+		Task task = taskService.getTask(taskId);
+        return new ResponseEntity<Task>(task, HttpStatus.OK);
 	}
 	
-	@PostMapping("/task")
-	public ResponseEntity<Task> signup(@RequestBody Task task, Principal p) {
+	//create task
+	@PostMapping("/newtask")
+	public ResponseEntity<Object> createTask(@RequestBody Task task, Principal p) {
 		String user = p.getName();
-		Task tasks = taskService.createTask(task,user);
-        return new ResponseEntity<Task>(tasks, HttpStatus.OK);
+		if(taskService.getTask(task.getId())==null) {
+		Task result = taskService.createTask(task,user);
+        return new ResponseEntity<Object>(result, HttpStatus.OK);
+		} 
+		return new ResponseEntity<Object>("{status: didn't create }", HttpStatus.NOT_FOUND);
 	}
-
+	//update task with put
+	@PutMapping("/task")
+	public ResponseEntity<Task> updateTask(@RequestBody Task task, Principal p) {
+		
+		return new ResponseEntity<Task>(taskService.updateTask(task, p.getName()), HttpStatus.OK);
+	}
+	@DeleteMapping("/Tasks/{id}")
+	 Task deleteTask(@PathVariable Long id) {
+	     return taskService.deleteTask(id);
+	 }
+	  
 }

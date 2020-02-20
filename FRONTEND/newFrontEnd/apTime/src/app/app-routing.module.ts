@@ -13,9 +13,8 @@ const routes: Routes = [
   { path: "", component: HomeComponent, pathMatch: "full" },
   { path: "login", component: AuthComponent, pathMatch: "full" },
   { path: "dashboard", component: SecureComponent, pathMatch: "full"},
-  {path: "tasks", component: TasksComponent, pathMatch: "full"},
+  { path: "tasks", component: TasksComponent, pathMatch: "full"},
   { path: "category", component: TaskCategoryComponent, pathMatch: "full" }
-  
 ];
 
 @NgModule({

@@ -9,5 +9,4 @@ const awsmobile = {
     "oauth": {}
 };
 
-
 export default awsmobile;

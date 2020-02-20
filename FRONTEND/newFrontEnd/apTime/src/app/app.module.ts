@@ -41,7 +41,6 @@ import { ConfirmDeleteDialog } from './tasks/tasks.component';
 import { EditTaskDialog } from './tasks/tasks.component';
 import { TaskCategoryComponent } from './task-category/task-category.component';
 
-
 @NgModule({
   declarations: [
     AppComponent,
