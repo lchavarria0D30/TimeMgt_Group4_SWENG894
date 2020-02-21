@@ -9,12 +9,17 @@ import com.apptime.auth.service.TaskCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -36,11 +41,15 @@ public class TaskCategoryController {
     private UserRepository userRepository;
 
     @PostMapping
-    public ResponseEntity<Category> createPrivateCategories(@RequestBody Category category, Principal principal) {
-        if (principal == null) {
+    public ResponseEntity<Category> createPrivateCategories(@RequestBody Category category, Authentication authentication) {
+        if (authentication == null) {
+            authentication = getAuthentication(authentication);
+        }
+        if (authentication == null) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
-        String username = principal.getName();
+
+        String username = authentication.getName();
         Users user = userRepository.findByUsername(username);
         if (user == null) {
             // wrong username
@@ -65,11 +74,15 @@ public class TaskCategoryController {
     }
 
     @GetMapping(value = "/mine")
-    public ResponseEntity<Collection<Category>> getMineCategories(Principal principal) {
-        if (principal == null) {
-            return buildErrorResponse(HttpStatus.UNAUTHORIZED);
+    public ResponseEntity<Collection<Category>> getMineCategories(Authentication authentication) {
+        if (authentication == null) {
+            authentication = getAuthentication(authentication);
         }
-        String username = principal.getName();
+        if (authentication == null) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        String username = authentication.getName();
         Users user = userRepository.findByUsername(username);
         if (user == null) {
             // wrong username
@@ -81,11 +94,15 @@ public class TaskCategoryController {
     }
 
     @GetMapping(value = "/public")
-    public ResponseEntity<Collection<Category>> getPublicCategories(Principal principal) {
-        if (principal == null) {
-            return buildErrorResponse(HttpStatus.UNAUTHORIZED);
+    public ResponseEntity<Collection<Category>> getPublicCategories(Authentication authentication) {
+        if (authentication == null) {
+            authentication = getAuthentication(authentication);
         }
-        String username = principal.getName();
+        if (authentication == null) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        String username = authentication.getName();
         Users user = userRepository.findByUsername(username);
         if (user == null) {
             // wrong username
@@ -95,30 +112,28 @@ public class TaskCategoryController {
     }
 
     @PostMapping(value = "/public")
-    public ResponseEntity<Category> createPublicCategory(@RequestBody Category category, Principal principal) {
-        if (principal == null) {
+    public ResponseEntity<Category> createPublicCategory(@RequestBody Category category, Authentication authentication) {
+        if (authentication == null) {
+            authentication = getAuthentication(authentication);
+        }
+        if (authentication == null) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
-        String username = principal.getName();
+        String username = authentication.getName();
         Users user = userRepository.findByUsername(username);
         if (user == null) {
             // wrong username
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
+        if (!checkRule(authentication, "ADMIN")) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
         if (category == null || category.getName() == null || category.getName().isEmpty()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-
-//        if (user.getRoles() == null || user.getRoles().isEmpty()) {
-//            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-//        }
-//
-//        boolean isAdmin = user.getRoles().stream().map(Roles::getRole).collect(Collectors.toSet()).contains(ADMIN_ROLE);
-//        if (!isAdmin) {
-//            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-//        }
 
         TaskCategory createdCategory = categoryService.createCategory(category.getName(), user, true);
         if (createdCategory == null) {
@@ -130,5 +145,21 @@ public class TaskCategoryController {
 
     private ResponseEntity<Collection<Category>> buildErrorResponse(HttpStatus httpStatus) {
         return new ResponseEntity<>(httpStatus);
+    }
+
+    private Authentication getAuthentication(Authentication authentication) {
+        return authentication != null ? authentication : SecurityContextHolder.getContext().getAuthentication();
+    }
+
+    private boolean checkRule(Authentication authentication, String expectedRole) {
+        if (CollectionUtils.isEmpty(authentication.getAuthorities())) {
+            return false;
+        }
+        for (GrantedAuthority authority : authentication.getAuthorities()) {
+            if (authority.getAuthority().equalsIgnoreCase(expectedRole)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
