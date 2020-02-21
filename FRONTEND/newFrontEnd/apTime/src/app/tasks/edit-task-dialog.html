@@ -105,5 +105,5 @@
 </form>
 </div>
 <div mat-dialog-actions align="end" class="header-text">
-  <button mat-raised-button color="primary" [mat-dialog-close]="data" cdkFocusInitial>Save</button>
+  <button mat-raised-button color="primary" [mat-dialog-close]="data"  (click)="onYesClick()" cdkFocusInitial>Save</button>
 </div>
