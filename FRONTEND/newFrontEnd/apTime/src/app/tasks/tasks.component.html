@@ -1,0 +1,77 @@
+<div>
+<p>tasks works!</p>
+</div>
+<div fxLayout="row wrap" fxLayout.xs="column wrap"  fxLayoutAlign="center center" fxLayoutGap="15px grid">
+	<div *ngFor="let number of [0,1,2,3,4,5,6,7,8,9]; let i = index">
+		<mat-card>
+			<mat-card-header>
+		    	<mat-card-title>Name</mat-card-title>
+		    	<mat-card-subtitle>Description</mat-card-subtitle>
+		  	</mat-card-header>
+		  	<mat-card-content>
+		  		<div fxLayout="column">
+
+				  <div fxLayout="row" fxLayoutGap="15px">
+				  	<div fxFlex="">
+					    <mat-label>Start Date</mat-label>
+					</div>
+					<div fxFlex="">
+					    <mat-label>Start Time</mat-label>
+					</div>
+				  </div>
+
+				  <div fxLayout="row" fxLayoutGap="15px">
+				  	<div fxFlex="">
+					    <mat-label>01/20/2020</mat-label>
+					</div>
+					<div fxFlex="">
+					    <mat-label>10:00PM</mat-label>
+					</div>
+				  </div>
+
+				  <div><p></p></div>
+
+				  <div fxLayout="row" fxLayoutGap="15px">
+				  	<div fxFlex="">
+					    <mat-label>End Date</mat-label>
+					</div>
+					<div fxFlex="">
+					    <mat-label>End Time</mat-label>
+					</div>
+				  </div>
+
+				  <div fxLayout="row" fxLayoutGap="15px">
+				  	<div fxFlex="">
+					    <mat-label>01/20/2020</mat-label>
+					</div>
+					<div fxFlex="">
+					    <mat-label>10:00PM</mat-label>
+					</div>
+				  </div>
+
+				</div>
+		  	</mat-card-content>
+		  	<mat-card-actions>
+		    	<button mat-button>
+		    		<mat-icon (click)="openEditDialog(i)">edit</mat-icon>
+		    	</button>
+		    	<button mat-button>
+		    		<mat-icon>share</mat-icon>
+		    	</button>
+		    	<button mat-button>
+		    		<mat-icon (click)="openDeleteDialog(i)">delete</mat-icon>
+		    	</button>
+		 	</mat-card-actions>
+
+		</mat-card>
+	</div>
+	<!--  <ul>
+      <li *ngFor="let number of [0,1,2,3,4]">{{number}}</li>
+    </ul> -->
+</div>
+
+<div>
+ <button mat-fab color="primary" aria-label="New task" (click)="openDialog()" class="custom-button">
+    <mat-icon class="header-text">add</mat-icon>
+ </button>
+</div>
