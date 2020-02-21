@@ -7,20 +7,28 @@ import com.apptime.auth.model.to.Category;
 import com.apptime.auth.repository.TaskCategoryRepository;
 import com.apptime.auth.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.FilterChainProxy;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -29,6 +37,9 @@ import static com.apptime.auth.controller.JsonUtil.asJsonString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
@@ -37,11 +48,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @ExtendWith(MockitoExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@AutoConfigureMockMvc
 public class TaskCategoryControllerTest {
     private static final String USERNAME = "username";
     private static final String ADMIN_USERNAME = "admin";
-    @Autowired
+
     private MockMvc mockMvc;
 
     @Autowired
@@ -50,12 +60,29 @@ public class TaskCategoryControllerTest {
     @Autowired
     private TaskCategoryRepository categoryRepository;
 
+    @Autowired
+    private FilterChainProxy filterChainProxy;
+
+    @Autowired
+    private WebApplicationContext context;
+
+    private Authentication authentication;
+    private SecurityContext securityContext;
+
     @BeforeEach
     public void init() {
-        userRepository.deleteAll();
+        MockitoAnnotations.initMocks(this);
         categoryRepository.deleteAll();
+        userRepository.deleteAll();
         createUser(USERNAME);
         createAdminUser(ADMIN_USERNAME);
+        mockMvc = MockMvcBuilders
+                .webAppContextSetup(context)
+                //.apply(springSecurity())
+                .build();
+
+        securityContext = mock(SecurityContext.class);
+        SecurityContextHolder.setContext(securityContext);
     }
 
     private void createUser(String username) {
@@ -76,9 +103,20 @@ public class TaskCategoryControllerTest {
         userRepository.save(user);
     }
 
-    @Ignore
-    @WithMockUser(username = USERNAME, authorities = {"USER"})
+    private void mockAuthentication() {
+        authentication = mock(Authentication.class);
+        when(authentication.getName()).thenReturn(USERNAME);
+        mockAuthentication(authentication);
+    }
+
+    private void mockAuthentication(Authentication authentication) {
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+    }
+
+    @Test
     public void testCreatePrivateCategory() throws Exception {
+        mockAuthentication();
+
         Category request = new Category();
         String name = UUID.randomUUID().toString();
         request.setName(name);
@@ -133,9 +171,49 @@ public class TaskCategoryControllerTest {
         }
     }
 
-    @Ignore
-    @WithMockUser(username = ADMIN_USERNAME, authorities = {"USER", "ADMIN"})
+    @Test
     public void testCreatePublicCategory() throws Exception {
+        Authentication authentication = new Authentication() {
+            @Override
+            public Collection<? extends GrantedAuthority> getAuthorities() {
+                GrantedAuthority authority = (GrantedAuthority) () -> "ADMIN";
+                List<GrantedAuthority> authorities = new ArrayList<>();
+                authorities.add(authority);
+                return authorities;
+            }
+
+            @Override
+            public Object getCredentials() {
+                return null;
+            }
+
+            @Override
+            public Object getDetails() {
+                return null;
+            }
+
+            @Override
+            public Object getPrincipal() {
+                return this;
+            }
+
+            @Override
+            public boolean isAuthenticated() {
+                return false;
+            }
+
+            @Override
+            public void setAuthenticated(boolean b) throws IllegalArgumentException {
+
+            }
+
+            @Override
+            public String getName() {
+                return ADMIN_USERNAME;
+            }
+        };
+        mockAuthentication(authentication);
+
         Category request = new Category();
         String name = UUID.randomUUID().toString();
         request.setName(name);
@@ -188,5 +266,70 @@ public class TaskCategoryControllerTest {
             assertTrue(cname.equals(name) || cname.equals(name2));
             assertTrue(isPublic);
         }
+
+        // get public categories with non-Admin user
+        Authentication nonAdminAuthentication = new Authentication() {
+            @Override
+            public Collection<? extends GrantedAuthority> getAuthorities() {
+                GrantedAuthority authority = (GrantedAuthority) () -> "USER";
+                List<GrantedAuthority> authorities = new ArrayList<>();
+                authorities.add(authority);
+                return authorities;
+            }
+
+            @Override
+            public Object getCredentials() {
+                return null;
+            }
+
+            @Override
+            public Object getDetails() {
+                return null;
+            }
+
+            @Override
+            public Object getPrincipal() {
+                return this;
+            }
+
+            @Override
+            public boolean isAuthenticated() {
+                return false;
+            }
+
+            @Override
+            public void setAuthenticated(boolean b) throws IllegalArgumentException {
+
+            }
+
+            @Override
+            public String getName() {
+                return USERNAME;
+            }
+        };
+        mockAuthentication(nonAdminAuthentication);
+
+        actions = mockMvc.perform(MockMvcRequestBuilders.get("/category/public")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+        result = actions.andReturn();
+        content = result.getResponse().getContentAsString();
+        list = mapper.readValue(content, List.class);
+        assertEquals(2, list.size());
+        for (Object obj : list) {
+            Map<String, Object> map = (Map<String, Object>) obj;
+            String cname = (String) map.get("name");
+            boolean isPublic = (Boolean) map.get("public");
+            assertTrue(cname.equals(name) || cname.equals(name2));
+            assertTrue(isPublic);
+        }
+
+        // try to create public categories with nonAdmin user
+        request = new Category();
+        request.setName(UUID.randomUUID().toString());
+        mockMvc.perform(MockMvcRequestBuilders.post("/category/public")
+                .content(asJsonString(request))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isForbidden());
     }
 }
