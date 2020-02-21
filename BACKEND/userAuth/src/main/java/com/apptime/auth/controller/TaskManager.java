@@ -11,6 +11,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,7 +35,7 @@ public class TaskManager {
 	//list all task for a user
 	@GetMapping(value = "/")
 	public ResponseEntity<List<Task>> getTasks(Principal p) throws ParseException{
-		String user = p.getName();
+		String user = getPrinciple(p).getName();
 		List<Task> tasks = taskService.findUserTasks(user);
         return new ResponseEntity<List<Task>>(tasks, HttpStatus.OK);
 	}
@@ -44,13 +45,17 @@ public class TaskManager {
 	@GetMapping(value = "/task/{id}")
 	public ResponseEntity<Task> getTask(@PathVariable("id") int taskId, Principal p) throws ParseException{
 		Task task = taskService.getTask(taskId);
-        return new ResponseEntity<Task>(task, HttpStatus.OK);
+		if (task.getUserName().equals(getPrinciple(p).getName())) {
+			return new ResponseEntity<Task>(task, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
 	}
 	
 	//create task
 	@PostMapping("/newtask")
 	public ResponseEntity<Object> createTask(@RequestBody Task task, Principal p) {
-		String user = p.getName();
+		String user = getPrinciple(p).getName();
 		if(taskService.getTask(task.getId())==null) {
 		Task result = taskService.createTask(task,user);
         return new ResponseEntity<Object>(result, HttpStatus.OK);
@@ -60,12 +65,23 @@ public class TaskManager {
 	//update task with put
 	@PutMapping("/task")
 	public ResponseEntity<Task> updateTask(@RequestBody Task task, Principal p) {
-		
-		return new ResponseEntity<Task>(taskService.updateTask(task, p.getName()), HttpStatus.OK);
+		Task updatedTask = taskService.updateTask(task, getPrinciple(p).getName());
+		if (updatedTask != null) {
+			return new ResponseEntity<>(updatedTask, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
 	}
-	@DeleteMapping("/Tasks/{id}")
-	 Task deleteTask(@PathVariable Long id) {
-	     return taskService.deleteTask(id);
+	@DeleteMapping("/task/{id}")
+	public ResponseEntity<Task> deleteTask(@PathVariable Long id, Principal p) {
+		Task task = taskService.getTask(id);
+		if (task == null || !getPrinciple(p).getName().equals(task.getUserName())) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<>(taskService.deleteTask(id), HttpStatus.OK);
 	 }
-	  
+
+	 private Principal getPrinciple(Principal p) {
+		return p != null ? p : SecurityContextHolder.getContext().getAuthentication();
+	 }
 }
