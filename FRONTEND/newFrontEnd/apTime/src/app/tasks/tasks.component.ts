@@ -247,18 +247,18 @@ export class EditTaskDialog {
 
   onYesClick(): void {
 
-    this.scheduledStart = this.dateConversion(this.data.ssTime, this.data.ssDate)
-    this.scheduledEnd = this.dateConversion(this.data.seTime, this.data.seDate)
-    this.actualStart = this.dateConversion(this.data.asTime, this.data.asDate)
-    this.actualEnd = this.dateConversion(this.data.aeTime, this.data.aeDate)
+    this.scheduledStart = this.dateConversion(this.task.ssTime, this.task.ssDate)
+    this.scheduledEnd = this.dateConversion(this.task.seTime, this.task.seDate)
+    this.actualStart = this.dateConversion(this.task.asTime, this.task.asDate)
+    this.actualEnd = this.dateConversion(this.task.aeTime, this.task.aeDate)
 
     const headers = { 'Authorization': 'Bearer ' + this.sessionService.getToken()}
 
     const body = { 
-    id: this.data.id,
-    name: this.data.name,
-    description: this.data.description,
-    category: this.data.category,
+    id: this.task.id,
+    name: this.task.name,
+    description: this.task.description,
+    category: this.task.category,
     scheduledstart: this.scheduledStart,
     scheduledend: this.scheduledEnd,
     actualstart: this.actualStart,
@@ -301,9 +301,9 @@ export class EditTaskDialog {
   ngOnInit() {
     this.showActuals = false;
     this.id = this.data.id;
-    this.task = this.data;
+    this.task = this.data.task;
 
-    console.log("The id: ", this.data);
+    console.log("The task: ", this.task);
 
   }
 
