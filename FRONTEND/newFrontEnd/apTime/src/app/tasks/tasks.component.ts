@@ -20,6 +20,7 @@ export interface DialogData {
   number: string;
   id: number;
   token: string;
+  task: any;
 }
 
 @Component({
