@@ -1,33 +1,46 @@
-import { Component, OnInit } from "@angular/core";
-import { ReactiveFormsModule } from "@angular/forms";
-import { Category } from "./Category";
-import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { Location } from "@angular/common";
-import { CategoryService } from "../../services/category.service";
-
+import { Component, OnInit } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { Category } from './Category';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Location } from '@angular/common';
+import { CategoryService } from '../services/category.service';
+import { HttpClient } from '@angular/common/http';
+import { AmplifyService } from 'aws-amplify-angular';
+import { HttpHeaders } from '@angular/common/http';
+import Auth from '@aws-amplify/auth';
+import { SessionService } from '../services/session.service';
 @Component({
-  selector: "app-task-category",
-  templateUrl: "./task-category.component.html",
-  styleUrls: ["./task-category.component.css"],
+  selector: 'app-task-category',
+  templateUrl: './task-category.component.html',
+  styleUrls: ['./task-category.component.css'],
   providers: [Location]
 })
 export class TaskCategoryComponent implements OnInit {
   public categoryForm: FormGroup;
   cat: Category;
   status: string;
-
-  constructor(private location: Location, private catSevice: CategoryService) {}
+  amplifyService: any;
+  canCreateTask = false;
+  headers = {
+    Authorization: 'Bearer'
+  };
+  token: string = '';
+  constructor(
+    private location: Location,
+    private catSevice: CategoryService,
+    private amplify: AmplifyService,
+    private http: HttpClient,
+    private sessionService: SessionService
+  ) {
+    this.amplifyService = amplify;
+    this.amplifyService.authStateChange$.subscribe(authState => {
+      this.canCreateTask = authState.state === 'signedIn';
+    });
+  }
 
   ngOnInit() {
     this.categoryForm = new FormGroup({
-      name: new FormControl("", [
-        Validators.required,
-        Validators.maxLength(80)
-      ]),
-      description: new FormControl("", [
-        Validators.required,
-        Validators.maxLength(100)
-      ])
+      name: new FormControl('', [Validators.required, Validators.maxLength(80)])
     });
   }
 
@@ -47,18 +60,27 @@ export class TaskCategoryComponent implements OnInit {
 
   private createCategoryOb = categoryFormValue => {
     this.cat = {
-      name: categoryFormValue.name,
-      description: categoryFormValue.description
+      name: categoryFormValue.name
+      // description: categoryFormValue.description
+    };
+    let jtoken = async () =>
+      (await Auth.currentSession()).getIdToken().getJwtToken();
+
+    console.log(jtoken);
+    let apiUrl = 'http://localhost/8001/category';
+    this.createCat(this.cat);
+  };
+  //create Category
+  public createCat = body => {
+    const headers = {
+      Authorization: 'Bearer ' + this.sessionService.getToken()
     };
 
-    let apiUrl = "localhost/8001/category";
-    this.catSevice.create(apiUrl, this.cat).subscribe(
-      res => {
-        this.status = "success";
-      },
-      error => {
-        this.status = "failed";
-      }
-    );
+    this.http
+      .post('http://localhost:8001/category', body, { headers })
+      .subscribe({
+        next: data => console.log(data),
+        error: error => console.error('There was an error!', error)
+      });
   };
 }

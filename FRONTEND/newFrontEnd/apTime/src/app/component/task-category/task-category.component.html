@@ -32,23 +32,6 @@
             >less than 80 characters</mat-error
           >
         </mat-form-field>
-
-        <mat-form-field>
-          <input
-            matInput
-            type="text"
-            placeholder="category description"
-            formControlName="description"
-            name="description"
-          />
-          <mat-hint align="end">Not more then 100 characters long.</mat-hint>
-          <mat-error *ngIf="hasError('description', 'required')"
-            >description is required</mat-error
-          >
-          <mat-error *ngIf="hasError('description', 'maxlength')"
-            >Please input less chars</mat-error
-          >
-        </mat-form-field>
       </mat-card-content>
       <mat-card-actions align="center">
         <button
