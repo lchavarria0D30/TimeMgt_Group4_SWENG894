@@ -36,10 +36,11 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 
 
-import { DialogOverviewExampleDialog } from './tasks/tasks.component';
+import { CreateTaskDialog } from './tasks/tasks.component';
 import { ConfirmDeleteDialog } from './tasks/tasks.component';
 import { EditTaskDialog } from './tasks/tasks.component';
 import { TaskCategoryComponent } from './task-category/task-category.component';
+
 
 @NgModule({
   declarations: [
@@ -49,7 +50,7 @@ import { TaskCategoryComponent } from './task-category/task-category.component';
     SecureComponent,
     HomeComponent,
     TasksComponent,
-    DialogOverviewExampleDialog,
+    CreateTaskDialog,
     ConfirmDeleteDialog,
     EditTaskDialog,
     TaskCategoryComponent
@@ -68,7 +69,7 @@ import { TaskCategoryComponent } from './task-category/task-category.component';
   ],
   bootstrap: [AppComponent],
   entryComponents: [
-  DialogOverviewExampleDialog, 
+  CreateTaskDialog, 
   ConfirmDeleteDialog,
   EditTaskDialog
   ]
