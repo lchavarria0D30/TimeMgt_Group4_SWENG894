@@ -1,0 +1,38 @@
+Guidelines for use of GitHub Repository
+
+Guide 1:
+Team members are responsible to maintain their own branches locally and ensure any uploads (pushes) to their branch is made 
+when they are ready to upload their files.
+
+Guide 2:
+Team members must provide at a minimum a header on their file for identification of the file before creating a PULL REQUEST
+to the TestMaster branch.
+  The header must contain at a minimum the following:
+    1. Author(s) Name:
+    2. Created Date:
+    3. Use Case Implementation (including Jira ID):
+    
+Guide 3:
+Team members will ensure that they upload their files to their individual branches only. 
+
+Guide 4:
+Team members will create a PULL REQUEST to the TestMaster branch once they 
+  1. Tested and ran their code locally
+  2. Performed static analysis on their code
+
+Guide 5:
+  The PULL REQUEST to the TestMaster branch should contain the following: 
+  1. Title that generically specifies the change.
+  2. Description listing the Use Case Title with Jira ID and the Jira ID for all associated subtasks
+  3. Include instructions if running software is different than previous software.  Instructions should include: 
+    3.1. Tools used
+    3.2. GIT or other tool Commands required
+    3.3. Specific download of software 
+    3.4. Any details needed in order to run the application
+    
+Guide 6:
+  A peer review of the PULL REQUEST needs to be performed.
+   
+Guide 7: 
+  Once the peer review is completed, the GitHub Manager will merge the team members PULL REQUEST to the TestMaster.
+  
