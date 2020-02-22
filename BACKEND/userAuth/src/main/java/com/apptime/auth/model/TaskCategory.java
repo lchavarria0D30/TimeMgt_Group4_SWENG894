@@ -14,15 +14,14 @@ public class TaskCategory {
     @Id
     @GeneratedValue
     private int id;
-    @ManyToOne
-    private Users owner;
+    private String owner;
     private String name;
     private boolean isPublic;
 
     public TaskCategory() {
     }
 
-    public TaskCategory(String name, Users owner, boolean isPublic) {
+    public TaskCategory(String name, String owner, boolean isPublic) {
         this.owner = owner;
         this.name = name;
         this.isPublic = isPublic;
@@ -36,11 +35,11 @@ public class TaskCategory {
         this.id = id;
     }
 
-    public Users getOwner() {
+    public String getOwner() {
         return owner;
     }
 
-    public void setOwner(Users owner) {
+    public void setOwner(String owner) {
         this.owner = owner;
     }
 
