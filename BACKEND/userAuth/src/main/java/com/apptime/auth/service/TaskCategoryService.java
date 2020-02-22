@@ -10,7 +10,7 @@ import java.util.Collection;
  * The service interface for Category
  */
 public interface TaskCategoryService {
-    TaskCategory createCategory(String name, Users owner, boolean isPublic);
-    Collection<TaskCategory> getCategoriesByOwner(Users owner);
+    TaskCategory createCategory(String name, String owner, boolean isPublic);
+    Collection<TaskCategory> getCategoriesByOwner(String owner);
     Collection<TaskCategory> getAllPublicCategories();
 }

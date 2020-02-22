@@ -1,10 +1,7 @@
 package com.apptime.auth.controller;
 
-import com.apptime.auth.model.Roles;
 import com.apptime.auth.model.TaskCategory;
-import com.apptime.auth.model.Users;
 import com.apptime.auth.model.to.Category;
-import com.apptime.auth.repository.UserRepository;
 import com.apptime.auth.service.TaskCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,10 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-import java.security.Principal;
 import java.util.Collection;
-import java.util.stream.Collectors;
 
 /**
  * @author Qi Zhang
@@ -37,9 +31,6 @@ public class TaskCategoryController {
     @Autowired
     private TaskCategoryService categoryService;
 
-    @Autowired
-    private UserRepository userRepository;
-
     @PostMapping
     public ResponseEntity<Category> createPrivateCategories(@RequestBody Category category, Authentication authentication) {
         if (authentication == null) {
@@ -50,8 +41,7 @@ public class TaskCategoryController {
         }
 
         String username = authentication.getName();
-        Users user = userRepository.findByUsername(username);
-        if (user == null) {
+        if (username == null) {
             // wrong username
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
@@ -64,7 +54,7 @@ public class TaskCategoryController {
         if (name == null || name.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        TaskCategory createdCategory = categoryService.createCategory(name, user, false);
+        TaskCategory createdCategory = categoryService.createCategory(name, username, false);
         if (createdCategory != null) {
             return new ResponseEntity<>(Category.parse(createdCategory), HttpStatus.CREATED);
         } else {
@@ -83,13 +73,12 @@ public class TaskCategoryController {
         }
 
         String username = authentication.getName();
-        Users user = userRepository.findByUsername(username);
-        if (user == null) {
+        if (username == null) {
             // wrong username
             return buildErrorResponse(HttpStatus.UNAUTHORIZED);
         }
 
-        Collection<TaskCategory> categories = categoryService.getCategoriesByOwner(user);
+        Collection<TaskCategory> categories = categoryService.getCategoriesByOwner(username);
         return new ResponseEntity<>(Category.parse(categories), HttpStatus.OK);
     }
 
@@ -103,8 +92,7 @@ public class TaskCategoryController {
         }
 
         String username = authentication.getName();
-        Users user = userRepository.findByUsername(username);
-        if (user == null) {
+        if (username == null) {
             // wrong username
             return buildErrorResponse(HttpStatus.UNAUTHORIZED);
         }
@@ -121,8 +109,7 @@ public class TaskCategoryController {
         }
 
         String username = authentication.getName();
-        Users user = userRepository.findByUsername(username);
-        if (user == null) {
+        if (username == null) {
             // wrong username
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
@@ -135,7 +122,7 @@ public class TaskCategoryController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        TaskCategory createdCategory = categoryService.createCategory(category.getName(), user, true);
+        TaskCategory createdCategory = categoryService.createCategory(category.getName(), username, true);
         if (createdCategory == null) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
