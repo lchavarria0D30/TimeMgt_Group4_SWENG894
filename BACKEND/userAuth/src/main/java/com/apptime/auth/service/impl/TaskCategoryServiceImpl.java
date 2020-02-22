@@ -21,7 +21,7 @@ public class TaskCategoryServiceImpl implements TaskCategoryService {
     TaskCategoryRepository taskCategoryRepository;
 
     @Override
-    public TaskCategory createCategory(String name, Users owner, boolean isPublic) {
+    public TaskCategory createCategory(String name, String owner, boolean isPublic) {
         if (name == null || owner == null) {
             return null;
         }
@@ -44,7 +44,7 @@ public class TaskCategoryServiceImpl implements TaskCategoryService {
     }
 
     @Override
-    public Collection<TaskCategory> getCategoriesByOwner(Users owner) {
+    public Collection<TaskCategory> getCategoriesByOwner(String owner) {
         if (owner == null) {
             return Collections.emptyList();
         }

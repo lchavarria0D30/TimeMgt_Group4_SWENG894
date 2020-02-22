@@ -54,13 +54,7 @@ public class TaskCategoryControllerTest {
     private MockMvc mockMvc;
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
     private TaskCategoryRepository categoryRepository;
-
-    @Autowired
-    private FilterChainProxy filterChainProxy;
 
     @Autowired
     private WebApplicationContext context;
@@ -72,33 +66,12 @@ public class TaskCategoryControllerTest {
     public void init() {
         MockitoAnnotations.initMocks(this);
         categoryRepository.deleteAll();
-        userRepository.deleteAll();
-        createUser(USERNAME);
-        createAdminUser(ADMIN_USERNAME);
         mockMvc = MockMvcBuilders
                 .webAppContextSetup(context)
                 .build();
 
         securityContext = mock(SecurityContext.class);
         SecurityContextHolder.setContext(securityContext);
-    }
-
-    private void createUser(String username) {
-        String password = UUID.randomUUID().toString();
-        Users user = new Users();
-        user.setUsername(username);
-        userRepository.save(user);
-    }
-
-    private void createAdminUser(String username) {
-        String password = UUID.randomUUID().toString();
-        Users user = new Users();
-        user.setUsername(username);
-        Roles userRole = new Roles();
-        userRole.setRole("USER");
-        Roles adminRole = new Roles();
-        adminRole.setRole("ADMIN");
-        userRepository.save(user);
     }
 
     private void mockAuthentication() {
