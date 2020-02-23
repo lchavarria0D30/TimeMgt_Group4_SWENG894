@@ -1,7 +1,7 @@
 
 <mat-toolbar color="primary" style="width:100%;">
   <mat-toolbar-row>
-    <h1 mat-dialog-title>Edit Task {{task.name}}</h1>
+    <h1 mat-dialog-title>Edit Task "{{task.name}}"</h1>
 	<span class="example-spacer"></span>
 	<button mat-button  (click)="onNoClick()">
 		<mat-icon class="example-icon" aria-hidden="false" aria-label="Example user verified icon">close</mat-icon>
@@ -19,7 +19,7 @@
 
   <mat-form-field>
     <mat-label>Category</mat-label>
-    <input matInput [(ngModel)]="task.scheduledstart" name="taskCat">
+    <input matInput [(ngModel)]="task.category" name="taskCat">
   </mat-form-field>
 
   <mat-form-field>
@@ -34,7 +34,7 @@
   	<div fxFlex="">
 	  <mat-form-field>
 		  <mat-label>Start date</mat-label>
-		  <input matInput [matDatepicker]="picker1" [(ngModel)]="task.ssDate" name="taskSDate">
+		  <input matInput [matDatepicker]="picker1" [(ngModel)]="task.scheduledstart" name="taskSDate">
 		  <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
 		  <mat-datepicker #picker1></mat-datepicker>
 		</mat-form-field>

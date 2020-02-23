@@ -34,19 +34,7 @@ export class TasksComponent implements OnInit {
   token;
 
   ngOnInit() {
-    this.token = this.sessionService.getToken();
-    console.log("EL token: " + this.token)
-
-    const headers = { 'Authorization': 'Bearer ' + this.token
-     }
-    //console.log(headers);
-
-    this.http.get('http://localhost:8001/tasks/', { headers }).subscribe({
-    next: data => this.tasks = data,
-    error: error => console.error('There was an error!', error)
-    })
-
-    //console.log(this.tasks);
+    this.getTasks();
 
   }
 
@@ -65,25 +53,24 @@ export class TasksComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The create dialog was closed');
-      console.log(result);
-      
+      this.getTasks();
     });
   }
 
-  openDeleteDialog(i: number): void {
-    
-    console.log();
+  openDeleteDialog(i: number, name: string): void {
+ 
     const dialogRef = this.dialog.open(
     ConfirmDeleteDialog, {
       //width: '250px',
       data: {
-      id: i
+      id: i,
+      name: name
       }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The delete dialog was closed');
-      //this.animal = result;
+      this.getTasks();
     });
   }
 
@@ -98,11 +85,21 @@ export class TasksComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The edit dialog was closed');
-      console.log(result);
-      //this.animal = result;
+      this.getTasks();
     });
   }
 
+  getTasks(): void {
+      this.token = this.sessionService.getToken();
+
+      const headers = { 'Authorization': 'Bearer ' + this.token
+       }
+
+      this.http.get('http://localhost:8001/tasks/', { headers }).subscribe({
+      next: data => this.tasks = data,
+      error: error => console.error('There was an error!', error)
+      })
+  }
 
 
 }
@@ -199,9 +196,10 @@ export class ConfirmDeleteDialog {
   }
 
   onYesClick(): void {
-    console.log("BEFORE delete");
+
     const headers = { 'Authorization': 'Bearer ' + this.sessionService.getToken()}
-    this.http.delete('http://localhost:8001/tasks/Tasks/' + this.data.id, { headers }).subscribe({
+
+    this.http.delete('http://localhost:8001/tasks/task/' + this.data.id, { headers }).subscribe({
     next: data => console.log(data),
     error: error => console.error('There was an error!', error)
     })
@@ -210,7 +208,7 @@ export class ConfirmDeleteDialog {
   }
 
   ngOnInit() {
-    this.id = this.data.id;
+    this.name = this.data.name;
   }
 
 }
@@ -285,7 +283,7 @@ export class EditTaskDialog {
   dateConversion(time: string, date: Date) : Date {
     var tempDate = date;
     var tempTime = time;
-    console.log("IN dateconversion");
+
     var parts = tempTime.match(/(\d+):(\d+) (AM|PM)/);
     if (parts) {
         var hours = parseInt(parts[1]),
@@ -303,6 +301,8 @@ export class EditTaskDialog {
     this.showActuals = false;
     this.id = this.data.id;
     this.task = this.data.task;
+    
+    //this.task.scheduledstart = new Date(this.task.scheduledstart)
 
     console.log("The task: ", this.task);
 

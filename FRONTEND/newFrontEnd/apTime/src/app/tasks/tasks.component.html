@@ -1,5 +1,4 @@
 <div>
-<p>tasks works!</p>
 </div>
 <div fxLayout="row wrap" fxLayout.xs="column wrap"  fxLayoutAlign="center center" fxLayoutGap="15px grid">
 	<!-- <div *ngFor="let number of [0,1,2,3,4,5,6,7,8,9]; let i = index"> --> 
@@ -15,40 +14,40 @@
 
 				  <div fxLayout="row" fxLayoutGap="15px">
 				  	<div fxFlex="">
-					    <mat-label>Start Date and Time</mat-label>
+					    <mat-label class="label-color">Start Date</mat-label>
 					</div>
-					<!-- <div fxFlex="">
-					    <mat-label>Start Time</mat-label>
-					</div> -->
+					<div fxFlex="">
+					    <mat-label class="label-color">Start Time</mat-label>
+					</div>
 				  </div>
 
 				  <div fxLayout="row" fxLayoutGap="15px">
 				  	<div fxFlex="">
-					    <mat-label>{{task.scheduledstart}}</mat-label>
+					    <mat-label>{{task.scheduledstart | date:'mediumDate'}}</mat-label>
 					</div>
-					<!-- <div fxFlex="">
-					    <mat-label>10:00PM</mat-label>
-					</div> -->
+					<div fxFlex="">
+					    <mat-label>{{task.scheduledstart | date:'shortTime'}}</mat-label>
+					</div>
 				  </div>
 
 				  <div><p></p></div>
 
 				  <div fxLayout="row" fxLayoutGap="15px">
 				  	<div fxFlex="">
-					    <mat-label>End Date/Time</mat-label>
+					    <mat-label class="label-color">End Date</mat-label>
 					</div>
-					<!-- <div fxFlex="">
-					    <mat-label>End Time</mat-label>
-					</div> -->
+					<div fxFlex="">
+					    <mat-label class="label-color">End Time</mat-label>
+					</div>
 				  </div>
 
 				  <div fxLayout="row" fxLayoutGap="15px">
 				  	<div fxFlex="">
-					    <mat-label>{{task.scheduledEndTime}}</mat-label>
+					    <mat-label>{{task.scheduledend | date:'mediumDate'}}</mat-label>
 					</div>
-					<!-- <div fxFlex="">
-					    <mat-label>10:00PM</mat-label>
-					</div> -->
+					<div fxFlex="">
+					    <mat-label>{{task.scheduledend | date:'mediumDate'}}</mat-label>
+					</div>
 				  </div>
 
 				</div>
@@ -60,7 +59,7 @@
 		    	<button mat-button>
 		    		<mat-icon>share</mat-icon>
 		    	</button>
-		    	<button mat-button (click)="openDeleteDialog(task.id)">
+		    	<button mat-button (click)="openDeleteDialog(task.id, task.name)">
 		    		<mat-icon>delete</mat-icon>
 		    	</button>
 		 	</mat-card-actions>

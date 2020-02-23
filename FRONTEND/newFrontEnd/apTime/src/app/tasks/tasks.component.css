@@ -9,3 +9,7 @@
   position: absolute;
   position:fixed !important;
 }
+
+.label-color {
+	color:#673AB7 !important;
+}
