@@ -3,7 +3,7 @@ import { ReactiveFormsModule } from "@angular/forms";
 import { Category } from "./Category";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { Location } from "@angular/common";
-import { CategoryService } from "../services/category.service";
+import { CategoryService } from "../../services/category.service";
 
 @Component({
   selector: "app-task-category",

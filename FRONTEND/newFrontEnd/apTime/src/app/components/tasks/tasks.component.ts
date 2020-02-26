@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { HttpClient } from '@angular/common/http';
-import { SessionService } from "../services/session.service";
+import { SessionService } from "../../services/session.service";
 import { HttpHeaders } from '@angular/common/http';
 
 
