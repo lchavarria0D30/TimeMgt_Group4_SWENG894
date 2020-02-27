@@ -1,7 +1,6 @@
 package com.apptime.auth.controller;
 
 import com.apptime.auth.model.Task;
-import com.apptime.auth.model.to.Category;
 import com.apptime.auth.repository.TaskRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -56,9 +55,6 @@ public class TaskManagerTest {
 
     private MockMvc mockMvc;
 
-    private Authentication authentication;
-    private SecurityContext securityContext;
-
     @BeforeEach
     public void init() {
         MockitoAnnotations.initMocks(this);
@@ -68,9 +64,9 @@ public class TaskManagerTest {
                 .webAppContextSetup(context)
                 .build();
 
-        securityContext = mock(SecurityContext.class);
+        SecurityContext securityContext = mock(SecurityContext.class);
         SecurityContextHolder.setContext(securityContext);
-        authentication = mock(Authentication.class);
+        Authentication authentication = mock(Authentication.class);
         when(authentication.getName()).thenReturn(USERNAME);
         when(securityContext.getAuthentication()).thenReturn(authentication);
     }
@@ -116,14 +112,14 @@ public class TaskManagerTest {
         return task;
     }
 
+    @SuppressWarnings("unchecked")
     private void verifyResultsWithName(ResultActions actions, int expectedSize, String unexpectedName, String... expectedNames) throws UnsupportedEncodingException, JsonProcessingException {
         MvcResult result = actions.andReturn();
         String content = result.getResponse().getContentAsString();
         ObjectMapper mapper = new ObjectMapper();
         List<Map<String, Object>> list = mapper.readValue(content, List.class);
         assertEquals(expectedSize, list.size());
-        for (Object obj : list) {
-            Map<String, Object> map = (Map<String, Object>) obj;
+        for (Map<String, Object> map : list) {
             String name = (String) map.get("name");
             if (unexpectedName != null) {
                 assertNotEquals(unexpectedName, name);
@@ -141,6 +137,7 @@ public class TaskManagerTest {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void testGetTask() throws Exception {
         Task task = createTask();
         ResultActions actions = mockMvc.perform(MockMvcRequestBuilders.get("/tasks/task/" + task.getId())
@@ -169,6 +166,7 @@ public class TaskManagerTest {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void testUpdateTask() throws Exception {
         Task task = createTask();
 
@@ -212,6 +210,7 @@ public class TaskManagerTest {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void testCreateTask() throws Exception {
         Task request = new Task();
         String name = UUID.randomUUID().toString();
@@ -237,6 +236,7 @@ public class TaskManagerTest {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void testDeleteTask() throws Exception {
         Task task = createTask();
         ResultActions actions = mockMvc.perform(MockMvcRequestBuilders.delete("/tasks/task/" + task.getId())
