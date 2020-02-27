@@ -1,11 +1,8 @@
 package com.apptime.auth.controller;
 
-import com.apptime.auth.model.Roles;
 import com.apptime.auth.model.TaskCategory;
-import com.apptime.auth.model.Users;
 import com.apptime.auth.model.to.Category;
 import com.apptime.auth.repository.TaskCategoryRepository;
-import com.apptime.auth.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,7 +16,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.FilterChainProxy;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
@@ -59,7 +55,6 @@ public class TaskCategoryControllerTest {
     @Autowired
     private WebApplicationContext context;
 
-    private Authentication authentication;
     private SecurityContext securityContext;
 
     @BeforeEach
@@ -75,7 +70,7 @@ public class TaskCategoryControllerTest {
     }
 
     private void mockAuthentication() {
-        authentication = mock(Authentication.class);
+        Authentication authentication = mock(Authentication.class);
         when(authentication.getName()).thenReturn(USERNAME);
         mockAuthentication(authentication);
     }
@@ -85,6 +80,7 @@ public class TaskCategoryControllerTest {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void testCreatePrivateCategory() throws Exception {
         mockAuthentication();
 
@@ -131,10 +127,9 @@ public class TaskCategoryControllerTest {
         MvcResult result = actions.andReturn();
         String content = result.getResponse().getContentAsString();
         ObjectMapper mapper = new ObjectMapper();
-        List list = mapper.readValue(content, List.class);
+        List<Map<String, Object>> list = mapper.readValue(content, List.class);
         assertEquals(2, list.size());
-        for (Object obj : list) {
-            Map<String, Object> map = (Map<String, Object>) obj;
+        for (Map<String, Object> map : list) {
             String cname = (String) map.get("name");
             boolean isPublic = (Boolean) map.get("public");
             assertTrue(cname.equals(name) || cname.equals(name2));
@@ -143,6 +138,7 @@ public class TaskCategoryControllerTest {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void testCreatePublicCategory() throws Exception {
         Authentication authentication = new Authentication() {
             @Override
@@ -228,10 +224,9 @@ public class TaskCategoryControllerTest {
         MvcResult result = actions.andReturn();
         String content = result.getResponse().getContentAsString();
         ObjectMapper mapper = new ObjectMapper();
-        List list = mapper.readValue(content, List.class);
+        List<Map<String, Object>> list = mapper.readValue(content, List.class);
         assertEquals(2, list.size());
-        for (Object obj : list) {
-            Map<String, Object> map = (Map<String, Object>) obj;
+        for (Map<String, Object> map : list) {
             String cname = (String) map.get("name");
             boolean isPublic = (Boolean) map.get("public");
             assertTrue(cname.equals(name) || cname.equals(name2));
@@ -287,8 +282,7 @@ public class TaskCategoryControllerTest {
         content = result.getResponse().getContentAsString();
         list = mapper.readValue(content, List.class);
         assertEquals(2, list.size());
-        for (Object obj : list) {
-            Map<String, Object> map = (Map<String, Object>) obj;
+        for (Map<String, Object> map : list) {
             String cname = (String) map.get("name");
             boolean isPublic = (Boolean) map.get("public");
             assertTrue(cname.equals(name) || cname.equals(name2));
