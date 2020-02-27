@@ -3,7 +3,7 @@ import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog
 import { HttpClient } from '@angular/common/http';
 import { SessionService } from "../../services/session.service";
 import { HttpHeaders } from '@angular/common/http';
-
+import { Validators, FormBuilder, FormGroup, FormControl } from '@angular/forms';
 
 export interface DialogData {
   name: string;
@@ -32,6 +32,7 @@ export class TasksComponent implements OnInit {
 
   tasks;
   token;
+
 
   ngOnInit() {
     this.getTasks();
@@ -113,6 +114,29 @@ export class CreateTaskDialog {
 
   scheduledStart;
   scheduledEnd;
+  timeRegex = /^(?:(?:1[0-2]|0?[1-9]):[0-5]\d\s*[AaPp][Mm])?$/;
+
+  nameFormControl = new FormControl('', [
+    Validators.required
+  ]);
+
+  sDateFormControl = new FormControl('', [
+    Validators.required
+  ]);
+
+  eDateFormControl = new FormControl('', [
+    Validators.required
+  ]);
+
+  sTimeFormControl = new FormControl('', [
+    Validators.required,
+    Validators.pattern(this.timeRegex)
+  ]);
+
+  eTimeFormControl = new FormControl('', [
+    Validators.required,
+    Validators.pattern(this.timeRegex)
+  ]);
 
   constructor(
     public dialogRef: MatDialogRef<CreateTaskDialog>,
