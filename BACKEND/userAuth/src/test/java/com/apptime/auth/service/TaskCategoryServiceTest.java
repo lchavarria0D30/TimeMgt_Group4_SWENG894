@@ -2,7 +2,6 @@ package com.apptime.auth.service;
 
 import com.apptime.auth.model.TaskCategory;
 import com.apptime.auth.repository.TaskCategoryRepository;
-import com.apptime.auth.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -14,12 +14,4 @@ public class JsonUtil {
             throw new RuntimeException(e);
         }
     }
-
-    public static <T> T parseJson(final String str, T obj) {
-        try {
-            return (T) new ObjectMapper().readValue("{'name' : 'mkyong'}", obj.getClass());
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
 }
