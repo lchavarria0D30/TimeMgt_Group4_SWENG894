@@ -32,6 +32,14 @@
             >less than 80 characters</mat-error
           >
         </mat-form-field>
+        <br />
+        <mat-checkbox
+          name="isPublic"
+          formControlName="isPublic"
+          id="isPublic"
+          [(ngModel)]="isPublic"
+          >public</mat-checkbox
+        >
       </mat-card-content>
       <mat-card-actions align="center">
         <button
