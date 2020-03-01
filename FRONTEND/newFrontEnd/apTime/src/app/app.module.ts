@@ -1,20 +1,19 @@
-import { BrowserModule } from "@angular/platform-browser";
-import { NgModule } from "@angular/core";
-import { AppRoutingModule } from "./app-routing.module";
-import { AppComponent } from "./app.component";
-import { AuthComponent } from "./components/auth/auth.component";
-import { ProfileComponent } from "./components/profile/profile.component";
-import { SecureComponent } from "./components/secure/secure.component";
-import { HomeComponent } from "./components/home/home.component";
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+import { AppRoutingModule } from './app-routing.module';
+import { AppComponent } from './app.component';
+import { AuthComponent } from './components/auth/auth.component';
+import { ProfileComponent } from './components/profile/profile.component';
+import { SecureComponent } from './components/secure/secure.component';
+import { HomeComponent } from './components/home/home.component';
 import { TasksComponent } from './components/tasks/tasks.component';
 
 
-import { AmplifyAngularModule, AmplifyService } from "aws-amplify-angular";
+import { AmplifyAngularModule, AmplifyService } from 'aws-amplify-angular';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-//import UI from "@aws-amplify/ui";
 import { HttpClientModule } from '@angular/common/http';
 import { Validators, FormBuilder, FormGroup, FormControl } from '@angular/forms';
-import { CustomMaterialModule } from "./modules/material.module";
+import { CustomMaterialModule } from './modules/material.module';
 
 
 import {MatMenuModule} from '@angular/material/menu';
@@ -43,9 +42,9 @@ import { TaskCategoryComponent } from './components/task-category/task-category.
     EditTaskDialog,
     TaskCategoryComponent
   ],
-  imports: [BrowserModule, 
-  AppRoutingModule, 
-  AmplifyAngularModule, 
+  imports: [BrowserModule,
+  AppRoutingModule,
+  AmplifyAngularModule,
   BrowserAnimationsModule,
   FlexLayoutModule,
   HttpClientModule,
@@ -57,7 +56,7 @@ import { TaskCategoryComponent } from './components/task-category/task-category.
   ],
   bootstrap: [AppComponent],
   entryComponents: [
-  CreateTaskDialog, 
+  CreateTaskDialog,
   ConfirmDeleteDialog,
   EditTaskDialog
   ]

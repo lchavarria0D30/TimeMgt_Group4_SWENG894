@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { HttpClient } from '@angular/common/http';
-import { SessionService } from "../../services/session.service";
+import { SessionService } from '../../services/session.service';
 import { HttpHeaders } from '@angular/common/http';
 import { Validators, FormBuilder, FormGroup, FormControl } from '@angular/forms';
 
@@ -39,14 +39,13 @@ export class TasksComponent implements OnInit {
 
   }
 
-  //number = "1";
   constructor(public dialog: MatDialog, private http: HttpClient,
-  private sessionService: SessionService ) {}
+              private sessionService: SessionService ) {}
 
   openDialog(): void {
     const dialogRef = this.dialog.open(
     CreateTaskDialog, {
-      //width: '250px',
+      // width: '250px',
       data: {
       token: this.token
       }
@@ -59,13 +58,13 @@ export class TasksComponent implements OnInit {
   }
 
   openDeleteDialog(i: number, name: string): void {
- 
+
     const dialogRef = this.dialog.open(
     ConfirmDeleteDialog, {
-      //width: '250px',
+      // width: '250px',
       data: {
       id: i,
-      name: name
+      name
       }
     });
 
@@ -93,13 +92,13 @@ export class TasksComponent implements OnInit {
   getTasks(): void {
       this.token = this.sessionService.getToken();
 
-      const headers = { 'Authorization': 'Bearer ' + this.token
-       }
+      const headers = { Authorization: 'Bearer ' + this.token
+       };
 
       this.http.get('http://localhost:8001/tasks/', { headers }).subscribe({
       next: data => this.tasks = data,
       error: error => console.error('There was an error!', error)
-      })
+      });
   }
 
 
@@ -149,42 +148,42 @@ export class CreateTaskDialog {
   }
 
   onYesClick(): void {
-  
-    this.scheduledStart = this.dateConversion(this.data.ssTime, this.data.ssDate)
-    this.scheduledEnd = this.dateConversion(this.data.seTime, this.data.seDate)
+
+    this.scheduledStart = this.dateConversion(this.data.ssTime, this.data.ssDate);
+    this.scheduledEnd = this.dateConversion(this.data.seTime, this.data.seDate);
 
     console.log(this.scheduledStart);
     console.log(this.scheduledEnd);
-    console.log("Before POST");
+    console.log('Before POST');
 
-    const headers = { 'Authorization': 'Bearer ' + this.sessionService.getToken()}
+    const headers = { Authorization: 'Bearer ' + this.sessionService.getToken()};
 
     const body = { name: this.data.name,
     description: this.data.description,
     category: this.data.category,
     scheduledstart: this.scheduledStart,
     scheduledend: this.scheduledEnd,
-     }
+     };
 
     this.http.post('http://localhost:8001/tasks/newtask', body, { headers }).subscribe({
     next: data => console.log(data),
     error: error => console.error('There was an error!', error)
-    })
+    });
 
 
     this.dialogRef.close();
   }
 
-  dateConversion(time: string, date: Date) : Date {
-    var tempDate = date;
-    var tempTime = time;
-    console.log("IN dateconversion");
-    var parts = tempTime.match(/(\d+):(\d+) (AM|PM)/);
+  dateConversion(time: string, date: Date): Date {
+    let tempDate = date;
+    let tempTime = time;
+    console.log('IN dateconversion');
+    let parts = tempTime.match(/(\d+):(\d+) (AM|PM)/);
     if (parts) {
-        var hours = parseInt(parts[1]),
+        let hours = parseInt(parts[1]),
             minutes = parseInt(parts[2]),
             tt = parts[3];
-        if (tt === 'PM' && hours < 12) hours += 12;
+        if (tt === 'PM' && hours < 12) { hours += 12; }
         date.setHours(hours, minutes, 0, 0);
     }
 
@@ -221,12 +220,12 @@ export class ConfirmDeleteDialog {
 
   onYesClick(): void {
 
-    const headers = { 'Authorization': 'Bearer ' + this.sessionService.getToken()}
+    const headers = { Authorization: 'Bearer ' + this.sessionService.getToken()};
 
     this.http.delete('http://localhost:8001/tasks/task/' + this.data.id, { headers }).subscribe({
     next: data => console.log(data),
     error: error => console.error('There was an error!', error)
-    })
+    });
 
     this.dialogRef.close();
   }
@@ -270,14 +269,14 @@ export class EditTaskDialog {
 
   onYesClick(): void {
 
-    this.scheduledStart = this.dateConversion(this.task.ssTime, this.task.ssDate)
-    this.scheduledEnd = this.dateConversion(this.task.seTime, this.task.seDate)
-    this.actualStart = this.dateConversion(this.task.asTime, this.task.asDate)
-    this.actualEnd = this.dateConversion(this.task.aeTime, this.task.aeDate)
+    this.scheduledStart = this.dateConversion(this.task.ssTime, this.task.ssDate);
+    this.scheduledEnd = this.dateConversion(this.task.seTime, this.task.seDate);
+    this.actualStart = this.dateConversion(this.task.asTime, this.task.asDate);
+    this.actualEnd = this.dateConversion(this.task.aeTime, this.task.aeDate);
 
-    const headers = { 'Authorization': 'Bearer ' + this.sessionService.getToken()}
+    const headers = { Authorization: 'Bearer ' + this.sessionService.getToken()};
 
-    const body = { 
+    const body = {
     id: this.task.id,
     name: this.task.name,
     description: this.task.description,
@@ -287,13 +286,13 @@ export class EditTaskDialog {
     actualstart: this.actualStart,
     actualend: this.actualEnd
 
-     }
+     };
 
-    console.log("BEFORE put");
+    console.log('BEFORE put');
     this.http.put('http://localhost:8001/tasks/task', body, { headers }).subscribe({
     next: data => console.log(data),
     error: error => console.error('There was an error!', error)
-    })
+    });
 
 
     this.dialogRef.close();
@@ -301,19 +300,19 @@ export class EditTaskDialog {
 
   onActualsClick(): void {
     this.showActuals = true;
-    console.log("Actual click");
+    console.log('Actual click');
   }
 
-  dateConversion(time: string, date: Date) : Date {
-    var tempDate = date;
-    var tempTime = time;
+  dateConversion(time: string, date: Date): Date {
+    let tempDate = date;
+    let tempTime = time;
 
-    var parts = tempTime.match(/(\d+):(\d+) (AM|PM)/);
+    let parts = tempTime.match(/(\d+):(\d+) (AM|PM)/);
     if (parts) {
-        var hours = parseInt(parts[1]),
+        let hours = parseInt(parts[1]),
             minutes = parseInt(parts[2]),
             tt = parts[3];
-        if (tt === 'PM' && hours < 12) hours += 12;
+        if (tt === 'PM' && hours < 12) { hours += 12; }
         date.setHours(hours, minutes, 0, 0);
     }
 
@@ -325,10 +324,10 @@ export class EditTaskDialog {
     this.showActuals = false;
     this.id = this.data.id;
     this.task = this.data.task;
-    
-    //this.task.scheduledstart = new Date(this.task.scheduledstart)
 
-    console.log("The task: ", this.task);
+    // this.task.scheduledstart = new Date(this.task.scheduledstart)
+
+    console.log('The task: ', this.task);
 
   }
 

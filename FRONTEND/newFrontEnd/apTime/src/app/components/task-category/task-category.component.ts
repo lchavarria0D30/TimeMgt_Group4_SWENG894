@@ -1,14 +1,14 @@
-import { Component, OnInit } from "@angular/core";
-import { ReactiveFormsModule } from "@angular/forms";
-import { Category } from "./Category";
-import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { Location } from "@angular/common";
-import { CategoryService } from "../../services/category.service";
+import { Component, OnInit } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { Category } from './Category';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Location } from '@angular/common';
+import { CategoryService } from '../../services/category.service';
 
 @Component({
-  selector: "app-task-category",
-  templateUrl: "./task-category.component.html",
-  styleUrls: ["./task-category.component.css"],
+  selector: 'app-task-category',
+  templateUrl: './task-category.component.html',
+  styleUrls: ['./task-category.component.css'],
   providers: [Location]
 })
 export class TaskCategoryComponent implements OnInit {
@@ -20,11 +20,11 @@ export class TaskCategoryComponent implements OnInit {
 
   ngOnInit() {
     this.categoryForm = new FormGroup({
-      name: new FormControl("", [
+      name: new FormControl('', [
         Validators.required,
         Validators.maxLength(80)
       ]),
-      description: new FormControl("", [
+      description: new FormControl('', [
         Validators.required,
         Validators.maxLength(100)
       ])
@@ -33,17 +33,17 @@ export class TaskCategoryComponent implements OnInit {
 
   public hasError = (controlName: string, errorName: string) => {
     return this.categoryForm.controls[controlName].hasError(errorName);
-  };
+  }
 
   public onCancel = () => {
     this.location.back();
-  };
+  }
 
   public createCategory = categoryFormValue => {
     if (this.categoryForm.valid) {
       this.createCategoryOb(categoryFormValue);
     }
-  };
+  }
 
   private createCategoryOb = categoryFormValue => {
     this.cat = {
@@ -51,14 +51,14 @@ export class TaskCategoryComponent implements OnInit {
       description: categoryFormValue.description
     };
 
-    let apiUrl = "localhost/8001/category";
+    const apiUrl = 'localhost/8001/category';
     this.catSevice.create(apiUrl, this.cat).subscribe(
       res => {
-        this.status = "success";
+        this.status = 'success';
       },
       error => {
-        this.status = "failed";
+        this.status = 'failed';
       }
     );
-  };
+  }
 }
