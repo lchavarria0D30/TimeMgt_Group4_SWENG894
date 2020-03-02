@@ -9,6 +9,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.apptime.auth.model.ClientUser;
 
+/**
+ * @author Bashiir Mohamed
+ * This class is a placeholder for the admin apis
+ * This compartmentalized privilege requring admin tasks.
+ */
 @RestController
 @RequestMapping("/api/admin")
 @PreAuthorize("hasRole('ROLE_ADMIN')")

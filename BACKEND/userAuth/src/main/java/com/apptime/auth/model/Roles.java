@@ -4,6 +4,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
+/**
+ * @author Bashiir Current user roles
+ * this mapps to auth 2.0 claims.
+ */
 @Entity
 public class Roles {
 

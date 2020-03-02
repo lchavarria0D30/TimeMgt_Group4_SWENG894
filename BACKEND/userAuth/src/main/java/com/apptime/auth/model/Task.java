@@ -13,6 +13,10 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 
+/**
+ * @author Bashiir Mohamed
+ * This is the model that represent Task
+ */
 @Entity
 public class Task {
 
