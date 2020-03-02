@@ -114,7 +114,7 @@ public class TaskCategoryController {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
-        if (!checkRule(authentication, "ADMIN")) {
+        if (!checkRule(authentication, ADMIN_ROLE)) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
 
