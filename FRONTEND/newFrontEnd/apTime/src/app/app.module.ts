@@ -22,11 +22,10 @@ import {MatMenuModule} from '@angular/material/menu';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 
-
-import { CreateTaskDialog } from './components/tasks/tasks.component';
-import { ConfirmDeleteDialog } from './components/tasks/tasks.component';
-import { EditTaskDialog } from './components/tasks/tasks.component';
 import { TaskCategoryComponent } from './components/task-category/task-category.component';
+import { CreateTaskDialogComponent } from './components/create-task-dialog/create-task-dialog.component';
+import { DeleteTaskDialogComponent } from './components/delete-task-dialog/delete-task-dialog.component';
+import { EditTaskDialogComponent } from './components/edit-task-dialog/edit-task-dialog.component';
 
 
 @NgModule({
@@ -37,10 +36,10 @@ import { TaskCategoryComponent } from './components/task-category/task-category.
     SecureComponent,
     HomeComponent,
     TasksComponent,
-    CreateTaskDialog,
-    ConfirmDeleteDialog,
-    EditTaskDialog,
-    TaskCategoryComponent
+    TaskCategoryComponent,
+    CreateTaskDialogComponent,
+    DeleteTaskDialogComponent,
+    EditTaskDialogComponent
   ],
   imports: [BrowserModule,
   AppRoutingModule,
@@ -56,9 +55,9 @@ import { TaskCategoryComponent } from './components/task-category/task-category.
   ],
   bootstrap: [AppComponent],
   entryComponents: [
-  CreateTaskDialog,
-  ConfirmDeleteDialog,
-  EditTaskDialog
+  CreateTaskDialogComponent,
+    DeleteTaskDialogComponent,
+    EditTaskDialogComponent
   ]
 })
 export class AppModule {}
