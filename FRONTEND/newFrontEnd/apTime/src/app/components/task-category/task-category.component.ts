@@ -78,7 +78,6 @@ export class TaskCategoryComponent implements OnInit {
 
     this.createCat();
   };
-<<<<<<< HEAD:FRONTEND/newFrontEnd/apTime/src/app/component/task-category/task-category.component.ts
   //create Category
   public createCat = function() {
     const headers = {
@@ -132,6 +131,3 @@ export class TaskCategoryComponent implements OnInit {
     });
   }
 }
-=======
-}
->>>>>>> TestMaster:FRONTEND/newFrontEnd/apTime/src/app/components/task-category/task-category.component.ts
