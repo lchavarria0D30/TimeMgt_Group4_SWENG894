@@ -8,7 +8,7 @@ import { HttpClient } from '@angular/common/http';
 import { AmplifyService } from 'aws-amplify-angular';
 import { HttpHeaders } from '@angular/common/http';
 import Auth from '@aws-amplify/auth';
-import { SessionService } from '../services/session.service';
+import { SessionService } from '../../services/session.service';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { FlexAlignStyleBuilder } from '@angular/flex-layout';
 import { ActivatedRoute, Router } from '@angular/router';
