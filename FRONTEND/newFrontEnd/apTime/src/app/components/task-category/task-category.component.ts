@@ -3,7 +3,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { Category } from './Category';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Location } from '@angular/common';
-import { CategoryService } from '../services/category.service';
+import { CategoryService } from '../../services/category.service';
 import { HttpClient } from '@angular/common/http';
 import { AmplifyService } from 'aws-amplify-angular';
 import { HttpHeaders } from '@angular/common/http';
@@ -13,6 +13,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { FlexAlignStyleBuilder } from '@angular/flex-layout';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+
 @Component({
   selector: 'app-task-category',
   templateUrl: './task-category.component.html',
@@ -51,23 +52,25 @@ export class TaskCategoryComponent implements OnInit {
         Validators.required,
         Validators.maxLength(80)
       ]),
+
       isPublic: new FormControl(false, [])
+
     });
   }
 
   public hasError = (controlName: string, errorName: string) => {
     return this.categoryForm.controls[controlName].hasError(errorName);
-  };
+  }
 
   public onCancel = () => {
     this.location.back();
-  };
+  }
 
   public createCategory = categoryFormValue => {
     if (this.categoryForm.valid) {
       this.createCategoryOb(categoryFormValue);
     }
-  };
+  }
 
   private createCategoryOb = categoryFormValue => {
     this.cat = {
