@@ -44,7 +44,7 @@ public class TaskManager {
 	 * @throws ParseException json conversion Exception
 	 */
 	@GetMapping(value = "/")
-	public ResponseEntity<List<Task>> getTasks(Principal p) throws ParseException{
+	public ResponseEntity<List<Task>> getTasks(Principal p) {
 		String user = getPrinciple(p).getName();
 		List<Task> tasks = taskService.findUserTasks(user);
         return new ResponseEntity<List<Task>>(tasks, HttpStatus.OK);
@@ -59,7 +59,7 @@ public class TaskManager {
 	 * @throws ParseException json conversion Exception
 	 */
 	@GetMapping(value = "/task/{id}")
-	public ResponseEntity<Task> getTask(@PathVariable("id") int taskId, Principal p) throws ParseException{
+	public ResponseEntity<Task> getTask(@PathVariable("id") int taskId, Principal p) {
 		Task task = taskService.getTask(taskId);
 		if (task.getUserName().equals(getPrinciple(p).getName())) {
 			return new ResponseEntity<Task>(task, HttpStatus.OK);
