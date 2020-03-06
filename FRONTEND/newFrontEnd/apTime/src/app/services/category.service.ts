@@ -1,9 +1,9 @@
-import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
-import { Category } from "../task-category/Category";
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Category } from '../components/task-category/Category';
 
 @Injectable({
-  providedIn: "root"
+  providedIn: 'root'
 })
 export class CategoryService {
   constructor(private http: HttpClient) {}

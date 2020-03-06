@@ -1,3 +1,8 @@
 .header-text{
-	color: #FFFFFF;
+	color: #FFFFFF !important;
+	//font-color: #FFFFFF !important;
 }
+
+.mat-flat-button{
+   color: white !important;
+ }
