@@ -1,0 +1,78 @@
+<div>
+</div>
+<div fxLayout="row wrap" fxLayout.xs="column wrap"  fxLayoutAlign="center center" fxLayoutGap="15px grid">
+	<!-- <div *ngFor="let number of [0,1,2,3,4,5,6,7,8,9]; let i = index"> --> 
+	<div *ngFor="let task of tasks; let i = index">
+		
+		<mat-card>
+			<mat-card-header>
+		    	<mat-card-title>{{task.name}}</mat-card-title>
+		    	<mat-card-subtitle>{{task.description}}</mat-card-subtitle>
+		  	</mat-card-header>
+		  	<mat-card-content>
+		  		<div fxLayout="column">
+
+				  <div fxLayout="row" fxLayoutGap="15px">
+				  	<div fxFlex="">
+					    <mat-label class="label-color">Start Date</mat-label>
+					</div>
+					<div fxFlex="">
+					    <mat-label class="label-color">Start Time</mat-label>
+					</div>
+				  </div>
+
+				  <div fxLayout="row" fxLayoutGap="15px">
+				  	<div fxFlex="">
+					    <mat-label>{{task.scheduledstart | date:'mediumDate'}}</mat-label>
+					</div>
+					<div fxFlex="">
+					    <mat-label>{{task.scheduledstart | date:'shortTime'}}</mat-label>
+					</div>
+				  </div>
+
+				  <div><p></p></div>
+
+				  <div fxLayout="row" fxLayoutGap="15px">
+				  	<div fxFlex="">
+					    <mat-label class="label-color">End Date</mat-label>
+					</div>
+					<div fxFlex="">
+					    <mat-label class="label-color">End Time</mat-label>
+					</div>
+				  </div>
+
+				  <div fxLayout="row" fxLayoutGap="15px">
+				  	<div fxFlex="">
+					    <mat-label>{{task.scheduledend | date:'mediumDate'}}</mat-label>
+					</div>
+					<div fxFlex="">
+					    <mat-label>{{task.scheduledend | date:'mediumDate'}}</mat-label>
+					</div>
+				  </div>
+
+				</div>
+		  	</mat-card-content>
+		  	<mat-card-actions>
+		    	<button mat-button (click)="openEditDialog(task.id, i)">
+		    		<mat-icon>edit</mat-icon>
+		    	</button>
+		    	<button mat-button>
+		    		<mat-icon>share</mat-icon>
+		    	</button>
+		    	<button mat-button (click)="openDeleteDialog(task.id, task.name)">
+		    		<mat-icon>delete</mat-icon>
+		    	</button>
+		 	</mat-card-actions>
+
+		</mat-card>
+	</div>
+	<!--  <ul>
+      <li *ngFor="let number of [0,1,2,3,4]">{{number}}</li>
+    </ul> -->
+</div>
+
+<div>
+ <button mat-fab color="primary" aria-label="New task" (click)="openDialog()" class="custom-button">
+    <mat-icon class="header-text">add</mat-icon>
+ </button>
+</div>

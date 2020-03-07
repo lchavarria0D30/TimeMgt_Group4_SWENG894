@@ -11,8 +11,12 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,34 +26,102 @@ import com.apptime.auth.model.Task;
 import com.apptime.auth.model.Users;
 import com.apptime.auth.service.TaskManagerService;
 
+/**
+ * @author Bashiir Mohamed
+ * This class is the controller for task managment api for each use.
+ * it contains all funtionlity for managing taks.
+ */
 @RestController
 @RequestMapping(value = "/tasks")
 public class TaskManager {
 	@Autowired
 	TaskManagerService taskService;
-	@RequestMapping(value = "/")
-	public ResponseEntity<List> getTasks(Principal p) throws ParseException{
-		String user = p.getName();
-		List<Task> tasks = taskService.getTasks(user);
-        return new ResponseEntity<List>(tasks, HttpStatus.OK);
-	}
-	
-	@RequestMapping(value = "/task/{id}")
-	public ResponseEntity<Task> getTask(@PathVariable("id") int taskId, Principal p) throws ParseException{
-		String user = p.getName();
-		Task tasks = taskService.getTaskById(user,taskId);
-		//String sDate = "Thu, Dec 31 1998 23:37:50";  
-		// SimpleDateFormat formatter5=new SimpleDateFormat("E, MMM dd yyyy HH:mm:ss");  
-		// Date date=formatter5.parse(sDate);  
-		//List<Task> tasks = Arrays.asList(new Task("clean",date,5));
-        return new ResponseEntity<Task>(tasks, HttpStatus.OK);
-	}
-	
-	@PostMapping("/task")
-	public ResponseEntity<Task> signup(@RequestBody Task task, Principal p) {
-		String user = p.getName();
-		Task tasks = taskService.createTask(task,user);
-        return new ResponseEntity<Task>(tasks, HttpStatus.OK);
+
+	/**
+	 *
+	 * @param p the current authenticated user.
+	 * @return List of tasks owned by the user.
+	 * @throws ParseException json conversion Exception
+	 */
+	@GetMapping(value = "/")
+	public ResponseEntity<List<Task>> getTasks(Principal p) {
+		String user = getPrinciple(p).getName();
+		List<Task> tasks = taskService.findUserTasks(user);
+        return new ResponseEntity<List<Task>>(tasks, HttpStatus.OK);
 	}
 
+
+	/**
+	 *
+	 * @param taskId request task id.
+	 * @param p current authenticated user(principle)
+	 * @return single list with the given @id or @http.status.noFound.
+	 * @throws ParseException json conversion Exception
+	 */
+	@GetMapping(value = "/task/{id}")
+	public ResponseEntity<Task> getTask(@PathVariable("id") int taskId, Principal p) {
+		Task task = taskService.getTask(taskId);
+		if (task.getUserName().equals(getPrinciple(p).getName())) {
+			return new ResponseEntity<Task>(task, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+	}
+
+	/**
+	 *
+	 * @param task task data to be created
+	 * @param p current authenticated user(principle)
+	 * @return the currently created task
+	 */
+	@PostMapping("/newtask")
+	public ResponseEntity<Object> createTask(@RequestBody Task task, Principal p) {
+		String user = getPrinciple(p).getName();
+		if(taskService.getTask(task.getId())==null) {
+		Task result = taskService.createTask(task,user);
+        return new ResponseEntity<Object>(result, HttpStatus.OK);
+		} 
+		return new ResponseEntity<Object>("{status: didn't create }", HttpStatus.NOT_FOUND);
+	}
+
+	/**
+	 *
+	 * @param task the task to be updated.
+	 * @param p current authenticated user(principle)
+	 * @return returns the task that was updated
+	 */
+	@PutMapping("/task")
+	public ResponseEntity<Task> updateTask(@RequestBody Task task, Principal p) {
+		Task updatedTask = taskService.updateTask(task, getPrinciple(p).getName());
+		if (updatedTask != null) {
+			return new ResponseEntity<>(updatedTask, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+	}
+
+	/**
+	 *
+	 * @param id @id of the @task to be deleted.
+	 * @param p current authenticated user(principle)
+	 * @return returns the @ deleted task T where T.id = @id
+	 */
+	@DeleteMapping("/task/{id}")
+	public ResponseEntity<Task> deleteTask(@PathVariable Long id, Principal p) {
+		Task task = taskService.getTask(id);
+		if (task == null || !getPrinciple(p).getName().equals(task.getUserName())) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<>(taskService.deleteTask(id), HttpStatus.OK);
+	 }
+
+	/**
+	 *
+	 * @param p current authenticated user(principle)
+	 * @return rturns returns current authenticated user
+	 * this method is private
+	 */
+	 private Principal getPrinciple(Principal p) {
+		return p != null ? p : SecurityContextHolder.getContext().getAuthentication();
+	 }
 }
