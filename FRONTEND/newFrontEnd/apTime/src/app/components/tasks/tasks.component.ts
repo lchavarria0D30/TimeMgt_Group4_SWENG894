@@ -7,6 +7,7 @@ import { Validators, FormBuilder, FormGroup, FormControl } from '@angular/forms'
 import { CreateTaskDialogComponent } from '../create-task-dialog/create-task-dialog.component';
 import { DeleteTaskDialogComponent } from '../delete-task-dialog/delete-task-dialog.component';
 import { EditTaskDialogComponent } from '../edit-task-dialog/edit-task-dialog.component';
+import { StartTaskDialogComponent } from '../start-task-dialog/start-task-dialog.component';
 
 export interface DialogData {
   name: string;
@@ -92,6 +93,21 @@ export class TasksComponent implements OnInit {
     });
   }
 
+  openStartDialog(i: number, name: string): void {
+    const dialogRef = this.dialog.open(
+        StartTaskDialogComponent, {
+          data: {
+            id: i,
+            name
+          }
+        });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The start task dialog was closed');
+      this.getTasks();
+    });
+  }
+
   getTasks(): void {
       this.token = this.sessionService.getToken();
 
@@ -102,6 +118,18 @@ export class TasksComponent implements OnInit {
       next: data => this.tasks = data,
       error: error => console.error('There was an error!', error)
       });
+  }
+
+  startTask(i: number): void {
+    const headers = { Authorization: 'Bearer ' + this.sessionService.getToken()};
+
+    const body = { id: i
+    };
+
+    this.http.post('http://localhost:8001/tasks/start', body, { headers }).subscribe({
+      next: data => console.log(data),
+      error: error => console.error('There was an error!', error)
+    });
   }
 
 
