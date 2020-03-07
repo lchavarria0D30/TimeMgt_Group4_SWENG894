@@ -9,17 +9,29 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.R
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.jwk.JwkTokenStore;
 
-@EnableWebSecurity
+ /**
+  * @author Bashiir Mohamed
+  * This class configures spring security to use outh 2.0
+  * it autowires ResoucreServerProperties.
+  */
+ @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends ResourceServerConfigurerAdapter {
 
+   /**
+    *  Configuration properties for OAuth2 Resources.
+    */
   private final ResourceServerProperties resource;
 
   public SecurityConfig(ResourceServerProperties resource) {
-	  System.out.println(resource.getJwk());
     this.resource = resource;
   }
 
+   /**
+    *
+    * @param http configure http request to be routed through auth 2.0
+    * @throws Exception IOExeption related to request processing
+    */
   @Override
   public void configure(HttpSecurity http) throws Exception {
     http.cors();
@@ -33,6 +45,10 @@ public class SecurityConfig extends ResourceServerConfigurerAdapter {
         .authenticated();
   }
 
+   /**
+    *
+    * @return Returnes token converted to spring security authority
+    */
   @Bean
   public TokenStore jwkTokenStore() {
     return new JwkTokenStore(
