@@ -1,0 +1,18 @@
+<div *ngFor="let alert of notes" class="alert alert-success alert-dismissable">
+  <a mat-button class="close" (click)="removeNote(alert)">&times;</a>
+  <h5 class="mat-h2">{{ alert.message }}</h5>
+  <div class="example-button-row">
+    <button mat-raised-button color="primary">Primary</button>
+    <button mat-raised-button color="accent">Accent</button>
+  </div>
+</div>
+<mat-toolbar-row>
+  <span>Second Line</span>
+  <span class="example-spacer"></span>
+  <mat-icon
+    class="example-icon"
+    aria-hidden="false"
+    aria-label="Example user verified icon"
+    >verified_user</mat-icon
+  >
+</mat-toolbar-row>
