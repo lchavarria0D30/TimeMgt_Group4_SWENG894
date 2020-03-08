@@ -12,10 +12,14 @@ import java.util.List;
  */
 public interface NotificationService {
     String TYPE_FOR_TASK = "task";
+    String TYPE_FOR_EXCEEDED_TASK = "exceeded_task";
+
     String CONTENT_PATTERN_FOR_TASK = "The task (%s) should be started at %s.";
+    String CONTENT_PATTERN_FOR_EXCEEDED_TASK = "The task (%s) is overdue. It should be done at %s.";
 
     long SNOOZE_TIME_IN_MIL_SEC = (long) 1000 * 60 * 5;
     long REMIND_TIME_BEFORE_START_IN_MIL_SEC = (long) 1000 * 60 * 10;
+    long REMIND_TIME_AFTER_ESTEMITED_END_IN_MIL_SEC = (long) 1000 * 60 * 5;
 
     List<Notification> retrieveUndeliveredNotifications(String owner);
     boolean snoozeNotification(int id, String owner);

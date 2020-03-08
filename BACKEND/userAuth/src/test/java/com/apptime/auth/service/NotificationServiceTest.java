@@ -8,14 +8,18 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
 
+import static com.apptime.auth.service.NotificationService.CONTENT_PATTERN_FOR_EXCEEDED_TASK;
 import static com.apptime.auth.service.NotificationService.CONTENT_PATTERN_FOR_TASK;
 import static com.apptime.auth.service.NotificationService.REMIND_TIME_BEFORE_START_IN_MIL_SEC;
+import static com.apptime.auth.service.NotificationService.TYPE_FOR_EXCEEDED_TASK;
 import static com.apptime.auth.service.NotificationService.TYPE_FOR_TASK;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -170,9 +174,18 @@ public class NotificationServiceTest {
         assertEquals(startTime.getTime() - REMIND_TIME_BEFORE_START_IN_MIL_SEC, remindTime.getTime());
         assertEquals(String.format(CONTENT_PATTERN_FOR_TASK, taskName, startTime), notification.getContent());
 
-        // create notification for the task again
+        // no duration, so no TYPE_FOR_EXCEED_TASK
+        notifications = repository.findByOwnerTypeKey(username, TYPE_FOR_EXCEEDED_TASK, Long.toString(id));
+        assertTrue(notifications.isEmpty());
+
+        // create notification for the task again (with duration)
         startTime = new Date(System.currentTimeMillis() + (long) 1000 * 60 * 60 * 24 * 2); // two day later
         task.setScheduledstart(startTime);
+
+        Date endTime = new Date(startTime.getTime() + (long) 1000 * 60 * 60); // one hour
+        LocalDateTime duration = LocalDateTime.ofInstant(endTime.toInstant(), ZoneId.systemDefault());
+        task.setDuration(duration);
+
         assertTrue(service.createNotificationForTask(task));
 
         notifications = repository.findByOwnerTypeKey(username, TYPE_FOR_TASK, Long.toString(id));
@@ -182,6 +195,14 @@ public class NotificationServiceTest {
         remindTime = notification.getRemindTime();
         assertEquals(startTime.getTime() - REMIND_TIME_BEFORE_START_IN_MIL_SEC, remindTime.getTime());
         assertEquals(String.format(CONTENT_PATTERN_FOR_TASK, taskName, startTime), notification.getContent());
+
+        notifications = repository.findByOwnerTypeKey(username, TYPE_FOR_EXCEEDED_TASK, Long.toString(id));
+        assertFalse(notifications.isEmpty());
+        assertEquals(1, notifications.size());
+        notification = notifications.iterator().next();
+        remindTime = notification.getRemindTime();
+        assertEquals(endTime.getTime() + (long) 1000 * 60 * 5, remindTime.getTime()); // five minute later
+        assertEquals(String.format(CONTENT_PATTERN_FOR_EXCEEDED_TASK, taskName, duration), notification.getContent());
     }
 
     @Test
@@ -215,9 +236,18 @@ public class NotificationServiceTest {
         assertEquals(startTime.getTime() - REMIND_TIME_BEFORE_START_IN_MIL_SEC, remindTime.getTime());
         assertEquals(String.format(CONTENT_PATTERN_FOR_TASK, taskName, startTime), notification.getContent());
 
+        // no duration, so no TYPE_FOR_EXCEED_TASK
+        notifications = repository.findByOwnerTypeKey(username, TYPE_FOR_EXCEEDED_TASK, Long.toString(id));
+        assertTrue(notifications.isEmpty());
+
         // create notification for the task again
         startTime = new Date(System.currentTimeMillis() + (long) 1000 * 60 * 60 * 24 * 2); // two day later
         task.setScheduledstart(startTime);
+
+        Date endTime = new Date(startTime.getTime() + (long) 1000 * 60 * 60); // one hour
+        LocalDateTime duration = LocalDateTime.ofInstant(endTime.toInstant(), ZoneId.systemDefault());
+        task.setDuration(duration);
+
         assertTrue(service.updateNotificationForTask(task));
 
         notifications = repository.findByOwnerTypeKey(username, TYPE_FOR_TASK, Long.toString(id));
@@ -227,6 +257,14 @@ public class NotificationServiceTest {
         remindTime = notification.getRemindTime();
         assertEquals(startTime.getTime() - REMIND_TIME_BEFORE_START_IN_MIL_SEC, remindTime.getTime());
         assertEquals(String.format(CONTENT_PATTERN_FOR_TASK, taskName, startTime), notification.getContent());
+
+        notifications = repository.findByOwnerTypeKey(username, TYPE_FOR_EXCEEDED_TASK, Long.toString(id));
+        assertFalse(notifications.isEmpty());
+        assertEquals(1, notifications.size());
+        notification = notifications.iterator().next();
+        remindTime = notification.getRemindTime();
+        assertEquals(endTime.getTime() + (long) 1000 * 60 * 5, remindTime.getTime()); // five minute later
+        assertEquals(String.format(CONTENT_PATTERN_FOR_EXCEEDED_TASK, taskName, duration), notification.getContent());
     }
 
     @Test
@@ -239,12 +277,14 @@ public class NotificationServiceTest {
         Random r = new Random();
         long id = r.nextLong();
         task.setId(id);
-        
+
         String username = UUID.randomUUID().toString();
         task.setUserName(username);
         assertTrue((service.deleteNotificationForTask(task)));
 
         List<Notification> notifications = repository.findByOwnerTypeKey(username, TYPE_FOR_TASK, Long.toString(id));
+        assertTrue(notifications.isEmpty());
+        notifications = repository.findByOwnerTypeKey(username, TYPE_FOR_EXCEEDED_TASK, Long.toString(id));
         assertTrue(notifications.isEmpty());
 
         // create notification firstly, then delete it
@@ -254,15 +294,25 @@ public class NotificationServiceTest {
         String taskName = "taskName";
         task.setName(taskName);
 
+        Date endTime = new Date(startTime.getTime() + (long) 1000 * 60 * 60); // one hour
+        LocalDateTime duration = LocalDateTime.ofInstant(endTime.toInstant(), ZoneId.systemDefault());
+        task.setDuration(duration);
+
         assertTrue(service.createNotificationForTask(task));
 
         notifications = repository.findByOwnerTypeKey(username, TYPE_FOR_TASK, Long.toString(id));
         assertFalse(notifications.isEmpty());
         assertEquals(1, notifications.size());
 
+        notifications = repository.findByOwnerTypeKey(username, TYPE_FOR_EXCEEDED_TASK, Long.toString(id));
+        assertFalse(notifications.isEmpty());
+        assertEquals(1, notifications.size());
+
         assertTrue((service.deleteNotificationForTask(task)));
 
         notifications = repository.findByOwnerTypeKey(username, TYPE_FOR_TASK, Long.toString(id));
+        assertTrue(notifications.isEmpty());
+        notifications = repository.findByOwnerTypeKey(username, TYPE_FOR_EXCEEDED_TASK, Long.toString(id));
         assertTrue(notifications.isEmpty());
     }
 }

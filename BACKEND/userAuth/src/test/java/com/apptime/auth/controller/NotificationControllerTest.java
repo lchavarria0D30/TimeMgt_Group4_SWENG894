@@ -1,8 +1,6 @@
 package com.apptime.auth.controller;
 
 import com.apptime.auth.model.Notification;
-import com.apptime.auth.model.TaskCategory;
-import com.apptime.auth.model.to.Category;
 import com.apptime.auth.repository.NotificationRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,7 +30,6 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
