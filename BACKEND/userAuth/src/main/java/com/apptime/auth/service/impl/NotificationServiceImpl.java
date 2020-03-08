@@ -9,6 +9,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -73,11 +75,22 @@ public class NotificationServiceImpl implements NotificationService {
             return false;
         }
         clearNotificationsForTask(task);
+
         String key = Long.toString(task.getId());
-        String content = String.format(CONTENT_PATTERN_FOR_TASK, task.getName(), task.getScheduledstart());
+        Date startTime = task.getScheduledstart();
+        String contentForTask = String.format(CONTENT_PATTERN_FOR_TASK, task.getName(), startTime);
         // the notification would be reminded 10 minutes before the start time
-        Notification notification = new Notification(task.getUserName(), TYPE_FOR_TASK, key, content, new Date(task.getScheduledstart().getTime() - REMIND_TIME_BEFORE_START_IN_MIL_SEC));
-        notificationRepository.save(notification);
+        Notification notificationForTask = new Notification(task.getUserName(), TYPE_FOR_TASK, key, contentForTask, new Date(startTime.getTime() - REMIND_TIME_BEFORE_START_IN_MIL_SEC));
+        notificationRepository.save(notificationForTask);
+
+        if (task.getDuration() != null) {
+            // create notification for exceeded task
+            String contentForExceededTask = String.format(CONTENT_PATTERN_FOR_EXCEEDED_TASK, task.getName(), task.getDuration());
+            LocalDateTime notificationTime = task.getDuration().plusMinutes(5);
+            Date date = Date.from(notificationTime.atZone(ZoneId.systemDefault()).toInstant());
+            Notification notificationForExceededTask = new Notification(task.getUserName(), TYPE_FOR_EXCEEDED_TASK, key, contentForExceededTask, date);
+            notificationRepository.save(notificationForExceededTask);
+        }
         return true;
     }
 
@@ -98,9 +111,16 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     private void clearNotificationsForTask(Task task) {
-        List<Notification> notifications = notificationRepository.findByOwnerTypeKey(task.getUserName(), TYPE_FOR_TASK, Long.toString(task.getId()));
-        if (!notifications.isEmpty()) {
-            for (Notification notification : notifications) {
+        List<Notification> notificationsForTask = notificationRepository.findByOwnerTypeKey(task.getUserName(), TYPE_FOR_TASK, Long.toString(task.getId()));
+        if (!notificationsForTask.isEmpty()) {
+            for (Notification notification : notificationsForTask) {
+                notificationRepository.delete(notification);
+            }
+        }
+
+        List<Notification> notificationsForExceededTask = notificationRepository.findByOwnerTypeKey(task.getUserName(), TYPE_FOR_EXCEEDED_TASK, Long.toString(task.getId()));
+        if (!notificationsForExceededTask.isEmpty()) {
+            for (Notification notification : notificationsForExceededTask) {
                 notificationRepository.delete(notification);
             }
         }
