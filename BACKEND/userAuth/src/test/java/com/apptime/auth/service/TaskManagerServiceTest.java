@@ -13,6 +13,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 /**
  * @author Qi Zhang
@@ -26,9 +30,13 @@ public class TaskManagerServiceTest {
     @Autowired
     private TaskRepository repository;
 
+    private NotificationService notificationService;
+
     @BeforeEach
     public void init() {
         repository.deleteAll();
+        notificationService = mock(NotificationService.class);
+        service.setNotificationService(notificationService);
     }
 
     @Test
@@ -41,6 +49,8 @@ public class TaskManagerServiceTest {
 
         assertEquals(name, savedTask.getName());
         assertEquals(username, savedTask.getUserName());
+
+        verify(notificationService, times(1)).createNotificationForTask(any(Task.class));
 
         Task task2 = new Task();
         String name2 = UUID.randomUUID().toString();
@@ -84,6 +94,8 @@ public class TaskManagerServiceTest {
         assertEquals(newName, updatedTask.getName());
         assertEquals(desc, updatedTask.getDescription());
 
+        verify(notificationService, times(1)).updateNotificationForTask(any(Task.class));
+
         // try update with different username
         assertNull(service.updateTask(updatedTask, UUID.randomUUID().toString()));
 
@@ -107,6 +119,8 @@ public class TaskManagerServiceTest {
         Task deletedTask = service.deleteTask(taskInDb.getId());
         assertNotNull(deletedTask);
         assertEquals(deletedTask.getId(), taskInDb.getId());
+
+        verify(notificationService, times(1)).deleteNotificationForTask(any(Task.class));
 
         deletedTask = service.deleteTask(taskInDb.getId());
         assertNull(deletedTask);
