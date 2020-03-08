@@ -19,7 +19,10 @@ import com.apptime.auth.model.Task;
 import com.apptime.auth.repository.TaskRepository;
 
 import javax.transaction.Transactional;
-
+/**
+ * @author Bashiir Mohamed
+ * this class represent  task business service layer.  
+ */
 @Service
 public class TaskManagerService {
 	@Autowired

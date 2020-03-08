@@ -1,0 +1,92 @@
+
+<mat-toolbar color="primary" style="width:100%;">
+    <mat-toolbar-row>
+        <h1 mat-dialog-title>New Task</h1>
+        <span class="example-spacer"></span>
+        <button mat-button (click)="onNoClick()">
+            <mat-icon class="example-icon" aria-hidden="false" aria-label="Close button" class="header-text">close</mat-icon>
+        </button>
+    </mat-toolbar-row>
+</mat-toolbar>
+<div mat-dialog-content>
+    <div fxLayout="column">
+        <mat-form-field>
+            <mat-label>Name</mat-label>
+            <input matInput [(ngModel)]="data.name" [formControl]="nameFormControl">
+            <mat-error *ngIf="nameFormControl.hasError('required')">
+                Name is <strong>required</strong>
+            </mat-error>
+
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>Category</mat-label>
+            <input matInput [(ngModel)]="data.category">
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>Description</mat-label>
+            <input matInput [(ngModel)]="data.description">
+        </mat-form-field>
+
+    </div>
+
+    <div fxLayout="row" fxLayoutGap="15px">
+        <div fxFlex="">
+            <mat-form-field>
+                <mat-label>Start date</mat-label>
+                <input matInput [matDatepicker]="picker1" [(ngModel)]="data.ssDate" [formControl]="sDateFormControl">
+                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                <mat-datepicker #picker1></mat-datepicker>
+                <mat-error *ngIf="sDateFormControl.hasError('required')">
+                    Start Date is <strong>required</strong>
+                </mat-error>
+
+            </mat-form-field>
+        </div>
+        <div fxFlex="">
+            <mat-form-field>
+                <mat-label>Start Time</mat-label>
+                <input matInput [(ngModel)]="data.ssTime" [formControl]="sTimeFormControl">
+                <mat-error *ngIf="sTimeFormControl.hasError('required')">
+                    Start Time is <strong>required</strong>
+                </mat-error>
+                <mat-error *ngIf="sTimeFormControl.hasError('pattern')"> Start Time must follow <strong>HH:MM PM|AM</strong> format
+                </mat-error>
+
+            </mat-form-field>
+        </div>
+    </div>
+
+    <div fxLayout="row" fxLayoutGap="15px">
+        <div fxFlex="">
+            <mat-form-field>
+                <mat-label>End date</mat-label>
+                <input matInput [matDatepicker]="picker2" [(ngModel)]="data.seDate" [formControl]="eDateFormControl">
+                <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                <mat-datepicker #picker2></mat-datepicker>
+                <mat-error *ngIf="eDateFormControl.hasError('required')">
+                    End Date is <strong>required</strong>
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <div fxFlex="">
+            <mat-form-field>
+                <mat-label>End Time</mat-label>
+                <input matInput [(ngModel)]="data.seTime" [formControl]="eTimeFormControl">
+
+                <mat-error *ngIf="eTimeFormControl.hasError('required')"> End Time is <strong>required</strong>
+                </mat-error>
+                <mat-error *ngIf="eTimeFormControl.hasError('pattern')"> End Time must follow <strong>HH:MM PM|AM</strong> format
+                </mat-error>
+            </mat-form-field>
+
+
+        </div>
+    </div>
+</div>
+<div mat-dialog-actions>
+
+    <button mat-flat-button color="primary" [mat-dialog-close]="data" cdkFocusInitial (click) ="onYesClick()" [disabled]="!eTimeFormControl.valid || !sTimeFormControl.valid || !eDateFormControl.valid || !sDateFormControl.valid ||
+  !nameFormControl.valid" >Save</button>
+</div>

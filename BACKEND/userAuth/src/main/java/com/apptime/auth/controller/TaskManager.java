@@ -26,24 +26,40 @@ import com.apptime.auth.model.Task;
 import com.apptime.auth.model.Users;
 import com.apptime.auth.service.TaskManagerService;
 
+/**
+ * @author Bashiir Mohamed
+ * This class is the controller for task managment api for each use.
+ * it contains all funtionlity for managing taks.
+ */
 @RestController
 @RequestMapping(value = "/tasks")
 public class TaskManager {
 	@Autowired
 	TaskManagerService taskService;
-	
-	//list all task for a user
+
+	/**
+	 *
+	 * @param p the current authenticated user.
+	 * @return List of tasks owned by the user.
+	 * @throws ParseException json conversion Exception
+	 */
 	@GetMapping(value = "/")
-	public ResponseEntity<List<Task>> getTasks(Principal p) throws ParseException{
+	public ResponseEntity<List<Task>> getTasks(Principal p) {
 		String user = getPrinciple(p).getName();
 		List<Task> tasks = taskService.findUserTasks(user);
         return new ResponseEntity<List<Task>>(tasks, HttpStatus.OK);
 	}
-	
-	
-	//view task details
+
+
+	/**
+	 *
+	 * @param taskId request task id.
+	 * @param p current authenticated user(principle)
+	 * @return single list with the given @id or @http.status.noFound.
+	 * @throws ParseException json conversion Exception
+	 */
 	@GetMapping(value = "/task/{id}")
-	public ResponseEntity<Task> getTask(@PathVariable("id") int taskId, Principal p) throws ParseException{
+	public ResponseEntity<Task> getTask(@PathVariable("id") int taskId, Principal p) {
 		Task task = taskService.getTask(taskId);
 		if (task.getUserName().equals(getPrinciple(p).getName())) {
 			return new ResponseEntity<Task>(task, HttpStatus.OK);
@@ -51,8 +67,13 @@ public class TaskManager {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
-	
-	//create task
+
+	/**
+	 *
+	 * @param task task data to be created
+	 * @param p current authenticated user(principle)
+	 * @return the currently created task
+	 */
 	@PostMapping("/newtask")
 	public ResponseEntity<Object> createTask(@RequestBody Task task, Principal p) {
 		String user = getPrinciple(p).getName();
@@ -62,7 +83,13 @@ public class TaskManager {
 		} 
 		return new ResponseEntity<Object>("{status: didn't create }", HttpStatus.NOT_FOUND);
 	}
-	//update task with put
+
+	/**
+	 *
+	 * @param task the task to be updated.
+	 * @param p current authenticated user(principle)
+	 * @return returns the task that was updated
+	 */
 	@PutMapping("/task")
 	public ResponseEntity<Task> updateTask(@RequestBody Task task, Principal p) {
 		Task updatedTask = taskService.updateTask(task, getPrinciple(p).getName());
@@ -72,6 +99,13 @@ public class TaskManager {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
+
+	/**
+	 *
+	 * @param id @id of the @task to be deleted.
+	 * @param p current authenticated user(principle)
+	 * @return returns the @ deleted task T where T.id = @id
+	 */
 	@DeleteMapping("/task/{id}")
 	public ResponseEntity<Task> deleteTask(@PathVariable Long id, Principal p) {
 		Task task = taskService.getTask(id);
@@ -81,6 +115,12 @@ public class TaskManager {
 		return new ResponseEntity<>(taskService.deleteTask(id), HttpStatus.OK);
 	 }
 
+	/**
+	 *
+	 * @param p current authenticated user(principle)
+	 * @return rturns returns current authenticated user
+	 * this method is private
+	 */
 	 private Principal getPrinciple(Principal p) {
 		return p != null ? p : SecurityContextHolder.getContext().getAuthentication();
 	 }

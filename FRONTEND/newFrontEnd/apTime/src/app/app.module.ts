@@ -1,20 +1,19 @@
-import { BrowserModule } from "@angular/platform-browser";
-import { NgModule } from "@angular/core";
-import { AppRoutingModule } from "./app-routing.module";
-import { AppComponent } from "./app.component";
-import { AuthComponent } from "./components/auth/auth.component";
-import { ProfileComponent } from "./components/profile/profile.component";
-import { SecureComponent } from "./components/secure/secure.component";
-import { HomeComponent } from "./components/home/home.component";
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+import { AppRoutingModule } from './app-routing.module';
+import { AppComponent } from './app.component';
+import { AuthComponent } from './components/auth/auth.component';
+import { ProfileComponent } from './components/profile/profile.component';
+import { SecureComponent } from './components/secure/secure.component';
+import { HomeComponent } from './components/home/home.component';
 import { TasksComponent } from './components/tasks/tasks.component';
 
 
-import { AmplifyAngularModule, AmplifyService } from "aws-amplify-angular";
+import { AmplifyAngularModule, AmplifyService } from 'aws-amplify-angular';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-//import UI from "@aws-amplify/ui";
 import { HttpClientModule } from '@angular/common/http';
 import { Validators, FormBuilder, FormGroup, FormControl } from '@angular/forms';
-import { CustomMaterialModule } from "./modules/material.module";
+import { CustomMaterialModule } from './modules/material.module';
 
 
 import {MatMenuModule} from '@angular/material/menu';
@@ -23,11 +22,10 @@ import {MatMenuModule} from '@angular/material/menu';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 
-
-import { CreateTaskDialog } from './components/tasks/tasks.component';
-import { ConfirmDeleteDialog } from './components/tasks/tasks.component';
-import { EditTaskDialog } from './components/tasks/tasks.component';
 import { TaskCategoryComponent } from './components/task-category/task-category.component';
+import { CreateTaskDialogComponent } from './components/create-task-dialog/create-task-dialog.component';
+import { DeleteTaskDialogComponent } from './components/delete-task-dialog/delete-task-dialog.component';
+import { EditTaskDialogComponent } from './components/edit-task-dialog/edit-task-dialog.component';
 
 
 @NgModule({
@@ -38,14 +36,14 @@ import { TaskCategoryComponent } from './components/task-category/task-category.
     SecureComponent,
     HomeComponent,
     TasksComponent,
-    CreateTaskDialog,
-    ConfirmDeleteDialog,
-    EditTaskDialog,
-    TaskCategoryComponent
+    TaskCategoryComponent,
+    CreateTaskDialogComponent,
+    DeleteTaskDialogComponent,
+    EditTaskDialogComponent
   ],
-  imports: [BrowserModule, 
-  AppRoutingModule, 
-  AmplifyAngularModule, 
+  imports: [BrowserModule,
+  AppRoutingModule,
+  AmplifyAngularModule,
   BrowserAnimationsModule,
   FlexLayoutModule,
   HttpClientModule,
@@ -57,9 +55,9 @@ import { TaskCategoryComponent } from './components/task-category/task-category.
   ],
   bootstrap: [AppComponent],
   entryComponents: [
-  CreateTaskDialog, 
-  ConfirmDeleteDialog,
-  EditTaskDialog
+  CreateTaskDialogComponent,
+    DeleteTaskDialogComponent,
+    EditTaskDialogComponent
   ]
 })
 export class AppModule {}
