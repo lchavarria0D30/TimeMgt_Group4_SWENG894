@@ -1,22 +1,19 @@
 import { Injectable } from '@angular/core';
 import { Auth } from 'aws-amplify';
 
-
 @Injectable({
   providedIn: 'root'
 })
 export class SessionService {
-
   token;
 
-  constructor() { }
+  constructor() {}
 
   setToken(theToken: string): void {
     this.token = theToken;
   }
 
   getToken(): string {
-console.log(this.token);
     return this.token;
   }
 }

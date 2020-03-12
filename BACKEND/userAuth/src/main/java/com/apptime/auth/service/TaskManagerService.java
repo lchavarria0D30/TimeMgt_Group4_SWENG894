@@ -78,12 +78,14 @@ public class TaskManagerService {
 	 */
 	public TaskState start(long  taskId, Date startDate){
 		Task task = taskRepo.findById(taskId);
+		TaskState ts = null;
 		if(task != null){
 			TaskStateMachine.START(task);
 			task.setStart(startDate);
 			taskRepo.save(task);
+			ts = task.getState();
 		}
-		return task.getState();
+		return ts;
 
 	}
 
@@ -94,22 +96,26 @@ public class TaskManagerService {
 	 */
 	public TaskState pause(long  taskId){
 		Task task = taskRepo.findById(taskId);
+		TaskState ts = null;
 		if(task != null){
 			TaskStateMachine.PAUSE(task);
 			taskRepo.save(task);
+			ts = task.getState();
 		}
-		return task.getState();
+		return ts;
 
 	}
 
 	public TaskState complete(long  taskId, Date endDate){
 		Task task = taskRepo.findById(taskId);
+		TaskState ts = null;
 		if(task != null){
 			TaskStateMachine.COMPLETE(task);
 			task.setEnd(endDate);
 			taskRepo.save(task);
+			ts = task.getState();
 		}
-		return task.getState();
+		return ts;
 
 	}
 
