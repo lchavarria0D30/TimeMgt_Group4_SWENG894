@@ -16,6 +16,7 @@ export class SessionService {
   }
 
   getToken(): string {
+console.log(this.token);
     return this.token;
   }
 }
