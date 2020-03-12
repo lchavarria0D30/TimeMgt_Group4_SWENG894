@@ -1,7 +1,6 @@
 package com.apptime.auth.service.impl;
 
 import com.apptime.auth.model.TaskCategory;
-import com.apptime.auth.model.Users;
 import com.apptime.auth.repository.TaskCategoryRepository;
 import com.apptime.auth.service.TaskCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +13,7 @@ import java.util.stream.Collectors;
 /**
  * @author Qi Zhang
  * The implementation of TaskCategoryService
+ * Use Cases: TMGP4-43, TMGP4-39
  */
 @Service
 public class TaskCategoryServiceImpl implements TaskCategoryService {

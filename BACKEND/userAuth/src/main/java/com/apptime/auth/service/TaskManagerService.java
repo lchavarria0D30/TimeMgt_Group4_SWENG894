@@ -28,6 +28,9 @@ public class TaskManagerService {
 	@Autowired
 	TaskRepository taskRepo;
 
+	@Autowired
+	NotificationService notificationService;
+
     //view task details
 	public Task getTask(long id) {
 		return taskRepo.findById(id);
@@ -38,6 +41,7 @@ public class TaskManagerService {
 		// TODO Auto-generated method stub
 		task.setUserName(user);
 		taskRepo.save(task);
+		notificationService.createNotificationForTask(task);
 		return task;
 	}
 
@@ -51,6 +55,7 @@ public class TaskManagerService {
 		task.setId(old.getId());
 		task.setUserName(username);
 		taskRepo.save(task);
+		notificationService.updateNotificationForTask(task);
 		return task;
 	}
 
@@ -60,6 +65,7 @@ public class TaskManagerService {
 		Task old = taskRepo.findById(id);
 		if (old != null) {
 			taskRepo.delete(old);
+			notificationService.deleteNotificationForTask(old);
 		}
 		return old;
 
@@ -68,9 +74,7 @@ public class TaskManagerService {
 		return taskRepo.findByUserName(user);
 	}
 
-
-
-
-
-
+	void setNotificationService(NotificationService notificationService) {
+		this.notificationService = notificationService;
+	}
 }

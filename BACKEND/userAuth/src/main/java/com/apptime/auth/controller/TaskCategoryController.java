@@ -7,9 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,7 +21,7 @@ import java.util.Collection;
  */
 @RestController
 @RequestMapping(value = "/category")
-public class TaskCategoryController {
+public class TaskCategoryController extends AbstractionAuthenticationController {
 
     private static final String ADMIN_ROLE = "ADMIN";
 
@@ -33,14 +30,7 @@ public class TaskCategoryController {
 
     @PostMapping
     public ResponseEntity<Category> createPrivateCategories(@RequestBody Category category, Authentication authentication) {
-        if (authentication == null) {
-            authentication = getAuthentication(authentication);
-        }
-        if (authentication == null) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
-
-        String username = authentication.getName();
+        String username = getUsername(authentication);
         if (username == null) {
             // wrong username
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
@@ -65,14 +55,7 @@ public class TaskCategoryController {
 
     @GetMapping(value = "/mine")
     public ResponseEntity<Collection<Category>> getMineCategories(Authentication authentication) {
-        if (authentication == null) {
-            authentication = getAuthentication(authentication);
-        }
-        if (authentication == null) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
-
-        String username = authentication.getName();
+        String username = getUsername(authentication);
         if (username == null) {
             // wrong username
             return buildErrorResponse(HttpStatus.UNAUTHORIZED);
@@ -84,14 +67,7 @@ public class TaskCategoryController {
 
     @GetMapping(value = "/public")
     public ResponseEntity<Collection<Category>> getPublicCategories(Authentication authentication) {
-        if (authentication == null) {
-            authentication = getAuthentication(authentication);
-        }
-        if (authentication == null) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
-
-        String username = authentication.getName();
+        String username = getUsername(authentication);
         if (username == null) {
             // wrong username
             return buildErrorResponse(HttpStatus.UNAUTHORIZED);
@@ -101,9 +77,7 @@ public class TaskCategoryController {
 
     @PostMapping(value = "/public")
     public ResponseEntity<Category> createPublicCategory(@RequestBody Category category, Authentication authentication) {
-        if (authentication == null) {
-            authentication = getAuthentication(authentication);
-        }
+        authentication = getAuthentication(authentication);
         if (authentication == null) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
@@ -114,7 +88,7 @@ public class TaskCategoryController {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
-        if (!checkRule(authentication, "ADMIN")) {
+        if (!checkRule(authentication, ADMIN_ROLE)) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
 
@@ -134,19 +108,4 @@ public class TaskCategoryController {
         return new ResponseEntity<>(httpStatus);
     }
 
-    private Authentication getAuthentication(Authentication authentication) {
-        return authentication != null ? authentication : SecurityContextHolder.getContext().getAuthentication();
-    }
-
-    private boolean checkRule(Authentication authentication, String expectedRole) {
-        if (CollectionUtils.isEmpty(authentication.getAuthorities())) {
-            return false;
-        }
-        for (GrantedAuthority authority : authentication.getAuthorities()) {
-            if (authority.getAuthority().equalsIgnoreCase(expectedRole)) {
-                return true;
-            }
-        }
-        return false;
-    }
 }
