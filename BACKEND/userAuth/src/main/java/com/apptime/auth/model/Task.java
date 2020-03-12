@@ -26,9 +26,6 @@ public class Task {
 
     private Date end;
 
-    public Task() {
-    }
-
     public Date getEnd() {
         return end;
     }
