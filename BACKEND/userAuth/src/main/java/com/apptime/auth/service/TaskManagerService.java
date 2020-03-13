@@ -98,7 +98,7 @@ public class TaskManagerService {
 	 * @param startDate
 	 * @return
 	 */
-	public TaskState start(long  taskId, Date startDate , String userName){
+	public TaskState start(long  taskId, Date startDate ){
 		Task task = taskRepo.findById(taskId);
 		TaskState ts = null;
 		if(task != null){
