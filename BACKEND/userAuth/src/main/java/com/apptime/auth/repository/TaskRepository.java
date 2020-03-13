@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.apptime.auth.model.TaskState;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.apptime.auth.model.Task;
@@ -17,8 +18,12 @@ public interface TaskRepository extends JpaRepository<Task, Integer>{
 	 List<Task> findByUserName(String user);
 //view task details
 	Task findById(Long id);
+	//view task details
+	Task findByIdAndUserName(Long id, String userName);
+	Task findByUserNameAndState(String userName, TaskState state);
 
 	Task deleteById(long id);
+
 	 
 	 
 

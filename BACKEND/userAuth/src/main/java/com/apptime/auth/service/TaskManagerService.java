@@ -18,6 +18,7 @@ import com.apptime.auth.model.Task;
 import com.apptime.auth.repository.TaskRepository;
 
 import javax.transaction.Transactional;
+import com.apptime.auth.model.TaskError;
 /**
  * @author Bashiir Mohamed
  * this class represent  task business service layer.
@@ -30,6 +31,13 @@ public class TaskManagerService {
 	public Task getTask(long id) {
 		return taskRepo.findById(id);
 
+	}
+	public Task getTask(long id, String username) {
+		return taskRepo.findByIdAndUserName(id,username);
+
+	}
+	public Task getTask(TaskState ts, String userName){
+		return taskRepo.findByUserNameAndState(userName,ts);
 	}
 	//create task
 	public Task createTask(Task task, String user) {
@@ -70,13 +78,14 @@ public class TaskManagerService {
 		return taskRepo.findByUserName(user);
 	}
 
+
 	/**
 	 *
 	 * @param taskId
 	 * @param startDate
 	 * @return
 	 */
-	public TaskState start(long  taskId, Date startDate){
+	public TaskState start(long  taskId, Date startDate , String userName){
 		Task task = taskRepo.findById(taskId);
 		TaskState ts = null;
 		if(task != null){

@@ -15,14 +15,15 @@ public  class  TaskStateMachine  {
         TaskState current = task.getState();
         switch (current) {
             case CREATED:
-                task.setState(TaskState.CREATED);
+            case PAUSED:
+                task.setState(TaskState.ACTIVE);
         }
     }
 
     public static void PAUSE(Task task) {
         TaskState current = task.getState();
         switch (current) {
-            case CREATED:
+            case ACTIVE:
                 task.setState(TaskState.PAUSED);
         }
     }
