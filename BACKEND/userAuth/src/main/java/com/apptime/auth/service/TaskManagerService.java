@@ -27,10 +27,12 @@ import com.apptime.auth.model.TaskError;
 public class TaskManagerService {
 	@Autowired
 	TaskRepository taskRepo;
+
 	@Autowired
 	NotificationService notificationService;
 
     //view task details
+	//view task details
 	public Task getTask(long id) {
 		return taskRepo.findById(id);
 
@@ -85,10 +87,10 @@ public class TaskManagerService {
 	}
 
 
+
 	void setNotificationService(NotificationService notificationService) {
 		this.notificationService = notificationService;
 	}
-
 
 	/**
 	 *
@@ -124,7 +126,10 @@ public class TaskManagerService {
 		}
 		return ts;
 
+
 	}
+
+
 
 	public TaskState complete(long  taskId, Date endDate){
 		Task task = taskRepo.findById(taskId);
@@ -139,4 +144,5 @@ public class TaskManagerService {
 
 	}
 
-}
+
+	}
