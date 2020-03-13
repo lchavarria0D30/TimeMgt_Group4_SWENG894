@@ -9,6 +9,7 @@ import { mapTo, startWith, map, flatMap, switchMap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { ajax } from 'rxjs/ajax';
 
+
 interface IQuote {
   categories: any[];
   created_at: string;
@@ -22,6 +23,7 @@ interface IQuote {
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
+
 export class AppComponent implements OnInit {
   title = 'apTime got new look';
   quote: Observable<string>;
@@ -71,6 +73,7 @@ export class AppComponent implements OnInit {
         nService.remaind(x, { autoClose: false, keepAfterRouteChange: true });
       });
   }
+
 
   ngOnInit() {
     // console.log(this.quote);

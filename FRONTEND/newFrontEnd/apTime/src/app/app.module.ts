@@ -8,11 +8,10 @@ import { SecureComponent } from './components/secure/secure.component';
 import { HomeComponent } from './components/home/home.component';
 import { TasksComponent } from './components/tasks/tasks.component';
 import { NotificationModule } from './components/notification';
-
 import { AmplifyAngularModule, AmplifyService } from 'aws-amplify-angular';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-//import UI from "@aws-amplify/ui";
 import { HttpClientModule } from '@angular/common/http';
+
 import {
   Validators,
   FormBuilder,
@@ -21,14 +20,15 @@ import {
 } from '@angular/forms';
 import { CustomMaterialModule } from './modules/material.module';
 
+
 import { MatMenuModule } from '@angular/material/menu';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
 
-import { CreateTaskDialog } from './components/tasks/tasks.component';
-import { ConfirmDeleteDialog } from './components/tasks/tasks.component';
-import { EditTaskDialog } from './components/tasks/tasks.component';
 import { TaskCategoryComponent } from './components/task-category/task-category.component';
+import { CreateTaskDialogComponent } from './components/create-task-dialog/create-task-dialog.component';
+import { DeleteTaskDialogComponent } from './components/delete-task-dialog/delete-task-dialog.component';
+import { EditTaskDialogComponent } from './components/edit-task-dialog/edit-task-dialog.component';
 
 @NgModule({
   declarations: [
@@ -38,11 +38,12 @@ import { TaskCategoryComponent } from './components/task-category/task-category.
     SecureComponent,
     HomeComponent,
     TasksComponent,
-    CreateTaskDialog,
-    ConfirmDeleteDialog,
-    EditTaskDialog,
-    TaskCategoryComponent
+    TaskCategoryComponent,
+    CreateTaskDialogComponent,
+    DeleteTaskDialogComponent,
+    EditTaskDialogComponent
   ],
+
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -56,6 +57,12 @@ import { TaskCategoryComponent } from './components/task-category/task-category.
   ],
   providers: [AmplifyService, CustomMaterialModule],
   bootstrap: [AppComponent],
-  entryComponents: [CreateTaskDialog, ConfirmDeleteDialog, EditTaskDialog]
+
+  entryComponents: [
+  CreateTaskDialogComponent,
+    DeleteTaskDialogComponent,
+    EditTaskDialogComponent
+  ]
+
 })
 export class AppModule {}

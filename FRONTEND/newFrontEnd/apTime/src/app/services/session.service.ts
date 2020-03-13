@@ -8,16 +8,14 @@ import { Auth } from 'aws-amplify';
 export class SessionService {
 
   token;
-  
+
   constructor() { }
 
-  setToken(theToken : string): void {
-  		this.token = theToken
+  setToken(theToken: string): void {
+    this.token = theToken;
   }
 
   getToken(): string {
-  	
-  	
     return this.token;
   }
 }

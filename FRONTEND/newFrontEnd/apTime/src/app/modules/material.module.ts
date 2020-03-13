@@ -1,7 +1,7 @@
-import { NgModule } from "@angular/core";
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-//import { FlexLayoutModule } from "@angular/flex-layout";
-import { HttpClientModule } from "@angular/common/http";
+import { NgModule } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+// import { FlexLayoutModule } from '@angular/flex-layout';
+import { HttpClientModule } from '@angular/common/http';
 
 
 import {
@@ -25,11 +25,11 @@ import {
   MatDatepickerModule,
   MatProgressSpinnerModule,
   MatInputModule
-} from "@angular/material";
-import { MatRadioModule } from "@angular/material/radio";
-import { MatSelectModule } from "@angular/material/select";
-import { MatSliderModule } from "@angular/material/slider";
-import { Location } from "@angular/common";
+} from '@angular/material';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSliderModule } from '@angular/material/slider';
+import { Location } from '@angular/common';
 
 
 @NgModule({

@@ -19,11 +19,17 @@ import com.apptime.auth.model.Task;
 import com.apptime.auth.repository.TaskRepository;
 
 import javax.transaction.Transactional;
-
+/**
+ * @author Bashiir Mohamed
+ * this class represent  task business service layer.  
+ */
 @Service
 public class TaskManagerService {
 	@Autowired
 	TaskRepository taskRepo;
+
+	@Autowired
+	NotificationService notificationService;
 
     //view task details
 	public Task getTask(long id) {
@@ -35,6 +41,7 @@ public class TaskManagerService {
 		// TODO Auto-generated method stub
 		task.setUserName(user);
 		taskRepo.save(task);
+		notificationService.createNotificationForTask(task);
 		return task;
 	}
 
@@ -48,6 +55,7 @@ public class TaskManagerService {
 		task.setId(old.getId());
 		task.setUserName(username);
 		taskRepo.save(task);
+		notificationService.updateNotificationForTask(task);
 		return task;
 	}
 
@@ -57,6 +65,7 @@ public class TaskManagerService {
 		Task old = taskRepo.findById(id);
 		if (old != null) {
 			taskRepo.delete(old);
+			notificationService.deleteNotificationForTask(old);
 		}
 		return old;
 
@@ -65,9 +74,7 @@ public class TaskManagerService {
 		return taskRepo.findByUserName(user);
 	}
 
-
-
-
-
-
+	void setNotificationService(NotificationService notificationService) {
+		this.notificationService = notificationService;
+	}
 }
