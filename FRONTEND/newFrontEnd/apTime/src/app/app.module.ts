@@ -29,6 +29,8 @@ import { TaskCategoryComponent } from './components/task-category/task-category.
 import { CreateTaskDialogComponent } from './components/create-task-dialog/create-task-dialog.component';
 import { DeleteTaskDialogComponent } from './components/delete-task-dialog/delete-task-dialog.component';
 import { EditTaskDialogComponent } from './components/edit-task-dialog/edit-task-dialog.component';
+import { StartTaskDialogComponent } from './components/start-task-dialog/start-task-dialog.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +43,9 @@ import { EditTaskDialogComponent } from './components/edit-task-dialog/edit-task
     TaskCategoryComponent,
     CreateTaskDialogComponent,
     DeleteTaskDialogComponent,
-    EditTaskDialogComponent
+    EditTaskDialogComponent,
+    StartTaskDialogComponent,
+    DashboardComponent
   ],
 
   imports: [
@@ -61,7 +65,8 @@ import { EditTaskDialogComponent } from './components/edit-task-dialog/edit-task
   entryComponents: [
   CreateTaskDialogComponent,
     DeleteTaskDialogComponent,
-    EditTaskDialogComponent
+    EditTaskDialogComponent,
+    StartTaskDialogComponent
   ]
 
 })
