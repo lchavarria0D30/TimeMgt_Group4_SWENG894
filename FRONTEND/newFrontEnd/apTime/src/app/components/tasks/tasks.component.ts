@@ -118,19 +118,44 @@ export class TasksComponent implements OnInit {
       next: data => this.tasks = data,
       error: error => console.error('There was an error!', error)
       });
+
+      console.log(this.tasks);
   }
 
-  startTask(i: number): void {
+  suspendTask(i: number): void {
     const headers = { Authorization: 'Bearer ' + this.sessionService.getToken()};
-
-    const body = { id: i
+    console.log("SuspendTask");
+    const body = {
     };
 
-    this.http.post('http://localhost:8001/tasks/start', body, { headers }).subscribe({
+    this.http.post('http://localhost:8001/tasks/task/' + i + '/suspend', body, { headers }).subscribe({
       next: data => console.log(data),
       error: error => console.error('There was an error!', error)
     });
   }
 
+  completeTask(i: number): void {
+    const headers = { Authorization: 'Bearer ' + this.sessionService.getToken()};
+    console.log("CompleteTask");
+    const body = {
+    };
+
+    this.http.post('http://localhost:8001/tasks/task/' + i + '/complete', body, { headers }).subscribe({
+      next: data => console.log(data),
+      error: error => console.error('There was an error!', error)
+    });
+  }
+
+  startTask(i: number): void {
+    const headers = { Authorization: 'Bearer ' + this.sessionService.getToken()};
+    console.log("StartTask");
+    const body = { startDate: new Date()
+    };
+
+    this.http.post('http://localhost:8001/tasks/task/' + i + '/start', body, { headers }).subscribe({
+      next: data => console.log(data),
+      error: error => console.error('There was an error!', error)
+    });
+  }
 
 }

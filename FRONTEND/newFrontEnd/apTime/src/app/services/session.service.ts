@@ -13,6 +13,7 @@ export class SessionService {
 
   setToken(theToken: string): void {
     this.token = theToken;
+    console.log("Token: " + this.token);
   }
 
   getToken(): string {
