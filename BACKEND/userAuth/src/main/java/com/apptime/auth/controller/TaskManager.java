@@ -129,9 +129,12 @@ public class TaskManager {
 		//check for currently other active tasks
 		Task active = taskService.getTask(TaskState.ACTIVE, userName);
 		if(active != null){
-			return new ResponseEntity<TaskError>(new TaskError(ErrorType.Concurent_Active_Task_Not_Allowed, active),HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<TaskError>(new TaskError(ErrorType.Concurrent_Active_Task_Not_Allowed, active),HttpStatus.BAD_REQUEST);
 		}
-		return new ResponseEntity<TaskState>(taskService.start(id, new Date(), userName), HttpStatus.OK);
+		if(!isAuthorized(p,task)){
+			return new ResponseEntity<TaskError>(new TaskError(ErrorType.Task_Not_Found, null),HttpStatus.UNAUTHORIZED);
+		}
+		return new ResponseEntity<TaskState>(taskService.start(id, new Date()), HttpStatus.OK);
 	}
 
 	/**
@@ -146,6 +149,9 @@ public class TaskManager {
 		Task task = taskService.getTask(id,userName);
 		if (task == null ) {
 			return new ResponseEntity<TaskError>( new TaskError(ErrorType.Task_Not_Found, null), HttpStatus.NOT_FOUND);
+		}
+		if(!isAuthorized(p,task)){
+			return new ResponseEntity<TaskError>(new TaskError(ErrorType.Task_Not_Found, null),HttpStatus.UNAUTHORIZED);
 		}
 		return new ResponseEntity<TaskState>(taskService.pause(id), HttpStatus.OK);
 	}
@@ -162,6 +168,9 @@ public class TaskManager {
 		if (task == null ) {
 			return new ResponseEntity<TaskError>( new TaskError(ErrorType.Task_Not_Found, null), HttpStatus.NOT_FOUND);
 		}
+		if(!isAuthorized(p,task)){
+			return new ResponseEntity<TaskError>(new TaskError(ErrorType.Task_Not_Found, null),HttpStatus.UNAUTHORIZED);
+		}
 		return new ResponseEntity<TaskState>(taskService.complete(id, new Date()), HttpStatus.OK);
 	}
 
@@ -174,6 +183,9 @@ public class TaskManager {
 	 */
 	private Principal getPrinciple(Principal p) {
 		return p != null ? p : SecurityContextHolder.getContext().getAuthentication();
+	}
+	private Boolean isAuthorized(Principal p, Task task){
+		return task.getUserName() == p.getName();
 	}
 
 
