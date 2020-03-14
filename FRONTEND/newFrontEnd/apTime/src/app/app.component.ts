@@ -66,7 +66,7 @@ export class AppComponent implements OnInit {
           // ajax('https://api.chucknorris.io/jokes/random')
         ),
         flatMap(v => v),
-        map(quote => quote.value) // Take the field you need
+        map(quote => quote.content) // Take the field you need
       )
       .subscribe(x => {
         console.log(x);
