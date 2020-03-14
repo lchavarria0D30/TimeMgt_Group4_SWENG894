@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import com.apptime.auth.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,9 +22,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.apptime.auth.model.ClientUser;
-import com.apptime.auth.model.Task;
-import com.apptime.auth.model.Users;
 import com.apptime.auth.service.TaskManagerService;
 
 /**
@@ -47,7 +45,7 @@ public class TaskManager {
 	public ResponseEntity<List<Task>> getTasks(Principal p) {
 		String user = getPrinciple(p).getName();
 		List<Task> tasks = taskService.findUserTasks(user);
-        return new ResponseEntity<List<Task>>(tasks, HttpStatus.OK);
+		return new ResponseEntity<List<Task>>(tasks, HttpStatus.OK);
 	}
 
 
@@ -78,9 +76,9 @@ public class TaskManager {
 	public ResponseEntity<Object> createTask(@RequestBody Task task, Principal p) {
 		String user = getPrinciple(p).getName();
 		if(taskService.getTask(task.getId())==null) {
-		Task result = taskService.createTask(task,user);
-        return new ResponseEntity<Object>(result, HttpStatus.OK);
-		} 
+			Task result = taskService.createTask(task,user);
+			return new ResponseEntity<Object>(result, HttpStatus.OK);
+		}
 		return new ResponseEntity<Object>("{status: didn't create }", HttpStatus.NOT_FOUND);
 	}
 
@@ -113,7 +111,60 @@ public class TaskManager {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<>(taskService.deleteTask(id), HttpStatus.OK);
-	 }
+	}
+
+	/**
+	 *
+	 * @param id
+	 * @param p
+	 * @return
+	 */
+	@PostMapping("/task/{id}/start")
+	public ResponseEntity<?> start(@PathVariable Long id, Principal p){
+		String userName = p.getName();
+		Task task = taskService.getTask(id,userName);
+		if (task == null ) {
+			return new ResponseEntity<TaskError>( new TaskError(ErrorType.Task_Not_Found, null), HttpStatus.NOT_FOUND);
+		}
+		//check for currently other active tasks
+		Task active = taskService.getTask(TaskState.ACTIVE, userName);
+		if(active != null){
+			return new ResponseEntity<TaskError>(new TaskError(ErrorType.Concurent_Active_Task_Not_Allowed, active),HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<TaskState>(taskService.start(id, new Date(), userName), HttpStatus.OK);
+	}
+
+	/**
+	 *
+	 * @param id
+	 * @param p
+	 * @return
+	 */
+	@PostMapping("/task/{id}/pause")
+	public ResponseEntity<?> pause(@PathVariable Long id, Principal p){
+		String userName = p.getName();
+		Task task = taskService.getTask(id,userName);
+		if (task == null ) {
+			return new ResponseEntity<TaskError>( new TaskError(ErrorType.Task_Not_Found, null), HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<TaskState>(taskService.pause(id), HttpStatus.OK);
+	}
+
+	/**
+	 *
+	 * @param id
+	 * @param p
+	 * @return
+	 */
+	@PostMapping("/task/{id}/complete")
+	public ResponseEntity<?> complete(@PathVariable Long id, Principal p){
+		Task task = taskService.getTask(id);
+		if (task == null ) {
+			return new ResponseEntity<TaskError>( new TaskError(ErrorType.Task_Not_Found, null), HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<TaskState>(taskService.complete(id, new Date()), HttpStatus.OK);
+	}
+
 
 	/**
 	 *
@@ -121,7 +172,9 @@ public class TaskManager {
 	 * @return rturns returns current authenticated user
 	 * this method is private
 	 */
-	 private Principal getPrinciple(Principal p) {
+	private Principal getPrinciple(Principal p) {
 		return p != null ? p : SecurityContextHolder.getContext().getAuthentication();
-	 }
+	}
+
+
 }
