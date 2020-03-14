@@ -183,8 +183,7 @@ public class NotificationServiceTest {
         task.setScheduledstart(startTime);
 
         Date endTime = new Date(startTime.getTime() + (long) 1000 * 60 * 60); // one hour
-        LocalDateTime duration = LocalDateTime.ofInstant(endTime.toInstant(), ZoneId.systemDefault());
-        task.setDuration(duration);
+        task.setScheduledEnd(endTime);
 
         assertTrue(service.createNotificationForTask(task));
 
@@ -202,7 +201,7 @@ public class NotificationServiceTest {
         notification = notifications.iterator().next();
         remindTime = notification.getRemindTime();
         assertEquals(endTime.getTime() + (long) 1000 * 60 * 5, remindTime.getTime()); // five minute later
-        assertEquals(String.format(CONTENT_PATTERN_FOR_EXCEEDED_TASK, taskName, duration), notification.getContent());
+        assertEquals(String.format(CONTENT_PATTERN_FOR_EXCEEDED_TASK, taskName, endTime), notification.getContent());
     }
 
     @Test
@@ -245,8 +244,7 @@ public class NotificationServiceTest {
         task.setScheduledstart(startTime);
 
         Date endTime = new Date(startTime.getTime() + (long) 1000 * 60 * 60); // one hour
-        LocalDateTime duration = LocalDateTime.ofInstant(endTime.toInstant(), ZoneId.systemDefault());
-        task.setDuration(duration);
+        task.setScheduledEnd(endTime);
 
         assertTrue(service.updateNotificationForTask(task));
 
@@ -264,7 +262,7 @@ public class NotificationServiceTest {
         notification = notifications.iterator().next();
         remindTime = notification.getRemindTime();
         assertEquals(endTime.getTime() + (long) 1000 * 60 * 5, remindTime.getTime()); // five minute later
-        assertEquals(String.format(CONTENT_PATTERN_FOR_EXCEEDED_TASK, taskName, duration), notification.getContent());
+        assertEquals(String.format(CONTENT_PATTERN_FOR_EXCEEDED_TASK, taskName, endTime), notification.getContent());
     }
 
     @Test
@@ -296,7 +294,7 @@ public class NotificationServiceTest {
 
         Date endTime = new Date(startTime.getTime() + (long) 1000 * 60 * 60); // one hour
         LocalDateTime duration = LocalDateTime.ofInstant(endTime.toInstant(), ZoneId.systemDefault());
-        task.setDuration(duration);
+        task.setScheduledEnd(endTime);
 
         assertTrue(service.createNotificationForTask(task));
 
