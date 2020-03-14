@@ -1,6 +1,7 @@
 package com.apptime.auth.model;
 
 import javax.persistence.*;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -17,20 +18,20 @@ public class Task {
     private String name;
     private Date scheduledstart;
     @Column(nullable = true)
-    private LocalDateTime duration;
+    private Duration duration;
     private String userName;
     private String Description;
     @Enumerated(EnumType.STRING)
     private TaskState state;
-    private Date start;
-
-    private Date end;
+    private Date actualStart;
+    private Date actualEnd;
+    private Date scheduledEnd;
 
     public Date getEnd() {
-        return end;
+        return actualEnd;
     }
     public void setEnd(Date end) {
-        this.end = end;
+        this.actualEnd = end;
     }
     public Date getScheduledstart() {
         return scheduledstart;
@@ -71,11 +72,11 @@ public class Task {
     }
 
 
-    public LocalDateTime getDuration() {
+    public Duration getDuration() {
         return duration;
     }
 
-    public void setDuration(LocalDateTime duration) {
+    public void setDuration(Duration duration) {
         this.duration = duration;
     }
 
@@ -95,11 +96,11 @@ public class Task {
         return state;
     }
     public void setStart(Date start) {
-        this.start = start;
+        this.actualStart = start;
     }
 
     public Date getStart() {
-        return start;
+        return actualStart;
     }
 
 
