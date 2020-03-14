@@ -11,12 +11,13 @@ import { ajax } from 'rxjs/ajax';
 
 
 interface IQuote {
-  categories: any[];
-  created_at: string;
-  icon_url: string;
   id: string;
-  url: string;
-  value: string;
+  owner: string;
+  type: string;
+  key: string;
+  content: string;
+  deliveredstring;
+  remindTime: string;
 }
 @Component({
   selector: 'app-root',
@@ -61,7 +62,7 @@ export class AppComponent implements OnInit {
         startWith(0), // Starts immediatly
         mapTo(
           // Map to your request
-          this._http.get<IQuote>('https://api.chucknorris.io/jokes/random')
+          this._http.get<IQuote>('http://localhost:8001/notification/new')
           // ajax('https://api.chucknorris.io/jokes/random')
         ),
         flatMap(v => v),
