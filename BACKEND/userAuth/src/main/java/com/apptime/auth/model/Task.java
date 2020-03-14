@@ -103,7 +103,12 @@ public class Task {
         return actualStart;
     }
 
+    public Date getScheduledEnd() {
+        return scheduledEnd;
+    }
 
-
+    public void setScheduledEnd(Date scheduledEnd) {
+        this.scheduledEnd = scheduledEnd;
+    }
 }
 
