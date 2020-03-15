@@ -11,8 +11,8 @@ import {DialogData} from '../tasks/tasks.component';
 })
 export class StartTaskDialogComponent implements OnInit {
   id;
-  number;
   name;
+  isConcurrent = false;
 
 
   constructor(
@@ -26,12 +26,66 @@ export class StartTaskDialogComponent implements OnInit {
   }
 
   onYesClick(): void {
+    this.startTask(this.id);
 
-    this.dialogRef.close();
+    if (this.isConcurrent)
+      this.dialogRef.close();
+  }
+
+  onCompleteClick(): void {
+    console.log('Complete clicked!');
+  }
+
+  onSuspendClick(): void {
+    console.log('Suspend clicked!');
   }
 
   ngOnInit() {
     this.name = this.data.name;
+    this.id = this.data.id;
+  }
+
+  startTask(i: number): void {
+    const headers = { Authorization: 'Bearer ' + this.sessionService.getToken()};
+    console.log("StartTask");
+    const body = { startDate: new Date()
+    };
+
+    this.http.post('http://localhost:8001/tasks/task/' + i + '/start', body, { headers }).subscribe({
+      next: data => console.log(data),
+      error: error => {
+        console.error('There was an error!', error)
+        //console.log("the error: " + error.error.errorType)
+        if(error.error.errorType == 'Concurrent_Active_Task_Not_Allowed') {
+          console.log('There is another task running');
+          this.isConcurrent = true;
+        }
+      }
+    });
+  }
+
+  suspendTask(i: number): void {
+    const headers = { Authorization: 'Bearer ' + this.sessionService.getToken()};
+    console.log("SuspendTask");
+    const body = {
+    };
+
+    this.http.post('http://localhost:8001/tasks/task/' + i + '/suspend', body, { headers }).subscribe({
+      next: data => console.log(data),
+      error: error => console.error('There was an error!', error)
+    });
+  }
+
+  completeTask(i: number): void {
+    const headers = { Authorization: 'Bearer ' + this.sessionService.getToken()};
+    console.log("CompleteTask");
+    const body = {
+    };
+
+    this.http.post('http://localhost:8001/tasks/task/' + i + '/complete', body, { headers }).subscribe({
+      next: data => console.log(data),
+      error: error => console.error('There was an error!', error)
+    });
   }
 
 }

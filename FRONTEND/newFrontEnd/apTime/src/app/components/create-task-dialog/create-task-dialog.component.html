@@ -19,9 +19,18 @@
 
         </mat-form-field>
 
+<!--        <mat-form-field>-->
+<!--            <mat-label>Category</mat-label>-->
+<!--            <input matInput [(ngModel)]="data.category">-->
+<!--        </mat-form-field>-->
+
         <mat-form-field>
             <mat-label>Category</mat-label>
-            <input matInput [(ngModel)]="data.category">
+            <mat-select [(ngModel)]="selectedCategory">
+                <mat-option *ngFor="let category of categories" [value]="category.name">
+                    {{category.name}}
+                </mat-option>
+            </mat-select>
         </mat-form-field>
 
         <mat-form-field>

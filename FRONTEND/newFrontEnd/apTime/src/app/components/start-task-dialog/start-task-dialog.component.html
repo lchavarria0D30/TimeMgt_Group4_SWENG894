@@ -1,8 +1,22 @@
-<h1 mat-dialog-title>Task "{{name}}"</h1>
-<div mat-dialog-content>
-    <p>Do you want to start the task?</p>
+<div *ngIf="!isConcurrent">
+    <h1 mat-dialog-title>Task "{{name}}"</h1>
+    <div mat-dialog-content>
+        <p>Do you want to start the task?</p>
+    </div>
+    <div mat-dialog-actions>
+        <button mat-button (click)="onNoClick()">No</button>
+        <button mat-button (click)="onYesClick()" cdkFocusInitial>Yes, start it!</button>
+    </div>
 </div>
-<div mat-dialog-actions>
-    <button mat-button (click)="onNoClick()">No</button>
-    <button mat-button (click)="onYesClick()" cdkFocusInitial>Yes, start it!</button>
+
+<div *ngIf="isConcurrent">
+    <h1 mat-dialog-title>Task 1 "{{name}}"</h1>
+    <div mat-dialog-content>
+        <p>Do you want to complete or suspend the running task?</p>
+    </div>
+    <div mat-dialog-actions>
+        <button mat-button (click)="onNoClick()">No</button>
+        <button mat-button (click)="onCompleteClick()" cdkFocusInitial>Complete it!</button>
+        <button mat-button (click)="onSuspendClick()" cdkFocusInitial>Suspend it!</button>
+    </div>
 </div>
