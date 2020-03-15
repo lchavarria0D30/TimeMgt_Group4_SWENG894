@@ -73,8 +73,9 @@ public class TaskManagerService {
 	@Transactional
 	public Task deleteTask(long id) {
 		Task old = taskRepo.findById(id);
-		if(!old.getState().equals(TaskState.CREATED) || !old.getState().equals(TaskState.COMPLETED))
+		if (old != null && old.getState() != null && !old.getState().equals(TaskState.CREATED) && !old.getState().equals(TaskState.COMPLETED)) {
 			return null;
+		}
 		if (old != null) {
 			taskRepo.delete(old);
 			notificationService.deleteNotificationForTask(old);

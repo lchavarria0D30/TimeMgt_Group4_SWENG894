@@ -83,11 +83,10 @@ public class NotificationServiceImpl implements NotificationService {
         Notification notificationForTask = new Notification(task.getUserName(), TYPE_FOR_TASK, key, contentForTask, new Date(startTime.getTime() - REMIND_TIME_BEFORE_START_IN_MIL_SEC));
         notificationRepository.save(notificationForTask);
 
-        if (task.getDuration() != null) {
+        if (task.getScheduledEnd() != null) {
             // create notification for exceeded task
-            String contentForExceededTask = String.format(CONTENT_PATTERN_FOR_EXCEEDED_TASK, task.getName(), task.getDuration());
-            LocalDateTime notificationTime = task.getDuration().plusMinutes(5);
-            Date date = Date.from(notificationTime.atZone(ZoneId.systemDefault()).toInstant());
+            String contentForExceededTask = String.format(CONTENT_PATTERN_FOR_EXCEEDED_TASK, task.getName(), task.getScheduledEnd());
+            Date date = new Date(task.getScheduledEnd().getTime() + REMIND_TIME_AFTER_ESTEMITED_END_IN_MIL_SEC);
             Notification notificationForExceededTask = new Notification(task.getUserName(), TYPE_FOR_EXCEEDED_TASK, key, contentForExceededTask, date);
             notificationRepository.save(notificationForExceededTask);
         }
