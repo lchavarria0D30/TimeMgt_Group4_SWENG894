@@ -26,12 +26,25 @@ export class StartTaskDialogComponent implements OnInit {
   }
 
   onYesClick(): void {
-
+    this.startTask(this.id);
     this.dialogRef.close();
   }
 
   ngOnInit() {
     this.name = this.data.name;
+    this.id = this.data.id;
+  }
+
+  startTask(i: number): void {
+    const headers = { Authorization: 'Bearer ' + this.sessionService.getToken()};
+    console.log("StartTask");
+    const body = { startDate: new Date()
+    };
+
+    this.http.post('http://localhost:8001/tasks/task/' + i + '/start', body, { headers }).subscribe({
+      next: data => console.log(data),
+      error: error => console.error('There was an error!', error)
+    });
   }
 
 }

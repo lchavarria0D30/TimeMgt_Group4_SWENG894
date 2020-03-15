@@ -13,13 +13,13 @@
 				</div>
 
 				<div fxFlex="50" *ngIf="task.state == 'COMPLETED' ">
-					<button mat-button (click)="startTask(task.id)" color="primary">
+					<button mat-button (click)="startTask(task.id)" color="primary" [disabled]="true">
 						<mat-icon>done_outline</mat-icon> Completed
 					</button>
 				</div>
 
 				<div fxFlex="50">
-					<button mat-button (click)="startTask(task.id)" color="primary" *ngIf="task.state == 'CREATED' ">
+					<button mat-button (click)="openStartDialog(task.id, task.name)" color="primary" *ngIf="task.state == 'CREATED' ">
 						<mat-icon>play_circle_filled</mat-icon> Start Created
 					</button>
 				</div>
@@ -83,13 +83,13 @@
 				</div>
 		  	</mat-card-content>
 		  	<mat-card-actions>
-		    	<button mat-button (click)="openEditDialog(task.id, i)">
+		    	<button mat-button (click)="openEditDialog(task.id, i)" *ngIf="task.state == 'CREATED' ">
 		    		<mat-icon>edit</mat-icon>
 		    	</button>
 <!--		    	<button mat-button>-->
 <!--		    		<mat-icon>share</mat-icon>-->
 <!--		    	</button>-->
-		    	<button mat-button (click)="openDeleteDialog(task.id, task.name)">
+		    	<button mat-button (click)="openDeleteDialog(task.id, task.name)" *ngIf="task.state == 'CREATED' ">
 		    		<mat-icon>delete</mat-icon>
 		    	</button>
 		 	</mat-card-actions>
