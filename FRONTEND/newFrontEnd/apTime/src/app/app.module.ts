@@ -31,6 +31,7 @@ import { DeleteTaskDialogComponent } from './components/delete-task-dialog/delet
 import { EditTaskDialogComponent } from './components/edit-task-dialog/edit-task-dialog.component';
 import { StartTaskDialogComponent } from './components/start-task-dialog/start-task-dialog.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { ConfirmTaskDialogComponent } from './components/confirm-task-dialog/confirm-task-dialog.component';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,8 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
     DeleteTaskDialogComponent,
     EditTaskDialogComponent,
     StartTaskDialogComponent,
-    DashboardComponent
+    DashboardComponent,
+    ConfirmTaskDialogComponent
   ],
 
   imports: [
@@ -66,7 +68,8 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
   CreateTaskDialogComponent,
     DeleteTaskDialogComponent,
     EditTaskDialogComponent,
-    StartTaskDialogComponent
+    StartTaskDialogComponent,
+    ConfirmTaskDialogComponent
   ]
 
 })

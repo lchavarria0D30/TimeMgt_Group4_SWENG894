@@ -13,26 +13,32 @@
 				</div>
 
 				<div fxFlex="50" *ngIf="task.state == 'COMPLETED' ">
-					<button mat-button (click)="startTask(task.id)" color="primary" [disabled]="true">
+					<button mat-button color="primary" [disabled]="true">
 						<mat-icon>done_outline</mat-icon> Completed
 					</button>
 				</div>
 
 				<div fxFlex="50">
 					<button mat-button (click)="openStartDialog(task.id, task.name)" color="primary" *ngIf="task.state == 'CREATED' ">
-						<mat-icon>play_circle_filled</mat-icon> Start Created
-					</button>
-				</div>
-
-				<div fxFlex="50" >
-					<button mat-button (click)="suspendTask(task.id)" color="primary" *ngIf="task.state == 'ACTIVE' ">
-						<mat-icon>pause_circle_outline</mat-icon> Start Suspend
+						<mat-icon>play_circle_filled</mat-icon> Start
 					</button>
 				</div>
 
 				<div fxFlex="50" *ngIf="task.state == 'ACTIVE' ">
-					<button mat-button (click)="completeTask(task.id)" color="primary">
-						<mat-icon>play_circle_outline</mat-icon> Start Active (Restart)
+					<button mat-button (click)="openConfirmDialog(task.id, task.name, false)" color="primary">
+						<mat-icon>pause_circle_outline</mat-icon> Pause
+					</button>
+				</div>
+
+				<div fxFlex="50" *ngIf="task.state == 'ACTIVE' ">
+					<button mat-button (click)="openConfirmDialog(task.id, task.name, true)" color="primary">
+						<mat-icon>done</mat-icon> Done
+					</button>
+				</div>
+
+				<div fxFlex="50" *ngIf="task.state == 'PAUSED' ">
+					<button mat-button (click)="openStartDialog(task.id, task.name)" color="primary">
+						<mat-icon>play_circle_outline</mat-icon> Restart
 					</button>
 				</div>
 

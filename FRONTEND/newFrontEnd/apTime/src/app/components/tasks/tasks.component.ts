@@ -8,6 +8,7 @@ import { CreateTaskDialogComponent } from '../create-task-dialog/create-task-dia
 import { DeleteTaskDialogComponent } from '../delete-task-dialog/delete-task-dialog.component';
 import { EditTaskDialogComponent } from '../edit-task-dialog/edit-task-dialog.component';
 import { StartTaskDialogComponent } from '../start-task-dialog/start-task-dialog.component';
+import { ConfirmTaskDialogComponent } from '../confirm-task-dialog/confirm-task-dialog.component';
 
 export interface DialogData {
   name: string;
@@ -24,6 +25,7 @@ export interface DialogData {
   number: string;
   id: number;
   token: string;
+  isDone: boolean;
   task: any;
 }
 
@@ -78,6 +80,24 @@ export class TasksComponent implements OnInit {
     });
   }
 
+  openConfirmDialog(i: number, name: string, isDone: boolean): void {
+
+    const dialogRef = this.dialog.open(
+        ConfirmTaskDialogComponent, {
+          // width: '250px',
+          data: {
+            id: i,
+            name,
+            isDone: isDone
+          }
+        });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The confirm dialog was closed');
+      this.getTasks();
+    });
+  }
+
   openEditDialog(i: number, index: number): void {
     const dialogRef = this.dialog.open(
     EditTaskDialogComponent, {
@@ -108,6 +128,7 @@ export class TasksComponent implements OnInit {
     });
   }
 
+
   getTasks(): void {
       this.token = this.sessionService.getToken();
 
@@ -119,31 +140,7 @@ export class TasksComponent implements OnInit {
       error: error => console.error('There was an error!', error)
       });
 
-      console.log(this.tasks);
-  }
-
-  suspendTask(i: number): void {
-    const headers = { Authorization: 'Bearer ' + this.sessionService.getToken()};
-    console.log("SuspendTask");
-    const body = {
-    };
-
-    this.http.post('http://localhost:8001/tasks/task/' + i + '/suspend', body, { headers }).subscribe({
-      next: data => console.log(data),
-      error: error => console.error('There was an error!', error)
-    });
-  }
-
-  completeTask(i: number): void {
-    const headers = { Authorization: 'Bearer ' + this.sessionService.getToken()};
-    console.log("CompleteTask");
-    const body = {
-    };
-
-    this.http.post('http://localhost:8001/tasks/task/' + i + '/complete', body, { headers }).subscribe({
-      next: data => console.log(data),
-      error: error => console.error('There was an error!', error)
-    });
+      // console.log(this.tasks);
   }
 
 }
