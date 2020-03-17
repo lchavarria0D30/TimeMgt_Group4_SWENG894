@@ -87,11 +87,21 @@ export class EditTaskDialogComponent implements OnInit {
 
   ngOnInit() {
     this.showActuals = false;
-    this.data.task.scheduledstart = new Date(this.data.task.scheduledstart.substring(0, this.data.task.scheduledstart.length - 5));
 
     this.id = this.data.id;
+
     this.task = this.data.task;
-    this.task.ssTime = this.data.task.scheduledstart.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    // let date = new Date(this.task.scheduledstart.substring(0, this.task.scheduledstart.length - 5));
+    //
+    // this.task.scheduledstart = new Date(this.task.scheduledstart.substring(0, this.task.scheduledstart.length - 5));
+    // this.task.ssTime = date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    setTimeout(() => {
+      let date = this.task.scheduledstart.substring(0, this.task.scheduledstart.length - 5);
+      let ssDate = new Date(date);
+      let ssTime = ssDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+      this.task.ssTime = ssTime;
+      this.task.scheduledstart = ssDate;
+    });
 
     console.log('The task: ', this.task);
 

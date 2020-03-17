@@ -99,6 +99,13 @@ export class TasksComponent implements OnInit {
   }
 
   openEditDialog(i: number, index: number): void {
+    // let theTask = this.tasks[index];
+    // console.log("the task before: ", theTask);
+    // let date = new Date(theTask.scheduledstart);
+    // let ssTime = new Date(theTask.scheduledstart.substring(0, theTask.scheduledstart.length - 5));
+    // let ssDate = ssTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+
+
     const dialogRef = this.dialog.open(
     EditTaskDialogComponent, {
       data: {
