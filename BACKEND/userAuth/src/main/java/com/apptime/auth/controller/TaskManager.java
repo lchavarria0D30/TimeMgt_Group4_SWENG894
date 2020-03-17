@@ -121,7 +121,7 @@ public class TaskManager {
 	 */
 	@PostMapping("/task/{id}/start")
 	public ResponseEntity<?> start(@PathVariable Long id, Principal p){
-		String userName = p.getName();
+		String userName = getPrinciple(p).getName();
 		Task task = taskService.getTask(id,userName);
 		if (task == null ) {
 			return new ResponseEntity<TaskError>( new TaskError(ErrorType.Task_Not_Found, null), HttpStatus.NOT_FOUND);
@@ -134,7 +134,7 @@ public class TaskManager {
 		if(!isAuthorized(p,task)){
 			return new ResponseEntity<TaskError>(new TaskError(ErrorType.Task_Not_Found, null),HttpStatus.UNAUTHORIZED);
 		}
-		return new ResponseEntity<TaskState>(taskService.start(id, new Date()), HttpStatus.OK);
+		return new ResponseEntity<TaskState>(taskService.start(id), HttpStatus.OK);
 	}
 
 	/**
@@ -145,7 +145,7 @@ public class TaskManager {
 	 */
 	@PostMapping("/task/{id}/pause")
 	public ResponseEntity<?> pause(@PathVariable Long id, Principal p){
-		String userName = p.getName();
+		String userName = getPrinciple(p).getName();
 		Task task = taskService.getTask(id,userName);
 		if (task == null ) {
 			return new ResponseEntity<TaskError>( new TaskError(ErrorType.Task_Not_Found, null), HttpStatus.NOT_FOUND);
@@ -171,7 +171,7 @@ public class TaskManager {
 		if(!isAuthorized(p,task)){
 			return new ResponseEntity<TaskError>(new TaskError(ErrorType.Task_Not_Found, null),HttpStatus.UNAUTHORIZED);
 		}
-		return new ResponseEntity<TaskState>(taskService.complete(id, new Date()), HttpStatus.OK);
+		return new ResponseEntity<TaskState>(taskService.complete(id), HttpStatus.OK);
 	}
 
 
@@ -185,7 +185,7 @@ public class TaskManager {
 		return p != null ? p : SecurityContextHolder.getContext().getAuthentication();
 	}
 	private Boolean isAuthorized(Principal p, Task task){
-		return task.getUserName() == p.getName();
+		return task.getUserName().equals(getPrinciple(p).getName());
 	}
 
 
