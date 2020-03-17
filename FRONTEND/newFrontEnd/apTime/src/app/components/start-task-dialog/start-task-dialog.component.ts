@@ -13,7 +13,7 @@ export class StartTaskDialogComponent implements OnInit {
   id;
   name;
   isConcurrent = false;
-
+  task;
 
   constructor(
       public dialogRef: MatDialogRef<StartTaskDialogComponent>,
@@ -32,12 +32,14 @@ export class StartTaskDialogComponent implements OnInit {
       this.dialogRef.close();
   }
 
-  onCompleteClick(): void {
+  onCompleteClick(i: number): void {
     console.log('Complete clicked!');
+    this.completeTask(i);
   }
 
-  onSuspendClick(): void {
+  onSuspendClick(i: number): void {
     console.log('Suspend clicked!');
+    this.suspendTask(i);
   }
 
   ngOnInit() {
@@ -62,6 +64,8 @@ export class StartTaskDialogComponent implements OnInit {
         if(error.error.errorType == 'Concurrent_Active_Task_Not_Allowed') {
           console.log('There is another task running');
           this.isConcurrent = true;
+          // console.log(error.error.payload);
+          this.task = error.error.payload;
         }
       }
     });
@@ -75,7 +79,8 @@ export class StartTaskDialogComponent implements OnInit {
 
     this.http.post('http://localhost:8001/tasks/task/' + i + '/pause', body, { headers }).subscribe({
       next: data => {
-        console.log(data)
+        // console.log(data)
+        this.startTask(this.id);
       },
       error: error => console.error('There was an error!', error)
     });
@@ -88,7 +93,11 @@ export class StartTaskDialogComponent implements OnInit {
     };
 
     this.http.post('http://localhost:8001/tasks/task/' + i + '/complete', body, { headers }).subscribe({
-      next: data => console.log(data),
+      next: data => {
+        // console.log(data)
+        this.startTask(this.id);
+
+      },
       error: error => console.error('There was an error!', error)
     });
   }
