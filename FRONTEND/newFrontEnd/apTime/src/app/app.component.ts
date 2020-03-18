@@ -1,3 +1,12 @@
+/**
+ *
+ * Author(s): Yanisse/Asma
+ * Jira Task: N/A
+ * Description: The main component code for application. Holds the component code to be used in all the other components
+ * of the app.
+ *
+ **/
+
 import { Component, OnInit } from '@angular/core';
 import { AmplifyService } from 'aws-amplify-angular';
 import { Auth } from 'aws-amplify';

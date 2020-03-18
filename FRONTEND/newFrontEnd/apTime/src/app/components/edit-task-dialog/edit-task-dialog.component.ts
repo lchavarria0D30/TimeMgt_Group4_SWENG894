@@ -1,3 +1,12 @@
+/**
+ *
+ * Author: Yanisse
+ * Jira Task: TMGP4-32
+ * Description: The component code for the edit task dialog box. The user inputs the details associated to the
+ * to be updated task.
+ *
+ **/
+
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {HttpClient} from '@angular/common/http';

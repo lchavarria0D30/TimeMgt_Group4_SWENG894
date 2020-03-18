@@ -1,3 +1,11 @@
+/**
+ *
+ * Author: Yanisse
+ * Jira Task: TMGP4-181, TMGP4-47, TMGP4-48, TMGP4-30, TMGP4-32, TMGP4-29
+ * Description: The component code for the general tasks view. User can see and manage all his tasks in this view.
+ *
+ **/
+
 import { Component, OnInit, Inject } from '@angular/core';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { HttpClient } from '@angular/common/http';

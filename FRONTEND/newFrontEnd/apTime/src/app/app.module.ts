@@ -1,3 +1,11 @@
+/**
+ *
+ * Author(s): Yanisse/Asma
+ * Jira Task: N/A
+ * Description: The main application modules code. Imports and exports all the modules needed in the application.
+ *
+ **/
+
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';

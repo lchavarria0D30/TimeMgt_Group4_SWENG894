@@ -1,3 +1,12 @@
+/**
+ *
+ * Author: Yanisse
+ * Jira Task: TMGP4-47
+ * Description: The component code for the start task dialog box. The user confirms whether he wants to start the task
+ * or not.
+ *
+ **/
+
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {HttpClient} from '@angular/common/http';

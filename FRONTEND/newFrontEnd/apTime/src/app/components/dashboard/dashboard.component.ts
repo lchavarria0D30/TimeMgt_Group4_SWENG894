@@ -1,3 +1,11 @@
+/**
+ *
+ * Author: Yanisse
+ * Jira Task: TBD
+ * Description: The component code for the dashboard. Users will see their current tasks in a dashboard view.
+ *
+ **/
+
 import { Component, OnInit } from '@angular/core';
 import { SessionService } from '../../services/session.service';
 import {HttpClient} from '@angular/common/http';

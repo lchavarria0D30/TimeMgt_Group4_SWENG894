@@ -1,3 +1,11 @@
+/**
+ *
+ * Author: Yanisse
+ * Jira Task: TMGP4-185
+ * Description: The component code for the home page.
+ *
+ **/
+
 import { Component, OnInit } from '@angular/core';
 
 @Component({
