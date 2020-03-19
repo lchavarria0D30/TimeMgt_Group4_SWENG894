@@ -8,6 +8,7 @@
  **/
 
 import {Component, Inject, OnInit} from '@angular/core';
+import {FormControl, Validators} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {HttpClient} from '@angular/common/http';
 import {SessionService} from '../../services/session.service';
@@ -28,6 +29,29 @@ export class EditTaskDialogComponent implements OnInit {
   scheduledEnd;
   actualStart;
   actualEnd;
+  timeRegex = /^(?:(?:1[0-2]|0?[1-9]):[0-5]\d\s*[AaPp][Mm])?$/;
+
+  nameFormControl = new FormControl('', [
+    Validators.required
+  ]);
+
+  sDateFormControl = new FormControl('', [
+    Validators.required
+  ]);
+
+  eDateFormControl = new FormControl('', [
+    Validators.required
+  ]);
+
+  sTimeFormControl = new FormControl('', [
+    Validators.required,
+    Validators.pattern(this.timeRegex)
+  ]);
+
+  eTimeFormControl = new FormControl('', [
+    Validators.required,
+    Validators.pattern(this.timeRegex)
+  ]);
 
 
   constructor(

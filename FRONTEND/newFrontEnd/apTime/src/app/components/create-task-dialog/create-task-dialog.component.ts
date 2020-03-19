@@ -74,10 +74,9 @@ export class CreateTaskDialogComponent implements OnInit {
       description: this.data.description,
       category: this.selectedCategory,
       scheduledstart: this.scheduledStart,
-      scheduledend: this.scheduledEnd,
+      scheduledEnd: this.scheduledEnd,
     };
 
-    console.log("the category: " + this.selectedCategory);
 
     this.http.post('http://localhost:8001/tasks/newtask', body, { headers }).subscribe({
       next: data => console.log(data),
