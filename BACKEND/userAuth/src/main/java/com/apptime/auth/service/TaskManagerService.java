@@ -1,24 +1,20 @@
 package com.apptime.auth.service;
 
-import java.security.Principal;
+import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import com.apptime.auth.config.TaskStateMachine;
 import com.apptime.auth.model.TaskState;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.apptime.auth.model.Task;
 import com.apptime.auth.repository.TaskRepository;
 
 import javax.transaction.Transactional;
-import com.apptime.auth.model.TaskError;
+
 /**
  * @author Bashiir Mohamed
  * this class represent  task business service layer.
@@ -146,4 +142,21 @@ public class TaskManagerService {
 	}
 
 
-	}
+    public Set<Task> getStartingTask(Date start, String name) {
+		Set<Task> tasks = taskRepo.getSpecificDayTasks(start,name);
+		Set<Task> result = new HashSet<Task>();
+		String pattern = "yyyy-MM-dd";
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+		String stDate = simpleDateFormat.format(start);
+		if(tasks != null && !tasks.isEmpty()){
+			for(Task task : tasks){
+				SimpleDateFormat simpleD = new SimpleDateFormat(pattern);
+				String schldDate = simpleD.format(task.getScheduledstart());
+				if (schldDate.equals(stDate)) {
+					result.add(task);
+				}
+				}
+			}
+		return result;
+    }
+}

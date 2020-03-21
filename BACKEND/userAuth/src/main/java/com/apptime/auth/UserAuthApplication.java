@@ -1,8 +1,13 @@
 package com.apptime.auth;
 
+
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -13,6 +18,9 @@ import org.springframework.web.filter.CorsFilter;
  * it also configures CORS filters for the entire application.
  * provices access to the resouce foler
  */
+@EntityScan(
+        basePackageClasses = {UserAuthApplication.class, Jsr310JpaConverters.class}
+)
 @EnableResourceServer
 @SpringBootApplication
 public class UserAuthApplication {
