@@ -2,6 +2,9 @@ package com.apptime.auth.service;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.stream.Collectors;
 import com.apptime.auth.config.TaskStateMachine;
 import com.apptime.auth.model.Task;
 import com.apptime.auth.model.TaskState;
@@ -10,8 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import javax.transaction.Transactional;
-import java.util.Date;
-import java.util.List;
+
 /**
  * @author Bashiir Mohamed
  * this class represent  task business service layer.
