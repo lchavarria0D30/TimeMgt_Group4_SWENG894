@@ -1,3 +1,11 @@
+/**
+ *
+ * Author: Yanisse
+ * Jira Task: TBD
+ * Description: The component code for the dashboard. Users will see their current tasks in a dashboard view.
+ *
+ **/
+
 import { Component, OnInit } from '@angular/core';
 import { SessionService } from '../../services/session.service';
 import {HttpClient} from '@angular/common/http';
@@ -34,24 +42,10 @@ export class DashboardComponent implements OnInit {
     this.http.get('http://localhost:8001/tasks/', { headers }).subscribe({
       next: data => {
         this.tasks = data;
-        // console.log(this.tasks);
-        this.theTask = this.tasks[0];
       },
       error: error => console.error('There was an error!', error)
     });
 
-  }
-
-  startTask(i: number): void {
-    const headers = { Authorization: 'Bearer ' + this.sessionService.getToken()};
-
-    const body = { id: i
-    };
-
-    this.http.post('http://localhost:8001/tasks/start', body, { headers }).subscribe({
-      next: data => console.log(data),
-      error: error => console.error('There was an error!', error)
-    });
   }
 
 }

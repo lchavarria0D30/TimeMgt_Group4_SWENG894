@@ -1,3 +1,12 @@
+/**
+ *
+ * Author: Yanisse
+ * Jira Task: TMGP4-29
+ * Description: The component code for the create task dialog box. The users inputs all the data associated to the task
+ * to be created.
+ *
+ **/
+
 import {Component, Inject, OnInit} from '@angular/core';
 import {FormControl, Validators} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
@@ -65,10 +74,9 @@ export class CreateTaskDialogComponent implements OnInit {
       description: this.data.description,
       category: this.selectedCategory,
       scheduledstart: this.scheduledStart,
-      scheduledend: this.scheduledEnd,
+      scheduledEnd: this.scheduledEnd,
     };
 
-    console.log("the category: " + this.selectedCategory);
 
     this.http.post('http://localhost:8001/tasks/newtask', body, { headers }).subscribe({
       next: data => console.log(data),
