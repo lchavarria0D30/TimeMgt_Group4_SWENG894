@@ -97,6 +97,7 @@ export class CreateTaskDialogComponent implements OnInit {
       const  minutes = parseInt(parts[2], 10);
       const  tt = parts[3];
       if (tt === 'PM' && hours < 12) { hours += 12; }
+      if (tt == 'AM' && hours == 12) {hours = 0; }
       date.setHours(hours, minutes, 0, 0);
     }
 
