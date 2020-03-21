@@ -3,6 +3,7 @@ package com.apptime.auth.controller;
 import com.apptime.auth.config.TaskStateMachine;
 import com.apptime.auth.model.Task;
 import com.apptime.auth.model.TaskState;
+import com.apptime.auth.repository.TaskReportRepository;
 import com.apptime.auth.repository.TaskRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -54,6 +55,9 @@ public class TaskManagerTest {
     private TaskRepository taskRepository;
 
     @Autowired
+    private TaskReportRepository reportRepository;
+
+    @Autowired
     private WebApplicationContext context;
 
     private MockMvc mockMvc;
@@ -61,6 +65,8 @@ public class TaskManagerTest {
     @BeforeEach
     public void init() {
         MockitoAnnotations.initMocks(this);
+
+        reportRepository.deleteAll();
         taskRepository.deleteAll();
 
         mockMvc = MockMvcBuilders
