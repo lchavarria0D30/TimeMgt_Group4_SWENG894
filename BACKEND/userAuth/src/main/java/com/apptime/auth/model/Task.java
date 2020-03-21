@@ -1,8 +1,9 @@
 package com.apptime.auth.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import javax.persistence.*;
 import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -16,6 +17,8 @@ public class Task {
     @GeneratedValue
     private long id;
     private String name;
+
+    //@Temporal(TemporalType.TIMESTAMP)
     private Date scheduledstart;
     @Column(nullable = true)
     private Duration duration;
@@ -38,6 +41,7 @@ public class Task {
     }
 
     public void setScheduledstart(Date scheduledstart) {
+
         this.scheduledstart = scheduledstart;
     }
 
@@ -98,11 +102,9 @@ public class Task {
     public void setStart(Date start) {
         this.actualStart = start;
     }
-
     public Date getStart() {
         return actualStart;
     }
-
     public Date getScheduledEnd() {
         return scheduledEnd;
     }

@@ -3,13 +3,12 @@ package com.apptime.auth.controller;
 import java.security.Principal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import com.apptime.auth.model.*;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -63,6 +62,18 @@ public class TaskManager {
 			return new ResponseEntity<Task>(task, HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+	}
+
+
+	@GetMapping("/due/{start}")
+	public ResponseEntity<Set<Task>> showAddedSince(@RequestBody FormatedDate start,Principal p) {
+		Set<Task>  tasks = taskService.getStartingTask(start.getDate(), p.getName());
+		if (tasks == null || tasks.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+		} else {
+			return new ResponseEntity<Set<Task>>(tasks, HttpStatus.OK);
 		}
 	}
 
