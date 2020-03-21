@@ -35,15 +35,15 @@ Description: Template for the view all tasks view.
 					</button>
 				</div>
 
-				<div fxFlex="50" *ngIf="task.state == 'ACTIVE' ">
-					<button mat-button (click)="openConfirmDialog(task.id, task.name, true)" color="primary">
-						<mat-icon>done</mat-icon> Done
-					</button>
-				</div>
-
 				<div fxFlex="50" *ngIf="task.state == 'PAUSED' ">
 					<button mat-button (click)="openStartDialog(task.id, task.name)" color="primary">
 						<mat-icon>play_circle_outline</mat-icon> Restart
+					</button>
+				</div>
+
+				<div fxFlex="50" *ngIf="task.state == 'ACTIVE' || task.state == 'PAUSED'">
+					<button mat-button (click)="openConfirmDialog(task.id, task.name, true)" color="primary">
+						<mat-icon>done</mat-icon> Done
 					</button>
 				</div>
 
