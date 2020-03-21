@@ -80,7 +80,7 @@ export class EditTaskDialogComponent implements OnInit {
       description: this.task.description,
       category: this.task.category,
       scheduledstart: this.scheduledStart,
-      scheduledend: this.scheduledEnd
+      scheduledEnd: this.scheduledEnd
       // actualstart: this.actualStart,
       // actualend: this.actualEnd
 
