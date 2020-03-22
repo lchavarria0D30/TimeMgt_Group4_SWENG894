@@ -9,7 +9,7 @@ import java.util.Objects;
 /**
  * @author Qi Zhang
  * This is the PO for TaskReport
- * Use Case: TMGP4-26, TMGP4-31
+ * Use Case: TMGP4-26, TMGP4-31, TMGP4-35
  */
 @Entity
 public class TaskReport {
@@ -24,6 +24,12 @@ public class TaskReport {
     private TaskReportType type;
 
     private Duration difference;
+
+    private Duration scheduledDuration;
+
+    private Duration actualDuration;
+
+    private int efficiency;
 
     public int getId() {
         return id;
@@ -65,6 +71,30 @@ public class TaskReport {
         this.difference = difference;
     }
 
+    public Duration getScheduledDuration() {
+        return scheduledDuration;
+    }
+
+    public void setScheduledDuration(Duration scheduledDuration) {
+        this.scheduledDuration = scheduledDuration;
+    }
+
+    public Duration getActualDuration() {
+        return actualDuration;
+    }
+
+    public void setActualDuration(Duration actualDuration) {
+        this.actualDuration = actualDuration;
+    }
+
+    public int getEfficiency() {
+        return efficiency;
+    }
+
+    public void setEfficiency(int efficiency) {
+        this.efficiency = efficiency;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -72,14 +102,18 @@ public class TaskReport {
         TaskReport report = (TaskReport) o;
         return getId() == report.getId() &&
                 getTaskId() == report.getTaskId() &&
-                getOwner() == report.getOwner() &&
+                getEfficiency() == report.getEfficiency() &&
+                Objects.equals(getOwner(), report.getOwner()) &&
                 getType() == report.getType() &&
-                Objects.equals(getDifference(), report.getDifference());
+                Objects.equals(getDifference(), report.getDifference()) &&
+                Objects.equals(getScheduledDuration(), report.getScheduledDuration()) &&
+                Objects.equals(getActualDuration(), report.getActualDuration());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getTaskId(), getOwner(), getType(), getDifference());
+        return Objects
+                .hash(getId(), getTaskId(), getOwner(), getType(), getDifference(), getScheduledDuration(), getActualDuration(), getEfficiency());
     }
 
     @Override
@@ -87,9 +121,12 @@ public class TaskReport {
         return "TaskReport{" +
                 "id=" + id +
                 ", taskId=" + taskId +
-                ", owner=" + owner +
+                ", owner='" + owner + '\'' +
                 ", type=" + type +
                 ", difference=" + difference +
+                ", scheduledDuration=" + scheduledDuration +
+                ", actualDuration=" + actualDuration +
+                ", efficiency=" + efficiency +
                 '}';
     }
 }

@@ -41,7 +41,6 @@ public class TaskManagerService {
 	}
 	public Task getTask(long id, String username) {
 		Task temp = taskRepo.findByIdAndUserName(id,username);
-		System.out.println("date on gettask() :"+temp.getScheduledstart());
 		return temp;
 
 	}

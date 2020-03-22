@@ -20,7 +20,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -29,7 +28,7 @@ import static org.mockito.Mockito.verify;
 /**
  * @author Qi Zhang
  * This is the unit test class for TaskReportService
- * Use Case: TMGP4-26, TMGP4-31
+ * Use Case: TMGP4-26, TMGP4-31, TMGP4-35
  */
 @SpringBootTest
 public class TaskReportServiceTest {
@@ -87,12 +86,18 @@ public class TaskReportServiceTest {
         Date actualEnd = new Date(current);
         task.setScheduledEnd(scheduledEnd);
         task.setEnd(actualEnd);
+        task.setScheduledstart(new Date(current - 1000L * 60 * 120)); // scheduled start time is 120 minutes ago, which means the scheduled duration is 100 minutes
+        task.setDuration(Duration.ofMinutes(80)); // the actual duration is 80 minutes
+
         taskRepository.save(task);
 
         TaskReport report = service.generateReport(task);
         assertNotNull(report);
         assertEquals(TaskReportType.LATER, report.getType());
         assertEquals(gap, report.getDifference().toMillis());
+        assertEquals(Duration.ofMinutes(80), report.getActualDuration());
+        assertEquals(Duration.ofMinutes(100), report.getScheduledDuration());
+        assertEquals(80, report.getEfficiency());
     }
 
     @Test
@@ -114,6 +119,8 @@ public class TaskReportServiceTest {
         assertNotNull(report);
         assertEquals(TaskReportType.EARLIER, report.getType());
         assertEquals(gap, report.getDifference().toMillis());
+        assertNull(report.getActualDuration());
+        assertNull(report.getScheduledDuration());
     }
 
     @Test
