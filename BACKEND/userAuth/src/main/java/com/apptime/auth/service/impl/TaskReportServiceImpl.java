@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * @author Qi Zhang
  * This is the Service implementation for TaskReport
- * Use Case: TMGP4-26, TMGP4-31
+ * Use Case: TMGP4-26, TMGP4-31, TMGP4-35
  */
 @Service
 public class TaskReportServiceImpl implements TaskReportService {
@@ -63,6 +63,17 @@ public class TaskReportServiceImpl implements TaskReportService {
         report.setOwner(task.getUserName());
         report.setType(type);
         report.setDifference(gapDuration);
+
+        if (task.getDuration() != null && task.getScheduledstart() != null) {
+            long scheduledDurationInMilSec = task.getScheduledEnd().getTime() - task.getScheduledstart().getTime();
+            Duration scheduledDuration = Duration.ofMillis(scheduledDurationInMilSec);
+
+            int efficiency = (int) ((task.getDuration().toMillis() * 100) / scheduledDurationInMilSec);
+
+            report.setScheduledDuration(scheduledDuration);
+            report.setActualDuration(task.getDuration());
+            report.setEfficiency(efficiency);
+        }
 
         reportRepository.save(report);
 

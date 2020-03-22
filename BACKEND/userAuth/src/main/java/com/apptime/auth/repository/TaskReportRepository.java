@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * @author Qi Zhang
  * This is the repository for TaskReport
- * Use Case: TMGP4-26, TMGP4-31
+ * Use Case: TMGP4-26, TMGP4-31, TMGP4-35
  */
 public interface TaskReportRepository extends JpaRepository<TaskReport, Integer> {
     List<TaskReport> findByOwner(String owner);
