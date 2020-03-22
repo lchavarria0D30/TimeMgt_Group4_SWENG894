@@ -9,6 +9,8 @@
 import { Component, OnInit } from '@angular/core';
 import { SessionService } from '../../services/session.service';
 import {HttpClient} from '@angular/common/http';
+import {FormControl} from '@angular/forms';
+
 
 @Component({
   selector: 'app-dashboard',
@@ -21,15 +23,37 @@ export class DashboardComponent implements OnInit {
   token;
   theTask;
 
+  date = new FormControl(new Date());
+
   constructor(private http: HttpClient,
               private sessionService: SessionService) { }
 
   ngOnInit() {
     this.getTasks();
+    this.getDateTasks();
   }
 
   selectedTask(i: number): void {
     this.theTask = this.tasks[i];
+  }
+
+  getDateTasks(): void {
+
+    console.log('Date changed:');
+    console.log(this.date.value.toISOString().substring(0,10));
+    let newDate = this.date.value.toISOString().substring(0,10);
+
+    const headers = { Authorization: 'Bearer ' + this.sessionService.getToken()};
+
+    const body = { date: newDate
+    };
+
+
+    this.http.post('http://localhost:8001/tasks/due/start', body, { headers }).subscribe({
+      next: data => console.log(data),
+      error: error => console.error('There was an error!', error)
+    });
+
   }
 
 
@@ -42,6 +66,7 @@ export class DashboardComponent implements OnInit {
     this.http.get('http://localhost:8001/tasks/', { headers }).subscribe({
       next: data => {
         this.tasks = data;
+        console.log("the tasks: ", this.tasks);
       },
       error: error => console.error('There was an error!', error)
     });
