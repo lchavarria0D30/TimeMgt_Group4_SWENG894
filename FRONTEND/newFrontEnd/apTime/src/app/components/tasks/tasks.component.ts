@@ -151,11 +151,14 @@ export class TasksComponent implements OnInit {
        };
 
       this.http.get('http://localhost:8001/tasks/', { headers }).subscribe({
-      next: data => this.tasks = data,
+      next: data => {
+        this.tasks = data
+        console.log(this.tasks);
+
+      },
       error: error => console.error('There was an error!', error)
       });
 
-      // console.log(this.tasks);
   }
 
 }

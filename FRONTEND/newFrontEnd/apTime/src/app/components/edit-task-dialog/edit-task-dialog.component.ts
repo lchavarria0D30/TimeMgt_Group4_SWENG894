@@ -86,6 +86,7 @@ export class EditTaskDialogComponent implements OnInit {
 
     };
 
+    console.log('Log body before put: ', body);
     console.log('BEFORE put');
     this.http.put('http://localhost:8001/tasks/task', body, { headers }).subscribe({
       next: data => console.log(data),
@@ -111,10 +112,10 @@ export class EditTaskDialogComponent implements OnInit {
       const  minutes = parseInt(parts[2], 10);
       const tt = parts[3];
       if (tt === 'PM' && hours < 12) { hours += 12; }
-
-      console.log("hours: ", hours);
-      console.log("minutes: ", minutes);
-      console.log("date: ", date);
+      if (tt == 'AM' && hours == 12) {hours = 0; }
+      // console.log("hours: ", hours);
+      // console.log("minutes: ", minutes);
+      // console.log("date: ", date);
       date.setHours(hours, minutes, 0, 0);
     }
 
@@ -135,6 +136,12 @@ export class EditTaskDialogComponent implements OnInit {
       let ssTime = ssDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
       this.task.ssTime = ssTime;
       this.task.ssDate = ssDate;
+
+      date = this.task.scheduledEnd.substring(0, this.task.scheduledEnd.length - 5);
+      let seDate = new Date(date);
+      let seTime = seDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+      this.task.seTime = seTime;
+      this.task.seDate = seDate;
     });
 
     console.log('The task: ', this.task);

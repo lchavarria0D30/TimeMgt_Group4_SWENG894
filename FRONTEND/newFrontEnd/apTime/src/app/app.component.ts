@@ -62,8 +62,10 @@ export class AppComponent implements OnInit {
           .catch(err => console.log(err));
       }
     });
-    //'https://api.chucknorris.io/jokes/random'
-    //https://rxjs-dev.firebaseapp.com/api/ajax/ajax
+
+ //'https://api.chucknorris.io/jokes/random'
+ //https://rxjs-dev.firebaseapp.com/api/ajax/ajax
+
   }
 
   ngOnInit() {

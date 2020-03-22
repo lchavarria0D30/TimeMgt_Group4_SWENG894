@@ -4,14 +4,14 @@ Jira Task: TBD
 Description: Temaplate for the dashboard.
 -->
 <div fxLayout="row" fxLayoutAlign="center center" >
-    <p>Select a Date: &nbsp;&nbsp;</p>
-
+    <p>Tasks scheduled for: &nbsp;&nbsp;</p>
     <mat-form-field>
 <!--        <mat-label>Choose a date</mat-label>-->
-        <input matInput [matDatepicker]="picker">
+        <input matInput [matDatepicker]="picker" [formControl]="date" (dateChange)="getDateTasks()">
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
+
 </div>
 <div fxLayout="row wrap" fxLayout.xs="column wrap"  fxLayoutAlign="center center" fxLayoutGap="15px grid">
 
@@ -20,7 +20,7 @@ Description: Temaplate for the dashboard.
         <div fxLayout="row wrap" fxLayout.xs="column wrap"  fxLayoutAlign="center center" fxLayoutGap="15px grid">
 <!--    <div *ngFor="let task of tasks; let i = index" >-->
 <!--            <div *ngFor="let number of [0]; let i = index">-->
-        <mat-card>
+        <mat-card *ngIf="theTask != undefined">
             <mat-card-header>
 
                 <div fxFlex="50">
@@ -111,8 +111,8 @@ Description: Temaplate for the dashboard.
 </div>
 
 
-<div>
-    <button mat-fab color="primary" aria-label="New task" (click)="openDialog()" class="custom-button">
-        <mat-icon class="header-text">add</mat-icon>
-    </button>
-</div>
+<!--<div>-->
+<!--    <button mat-fab color="primary" aria-label="New task" (click)="openDialog()" class="custom-button">-->
+<!--        <mat-icon class="header-text">add</mat-icon>-->
+<!--    </button>-->
+<!--</div>-->
