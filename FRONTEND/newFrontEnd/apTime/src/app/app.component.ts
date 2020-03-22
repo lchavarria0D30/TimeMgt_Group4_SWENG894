@@ -63,24 +63,24 @@ export class AppComponent implements OnInit {
           .catch(err => console.log(err));
       }
     });
-    //'https://api.chucknorris.io/jokes/random'
-    //https://rxjs-dev.firebaseapp.com/api/ajax/ajax
-    // interval(3000)
-    //   .pipe(
-    //     startWith(0), // Starts immediatly
-    //     mapTo(
-    //       // Map to your request
-    //       this._http.get<IQuote>('https://api.chucknorris.io/jokes/random')
-    //       // ajax('https://api.chucknorris.io/jokes/random')
-    //     ),
-    //     flatMap(v => v),
-    //     map(quote => quote.value) // Take the field you need
-    //   )
-    //   .subscribe(x => {
-    //     console.log(x);
-    //     nService.clear();
-    //     nService.remaind(x, { autoClose: false, keepAfterRouteChange: true });
-    //   });
+    // 'https://api.chucknorris.io/jokes/random'
+    // https://rxjs-dev.firebaseapp.com/api/ajax/ajax
+    interval(3000)
+      .pipe(
+        startWith(0), // Starts immediatly
+        mapTo(
+          // Map to your request
+          this._http.get<IQuote>('https://api.chucknorris.io/jokes/random')
+          // ajax('https://api.chucknorris.io/jokes/random')
+        ),
+        flatMap(v => v),
+        map(quote => quote.value) // Take the field you need
+      )
+      .subscribe(x => {
+        console.log(x);
+        nService.clear();
+        nService.remaind(x, { autoClose: false, keepAfterRouteChange: true });
+      });
   }
 
 
