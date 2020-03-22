@@ -1,5 +1,10 @@
 package com.apptime.auth.service;
-
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.stream.Collectors;
 import com.apptime.auth.config.TaskStateMachine;
 import com.apptime.auth.model.Task;
 import com.apptime.auth.model.TaskState;
@@ -8,9 +13,8 @@ import com.apptime.auth.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
-
 import javax.transaction.Transactional;
-import java.util.List;
+
 /**
  * @author Bashiir Mohamed
  * this class represent  task business service layer.
@@ -36,17 +40,23 @@ public class TaskManagerService {
 
 	}
 	public Task getTask(long id, String username) {
-		return taskRepo.findByIdAndUserName(id,username);
+		Task temp = taskRepo.findByIdAndUserName(id,username);
+		System.out.println("date on gettask() :"+temp.getScheduledstart());
+		return temp;
 
 	}
 	public Task getTask(TaskState ts, String userName){
 		return taskRepo.findByUserNameAndState(userName,ts);
+
 	}
 	//create task
 	public Task createTask(Task task, String user) {
 		task.setUserName(user);
 		TaskStateMachine.CREATE(task);
+		System.out.println("Before saving in Db in CreatTask: +"+task.getScheduledstart());
 		taskRepo.save(task);
+		Task task2 = taskRepo.findById(task.getId());
+		System.out.println("task after saving to the database CreatTask"+task2.getScheduledstart());
 		notificationService.createNotificationForTask(task);
 		return task;
 	}
@@ -146,4 +156,21 @@ public class TaskManagerService {
 		return ts;
 	}
 
+
+    public Set<Task> getTasksStartedLaterThan(Date start, String name) {
+		Set<Task> tasks = taskRepo.getTasksStartedLaterThan(start,name);
+		Set<Task> result = new HashSet<Task>();
+		String pattern = "yyyy-MM-dd";
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+		String stDate = simpleDateFormat.format(start);
+		if(tasks != null && !tasks.isEmpty()){
+			for(Task task : tasks){
+				String schldDate = simpleDateFormat.format(task.getScheduledstart());
+				if (schldDate.equals(stDate)) {
+					result.add(task);
+				}
+				}
+			}
+		return result;
+    }
 }

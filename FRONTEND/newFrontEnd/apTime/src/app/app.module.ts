@@ -1,3 +1,11 @@
+/**
+ *
+ * Author(s): Yanisse/Asma
+ * Jira Task: N/A
+ * Description: The main application modules code. Imports and exports all the modules needed in the application.
+ *
+ **/
+
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
@@ -31,6 +39,7 @@ import { DeleteTaskDialogComponent } from './components/delete-task-dialog/delet
 import { EditTaskDialogComponent } from './components/edit-task-dialog/edit-task-dialog.component';
 import { StartTaskDialogComponent } from './components/start-task-dialog/start-task-dialog.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { ConfirmTaskDialogComponent } from './components/confirm-task-dialog/confirm-task-dialog.component';
 
 @NgModule({
   declarations: [
@@ -45,7 +54,8 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
     DeleteTaskDialogComponent,
     EditTaskDialogComponent,
     StartTaskDialogComponent,
-    DashboardComponent
+    DashboardComponent,
+    ConfirmTaskDialogComponent
   ],
 
   imports: [
@@ -66,7 +76,8 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
   CreateTaskDialogComponent,
     DeleteTaskDialogComponent,
     EditTaskDialogComponent,
-    StartTaskDialogComponent
+    StartTaskDialogComponent,
+    ConfirmTaskDialogComponent
   ]
 
 })
