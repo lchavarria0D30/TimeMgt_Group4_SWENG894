@@ -74,7 +74,7 @@ public class TaskManagerService {
 			return null;
 		}
 		if (old != null) {
-			reportRepository.deleteByTask(old);
+			reportRepository.deleteByTaskId(id);
 			taskRepo.delete(old);
 			notificationService.deleteNotificationForTask(old);
 		}

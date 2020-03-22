@@ -13,4 +13,5 @@ import java.util.List;
 public interface TaskReportService {
     TaskReport generateReport(Task task);
     List<TaskReport> getReports(String owner);
+    TaskReport findByTaskId(long id);
 }

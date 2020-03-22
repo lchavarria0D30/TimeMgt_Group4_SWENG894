@@ -26,9 +26,6 @@ public class TaskReportController extends AbstractionAuthenticationController {
     @Autowired
     private TaskReportService service;
 
-    @Autowired
-    private TaskReportRepository reportRepository;
-
     @GetMapping
     public ResponseEntity<Collection<TaskReport>> getAll(Authentication authentication) {
         String username = getUsername(authentication);
@@ -44,8 +41,8 @@ public class TaskReportController extends AbstractionAuthenticationController {
         if (username == null || username.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
-        TaskReport taskReport = reportRepository.findByTaskId(taskId);
-        if (taskReport == null || !username.equals(taskReport.getTask().getUserName())) {
+        TaskReport taskReport = service.findByTaskId(taskId);
+        if (taskReport == null || !username.equals(taskReport.getOwner())) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(taskReport, HttpStatus.OK);

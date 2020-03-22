@@ -3,7 +3,6 @@ package com.apptime.auth.model;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
 import java.time.Duration;
 import java.util.Objects;
 
@@ -18,8 +17,9 @@ public class TaskReport {
     @GeneratedValue
     private int id;
 
-    @OneToOne
-    private Task task;
+    private long taskId;
+
+    private String owner;
 
     private TaskReportType type;
 
@@ -33,12 +33,20 @@ public class TaskReport {
         this.id = id;
     }
 
-    public Task getTask() {
-        return task;
+    public long getTaskId() {
+        return taskId;
     }
 
-    public void setTask(Task task) {
-        this.task = task;
+    public void setTaskId(long taskId) {
+        this.taskId = taskId;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
     }
 
     public TaskReportType getType() {
@@ -61,23 +69,25 @@ public class TaskReport {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        TaskReport that = (TaskReport) o;
-        return getId() == that.getId() &&
-                Objects.equals(getTask(), that.getTask()) &&
-                getType() == that.getType() &&
-                Objects.equals(getDifference(), that.getDifference());
+        TaskReport report = (TaskReport) o;
+        return getId() == report.getId() &&
+                getTaskId() == report.getTaskId() &&
+                getOwner() == report.getOwner() &&
+                getType() == report.getType() &&
+                Objects.equals(getDifference(), report.getDifference());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getTask(), getType(), getDifference());
+        return Objects.hash(getId(), getTaskId(), getOwner(), getType(), getDifference());
     }
 
     @Override
     public String toString() {
         return "TaskReport{" +
                 "id=" + id +
-                ", task=" + task +
+                ", taskId=" + taskId +
+                ", owner=" + owner +
                 ", type=" + type +
                 ", difference=" + difference +
                 '}';
