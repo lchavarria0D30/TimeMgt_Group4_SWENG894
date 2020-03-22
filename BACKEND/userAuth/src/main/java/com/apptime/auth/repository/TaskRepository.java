@@ -25,5 +25,5 @@ public interface TaskRepository extends JpaRepository<Task, Integer>{
 	Task deleteById(long id);
 
 	@Query("select u from Task u where u.scheduledstart > :start and u.userName = :name")
-    Set<Task> getSpecificDayTasks( Date start,String name);
+    Set<Task> getTasksStartedLaterThan( Date start,String name);
 }

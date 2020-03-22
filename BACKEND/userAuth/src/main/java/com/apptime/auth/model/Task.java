@@ -17,8 +17,6 @@ public class Task {
     @GeneratedValue
     private long id;
     private String name;
-
-    //@Temporal(TemporalType.TIMESTAMP)
     private Date scheduledstart;
     @Column(nullable = true)
     private Duration duration;

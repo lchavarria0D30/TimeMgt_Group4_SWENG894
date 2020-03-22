@@ -34,18 +34,24 @@ public class TaskManagerService {
 
 	}
 	public Task getTask(long id, String username) {
-		return taskRepo.findByIdAndUserName(id,username);
+		Task temp = taskRepo.findByIdAndUserName(id,username);
+		System.out.println("date on gettask() :"+temp.getScheduledstart());
+		return temp;
 
 	}
 	public Task getTask(TaskState ts, String userName){
 		return taskRepo.findByUserNameAndState(userName,ts);
+
 	}
 	//create task
 	public Task createTask(Task task, String user) {
 
 		task.setUserName(user);
 		TaskStateMachine.CREATE(task);
+		System.out.println("Before saving in Db in CreatTask: +"+task.getScheduledstart());
 		taskRepo.save(task);
+		Task task2 = taskRepo.findById(task.getId());
+		System.out.println("task after saving to the database CreatTask"+task2.getScheduledstart());
 		notificationService.createNotificationForTask(task);
 		return task;
 	}
@@ -142,16 +148,15 @@ public class TaskManagerService {
 	}
 
 
-    public Set<Task> getStartingTask(Date start, String name) {
-		Set<Task> tasks = taskRepo.getSpecificDayTasks(start,name);
+    public Set<Task> getTasksStartedLaterThan(Date start, String name) {
+		Set<Task> tasks = taskRepo.getTasksStartedLaterThan(start,name);
 		Set<Task> result = new HashSet<Task>();
 		String pattern = "yyyy-MM-dd";
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
 		String stDate = simpleDateFormat.format(start);
 		if(tasks != null && !tasks.isEmpty()){
 			for(Task task : tasks){
-				SimpleDateFormat simpleD = new SimpleDateFormat(pattern);
-				String schldDate = simpleD.format(task.getScheduledstart());
+				String schldDate = simpleDateFormat.format(task.getScheduledstart());
 				if (schldDate.equals(stDate)) {
 					result.add(task);
 				}
