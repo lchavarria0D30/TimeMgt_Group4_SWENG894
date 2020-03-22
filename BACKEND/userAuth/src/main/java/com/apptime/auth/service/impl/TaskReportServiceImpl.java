@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * @author Qi Zhang
  * This is the Service implementation for TaskReport
- * Use Case: TMGP4-26, TMGP4-31
+ * Use Case: TMGP4-26, TMGP4-31, TMGP4-35
  */
 @Service
 public class TaskReportServiceImpl implements TaskReportService {
@@ -36,7 +36,7 @@ public class TaskReportServiceImpl implements TaskReportService {
         if (task == null || task.getEnd() == null || task.getScheduledEnd() == null) {
             return null;
         }
-        TaskReport existingReport = reportRepository.findByTask(task);
+        TaskReport existingReport = reportRepository.findByTaskId(task.getId());
         if (existingReport != null) {
             return null;
         }
@@ -59,9 +59,21 @@ public class TaskReportServiceImpl implements TaskReportService {
         Duration gapDuration = Duration.ofMillis(Math.abs(gapInMilSec));
 
         TaskReport report = new TaskReport();
-        report.setTask(task);
+        report.setTaskId(task.getId());
+        report.setOwner(task.getUserName());
         report.setType(type);
         report.setDifference(gapDuration);
+
+        if (task.getDuration() != null && task.getScheduledstart() != null) {
+            long scheduledDurationInMilSec = task.getScheduledEnd().getTime() - task.getScheduledstart().getTime();
+            Duration scheduledDuration = Duration.ofMillis(scheduledDurationInMilSec);
+
+            int efficiency = (int) ((task.getDuration().toMillis() * 100) / scheduledDurationInMilSec);
+
+            report.setScheduledDuration(scheduledDuration);
+            report.setActualDuration(task.getDuration());
+            report.setEfficiency(efficiency);
+        }
 
         reportRepository.save(report);
 
@@ -76,6 +88,11 @@ public class TaskReportServiceImpl implements TaskReportService {
             return Collections.emptyList();
         }
         return reportRepository.findByOwner(owner);
+    }
+
+    @Override
+    public TaskReport findByTaskId(long id) {
+        return reportRepository.findByTaskId(id);
     }
 
     public void setReportRepository(TaskReportRepository reportRepository) {

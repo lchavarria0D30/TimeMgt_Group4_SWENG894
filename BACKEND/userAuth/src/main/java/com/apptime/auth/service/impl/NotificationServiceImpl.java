@@ -4,6 +4,7 @@ import com.apptime.auth.model.Notification;
 import com.apptime.auth.model.Task;
 import com.apptime.auth.model.TaskReport;
 import com.apptime.auth.repository.NotificationRepository;
+import com.apptime.auth.repository.TaskRepository;
 import com.apptime.auth.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -29,6 +30,9 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Autowired
     private NotificationRepository notificationRepository;
+
+    @Autowired
+    private TaskRepository taskRepository;
 
     @Override
     @Transactional
@@ -115,14 +119,19 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     @Transactional
     public boolean createNotificationForTaskReport(TaskReport report) {
-        if (report == null || report.getTask() == null || report.getType() == null || report.getDifference() == null) {
+        if (report == null || report.getType() == null || report.getDifference() == null) {
             return false;
         }
 
-        Task task = report.getTask();
-        String key = Long.toString(task.getId());
+        long taskId = report.getTaskId();
+        Task task = taskRepository.findById(taskId);
+        if (task == null) {
+            return false;
+        }
 
-        clearNotifications(report.getTask().getUserName(), TYPE_FOR_TASK_REPORT, key);
+        String key = Long.toString(taskId);
+
+        clearNotifications(report.getOwner(), TYPE_FOR_TASK_REPORT, key);
 
         String content;
         if (ON_TIME == report.getType()) {
