@@ -1,9 +1,9 @@
 package com.apptime.auth.service;
-
 import com.apptime.auth.config.TaskStateMachine;
 import com.apptime.auth.model.FormatedDate;
 import com.apptime.auth.model.Task;
 import com.apptime.auth.model.TaskState;
+import com.apptime.auth.repository.TaskReportRepository;
 import com.apptime.auth.repository.TaskRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -47,13 +47,21 @@ public class TaskManagerServiceTest {
     @Autowired
     private TaskRepository repository;
 
+    @Autowired
+    private TaskReportRepository reportRepository;
+
     private NotificationService notificationService;
+
+    private TaskReportService reportService;
 
     @BeforeEach
     public void init() {
+        reportRepository.deleteAll();
         repository.deleteAll();
         notificationService = mock(NotificationService.class);
         service.setNotificationService(notificationService);
+        reportService = mock(TaskReportService.class);
+        service.setReportService(reportService);
         service.setTaskRepo(repository);
     }
 
@@ -263,11 +271,13 @@ public class TaskManagerServiceTest {
         assertNotNull(task.getDuration());
         assertNotNull(task.getEnd());
         verify(repository, times(1)).save(eq(task));
-        clearInvocations(repository);
+        verify(reportService, times(1)).generateReport(any());
+        clearInvocations(repository, reportService);
 
         task.setState(CREATED);
         state = service.complete(1L);
         assertEquals(CREATED, state);
         verify(repository, times(1)).save(eq(task));
+        verify(reportService, times(1)).generateReport(any());
     }
 }
