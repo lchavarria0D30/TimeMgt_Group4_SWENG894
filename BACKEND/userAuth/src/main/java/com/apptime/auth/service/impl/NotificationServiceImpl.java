@@ -2,6 +2,7 @@ package com.apptime.auth.service.impl;
 
 import com.apptime.auth.model.Notification;
 import com.apptime.auth.model.Task;
+import com.apptime.auth.model.TaskReport;
 import com.apptime.auth.repository.NotificationRepository;
 import com.apptime.auth.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,11 +10,13 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+
+import static com.apptime.auth.model.TaskReportType.EARLIER;
+import static com.apptime.auth.model.TaskReportType.LATER;
+import static com.apptime.auth.model.TaskReportType.ON_TIME;
 
 /**
  * @author Qi Zhang
@@ -109,15 +112,42 @@ public class NotificationServiceImpl implements NotificationService {
         return true;
     }
 
-    private void clearNotificationsForTask(Task task) {
-        List<Notification> notificationsForTask = notificationRepository.findByOwnerTypeKey(task.getUserName(), TYPE_FOR_TASK, Long.toString(task.getId()));
-        if (!notificationsForTask.isEmpty()) {
-            for (Notification notification : notificationsForTask) {
-                notificationRepository.delete(notification);
-            }
+    @Override
+    @Transactional
+    public boolean createNotificationForTaskReport(TaskReport report) {
+        if (report == null || report.getTask() == null || report.getType() == null || report.getDifference() == null) {
+            return false;
         }
 
-        List<Notification> notificationsForExceededTask = notificationRepository.findByOwnerTypeKey(task.getUserName(), TYPE_FOR_EXCEEDED_TASK, Long.toString(task.getId()));
+        Task task = report.getTask();
+        String key = Long.toString(task.getId());
+
+        clearNotifications(report.getTask().getUserName(), TYPE_FOR_TASK_REPORT, key);
+
+        String content;
+        if (ON_TIME == report.getType()) {
+            content = String.format(CONTENT_PATTERN_FOR_TASK_REPORT_ON_TIME, task.getName());
+        } else if (EARLIER == report.getType()) {
+            content = String.format(CONTENT_PATTERN_FOR_TASK_REPORT_EARLIER, task.getName(), report.getDifference()
+                    .toMinutes());
+        } else if (LATER == report.getType()) {
+            content = String
+                    .format(CONTENT_PATTERN_FOR_TASK_REPORT_LATER, task.getName(), report.getDifference().toMinutes());
+        } else {
+            content = String.format(CONTENT_PATTERN_FOR_TASK_REPORT_ON_TIME, task.getName());
+        }
+        Notification notification = new Notification(task.getUserName(), TYPE_FOR_TASK_REPORT, key, content, new Date());
+        notificationRepository.save(notification);
+        return true;
+    }
+
+    private void clearNotificationsForTask(Task task) {
+        clearNotifications(task.getUserName(), TYPE_FOR_TASK, Long.toString(task.getId()));
+        clearNotifications(task.getUserName(), TYPE_FOR_EXCEEDED_TASK, Long.toString(task.getId()));
+    }
+
+    private void clearNotifications(String owner, String type, String key) {
+        List<Notification> notificationsForExceededTask = notificationRepository.findByOwnerTypeKey(owner, type, key);
         if (!notificationsForExceededTask.isEmpty()) {
             for (Notification notification : notificationsForExceededTask) {
                 notificationRepository.delete(notification);

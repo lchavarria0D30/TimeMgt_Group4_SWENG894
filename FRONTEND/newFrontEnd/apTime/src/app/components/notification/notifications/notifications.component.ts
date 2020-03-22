@@ -18,7 +18,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   constructor(
     private route: Router,
     private noteService: NotificationsServiceService
-  ) { }
+  ) {}
 
   ngOnInit() {
     // subscribe to new alert notifications
@@ -63,6 +63,14 @@ export class NotificationsComponent implements OnInit, OnDestroy {
       // remove alert
       this.notes = this.notes.filter(x => x !== alert);
     }
+  }
+
+  cancel(alert: Notification) {
+    console.log(alert.id);
+  }
+
+  snooze(alert: Notification) {
+    console.log(alert.id);
   }
 
   cssClass(alert: Notification) {
