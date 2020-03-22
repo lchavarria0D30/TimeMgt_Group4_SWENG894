@@ -1,18 +1,17 @@
 package com.apptime.auth.service;
-
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
-
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.stream.Collectors;
 import com.apptime.auth.config.TaskStateMachine;
+import com.apptime.auth.model.Task;
 import com.apptime.auth.model.TaskState;
+import com.apptime.auth.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
-
-import com.apptime.auth.model.Task;
-import com.apptime.auth.repository.TaskRepository;
-
 import javax.transaction.Transactional;
 
 /**
@@ -45,7 +44,6 @@ public class TaskManagerService {
 	}
 	//create task
 	public Task createTask(Task task, String user) {
-
 		task.setUserName(user);
 		TaskStateMachine.CREATE(task);
 		System.out.println("Before saving in Db in CreatTask: +"+task.getScheduledstart());
@@ -95,23 +93,8 @@ public class TaskManagerService {
 		this.notificationService = notificationService;
 	}
 
-	/**
-	 *
-	 * @param taskId
-	 * @param startDate
-	 * @return
-	 */
-	public TaskState start(long  taskId, Date startDate ){
-		Task task = taskRepo.findById(taskId);
-		TaskState ts = null;
-		if(task != null){
-			TaskStateMachine.START(task);
-			task.setStart(startDate);
-			taskRepo.save(task);
-			ts = task.getState();
-		}
-		return ts;
-
+	void setTaskRepo(TaskRepository taskRepo) {
+		this.taskRepo = taskRepo;
 	}
 
 	/**
@@ -119,7 +102,25 @@ public class TaskManagerService {
 	 * @param taskId
 	 * @return
 	 */
-	public TaskState pause(long  taskId){
+	@Transactional
+	public TaskState start(long taskId){
+		Task task = taskRepo.findById(taskId);
+		TaskState ts = null;
+		if(task != null){
+			TaskStateMachine.START(task);
+			taskRepo.save(task);
+			ts = task.getState();
+		}
+		return ts;
+	}
+
+	/**
+	 *
+	 * @param taskId
+	 * @return
+	 */
+	@Transactional
+	public TaskState pause(long taskId){
 		Task task = taskRepo.findById(taskId);
 		TaskState ts = null;
 		if(task != null){
@@ -128,23 +129,18 @@ public class TaskManagerService {
 			ts = task.getState();
 		}
 		return ts;
-
-
 	}
 
-
-
-	public TaskState complete(long  taskId, Date endDate){
+	@Transactional
+	public TaskState complete(long taskId){
 		Task task = taskRepo.findById(taskId);
 		TaskState ts = null;
 		if(task != null){
 			TaskStateMachine.COMPLETE(task);
-			task.setEnd(endDate);
 			taskRepo.save(task);
 			ts = task.getState();
 		}
 		return ts;
-
 	}
 
 

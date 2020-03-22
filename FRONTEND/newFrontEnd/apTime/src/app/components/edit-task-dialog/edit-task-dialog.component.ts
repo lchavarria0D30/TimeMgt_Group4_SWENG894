@@ -1,4 +1,14 @@
+/**
+ *
+ * Author: Yanisse
+ * Jira Task: TMGP4-32
+ * Description: The component code for the edit task dialog box. The user inputs the details associated to the
+ * to be updated task.
+ *
+ **/
+
 import {Component, Inject, OnInit} from '@angular/core';
+import {FormControl, Validators} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {HttpClient} from '@angular/common/http';
 import {SessionService} from '../../services/session.service';
@@ -19,6 +29,29 @@ export class EditTaskDialogComponent implements OnInit {
   scheduledEnd;
   actualStart;
   actualEnd;
+  timeRegex = /^(?:(?:1[0-2]|0?[1-9]):[0-5]\d\s*[AaPp][Mm])?$/;
+
+  nameFormControl = new FormControl('', [
+    Validators.required
+  ]);
+
+  sDateFormControl = new FormControl('', [
+    Validators.required
+  ]);
+
+  eDateFormControl = new FormControl('', [
+    Validators.required
+  ]);
+
+  sTimeFormControl = new FormControl('', [
+    Validators.required,
+    Validators.pattern(this.timeRegex)
+  ]);
+
+  eTimeFormControl = new FormControl('', [
+    Validators.required,
+    Validators.pattern(this.timeRegex)
+  ]);
 
 
   constructor(
@@ -36,8 +69,8 @@ export class EditTaskDialogComponent implements OnInit {
 
     this.scheduledStart = this.dateConversion(this.task.ssTime, this.task.ssDate);
     this.scheduledEnd = this.dateConversion(this.task.seTime, this.task.seDate);
-    this.actualStart = this.dateConversion(this.task.asTime, this.task.asDate);
-    this.actualEnd = this.dateConversion(this.task.aeTime, this.task.aeDate);
+    // this.actualStart = this.dateConversion(this.task.asTime, this.task.asDate);
+    // this.actualEnd = this.dateConversion(this.task.aeTime, this.task.aeDate);
 
     const headers = { Authorization: 'Bearer ' + this.sessionService.getToken()};
 
@@ -47,9 +80,9 @@ export class EditTaskDialogComponent implements OnInit {
       description: this.task.description,
       category: this.task.category,
       scheduledstart: this.scheduledStart,
-      scheduledend: this.scheduledEnd,
-      actualstart: this.actualStart,
-      actualend: this.actualEnd
+      scheduledEnd: this.scheduledEnd
+      // actualstart: this.actualStart,
+      // actualend: this.actualEnd
 
     };
 
@@ -78,6 +111,10 @@ export class EditTaskDialogComponent implements OnInit {
       const  minutes = parseInt(parts[2], 10);
       const tt = parts[3];
       if (tt === 'PM' && hours < 12) { hours += 12; }
+
+      console.log("hours: ", hours);
+      console.log("minutes: ", minutes);
+      console.log("date: ", date);
       date.setHours(hours, minutes, 0, 0);
     }
 
@@ -87,11 +124,18 @@ export class EditTaskDialogComponent implements OnInit {
 
   ngOnInit() {
     this.showActuals = false;
-    this.data.task.scheduledstart = new Date(this.data.task.scheduledstart.substring(0, this.data.task.scheduledstart.length - 5));
 
     this.id = this.data.id;
+
     this.task = this.data.task;
-    this.task.ssTime = this.data.task.scheduledstart.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    
+    setTimeout(() => {
+      let date = this.task.scheduledstart.substring(0, this.task.scheduledstart.length - 5);
+      let ssDate = new Date(date);
+      let ssTime = ssDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+      this.task.ssTime = ssTime;
+      this.task.ssDate = ssDate;
+    });
 
     console.log('The task: ', this.task);
 

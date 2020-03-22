@@ -1,6 +1,8 @@
 package com.apptime.auth.controller;
 
+import com.apptime.auth.config.TaskStateMachine;
 import com.apptime.auth.model.Task;
+import com.apptime.auth.model.TaskState;
 import com.apptime.auth.repository.TaskRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -25,6 +27,7 @@ import org.springframework.web.context.WebApplicationContext;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.UUID;
 
 import static com.apptime.auth.controller.JsonUtil.asJsonString;
@@ -105,9 +108,21 @@ public class TaskManagerTest {
     }
 
     private Task createTask() {
+        return createTaskWithUsername(USERNAME);
+    }
+
+    private Task createTaskWithUsername(String username) {
         Task task = new Task();
         task.setName(UUID.randomUUID().toString());
-        task.setUserName(USERNAME);
+        task.setUserName(username);
+        TaskStateMachine.CREATE(task);
+        taskRepository.save(task);
+        return task;
+    }
+
+    private Task createAndStartTask() {
+        Task task = createTask();
+        TaskStateMachine.START(task);
         taskRepository.save(task);
         return task;
     }
@@ -233,6 +248,7 @@ public class TaskManagerTest {
         assertNotNull(taskInDb);
         assertEquals(name, taskInDb.getName());
         assertEquals(USERNAME, taskInDb.getUserName());
+        assertEquals(TaskState.CREATED, taskInDb.getState());
     }
 
     @Test
@@ -264,5 +280,129 @@ public class TaskManagerTest {
         mockMvc.perform(MockMvcRequestBuilders.delete("/tasks/task/" + taskWithDifferentUser.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)).andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void testStartTask() throws Exception {
+        Task task = createTask();
+        ResultActions actions = mockMvc.perform(MockMvcRequestBuilders.post("/tasks/task/" + task.getId() + "/start")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+
+        MvcResult result = actions.andReturn();
+        String content = result.getResponse().getContentAsString();
+        ObjectMapper mapper = new ObjectMapper();
+        String value = mapper.readValue(content, String.class);
+        assertNotNull(value);
+        assertEquals(TaskState.ACTIVE.toString(), value);
+
+        Task taskInDb = taskRepository.findById(task.getId());
+        assertNotNull(taskInDb);
+        assertEquals(TaskState.ACTIVE, taskInDb.getState());
+        assertNotNull(taskInDb.getStart());
+
+        Random r = new Random();
+        long unexistingId = r.nextLong();
+        while (unexistingId == task.getId()) {
+            unexistingId = r.nextLong();
+        }
+        mockMvc.perform(MockMvcRequestBuilders.post("/tasks/task/" + unexistingId + "/start")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isNotFound());
+
+        // create another task
+        Task task2 = createTask();
+        mockMvc.perform(MockMvcRequestBuilders.post("/tasks/task/" + task2.getId() + "/start")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest());
+
+        // clean db
+        taskRepository.deleteAll();
+
+        // create one task with different username
+        task = createTaskWithUsername(UUID.randomUUID().toString());
+        mockMvc.perform(MockMvcRequestBuilders.post("/tasks/task/" + task.getId() + "/start")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void testPauseTask() throws Exception {
+        Task task = createAndStartTask();
+
+        ResultActions actions = mockMvc.perform(MockMvcRequestBuilders.post("/tasks/task/" + task.getId() + "/pause")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+
+        MvcResult result = actions.andReturn();
+        String content = result.getResponse().getContentAsString();
+        ObjectMapper mapper = new ObjectMapper();
+        String value = mapper.readValue(content, String.class);
+        assertNotNull(value);
+        assertEquals(TaskState.PAUSED.toString(), value);
+
+        Task taskInDb = taskRepository.findById(task.getId());
+        assertNotNull(taskInDb);
+        assertEquals(TaskState.PAUSED, taskInDb.getState());
+        assertNotNull(taskInDb.getStart());
+        assertNotNull(taskInDb.getDuration());
+
+        Random r = new Random();
+        long unexistingId = r.nextLong();
+        while (unexistingId == task.getId()) {
+            unexistingId = r.nextLong();
+        }
+        mockMvc.perform(MockMvcRequestBuilders.post("/tasks/task/" + unexistingId + "/pause")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isNotFound());
+
+        // clean db
+        taskRepository.deleteAll();
+
+        // create one task with different username
+        task = createTaskWithUsername(UUID.randomUUID().toString());
+        mockMvc.perform(MockMvcRequestBuilders.post("/tasks/task/" + task.getId() + "/pause")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void testCompleteTask() throws Exception {
+        Task task = createAndStartTask();
+
+        ResultActions actions = mockMvc.perform(MockMvcRequestBuilders.post("/tasks/task/" + task.getId() + "/complete")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+
+        MvcResult result = actions.andReturn();
+        String content = result.getResponse().getContentAsString();
+        ObjectMapper mapper = new ObjectMapper();
+        String value = mapper.readValue(content, String.class);
+        assertNotNull(value);
+        assertEquals(TaskState.COMPLETED.toString(), value);
+
+        Task taskInDb = taskRepository.findById(task.getId());
+        assertNotNull(taskInDb);
+        assertEquals(TaskState.COMPLETED, taskInDb.getState());
+        assertNotNull(taskInDb.getStart());
+        assertNotNull(taskInDb.getDuration());
+
+        Random r = new Random();
+        long unexistingId = r.nextLong();
+        while (unexistingId == task.getId()) {
+            unexistingId = r.nextLong();
+        }
+        mockMvc.perform(MockMvcRequestBuilders.post("/tasks/task/" + unexistingId + "/complete")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isNotFound());
+
+        // clean db
+        taskRepository.deleteAll();
+
+        // create one task with different username
+        task = createTaskWithUsername(UUID.randomUUID().toString());
+        mockMvc.perform(MockMvcRequestBuilders.post("/tasks/task/" + task.getId() + "/complete")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isUnauthorized());
     }
 }
