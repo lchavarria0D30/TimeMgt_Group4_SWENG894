@@ -16,9 +16,15 @@ export class NotificationsServiceService {
     return this.subject.asObservable().pipe(filter(x => x && x.id === id));
   }
 
-  remaind(message: string, options?: any) {
+  remaind(message: string, id: string, options?: any) {
+    console.log('id for notification' + id);
     this.notify(
-      new Notification({ ...options, type: NotificationType.Reminder, message })
+      new Notification({
+        ...options,
+        type: NotificationType.Reminder,
+        id: id,
+        message
+      })
     );
   }
 
