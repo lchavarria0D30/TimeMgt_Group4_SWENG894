@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import com.apptime.auth.config.TaskStateMachine;
 import com.apptime.auth.model.Task;
 import com.apptime.auth.model.TaskState;
+import com.apptime.auth.repository.TaskReportRepository;
 import com.apptime.auth.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,13 @@ public class TaskManagerService {
 	TaskRepository taskRepo;
 
 	@Autowired
-	NotificationService notificationService;
+	private TaskReportRepository reportRepository;
+
+	@Autowired
+	private TaskReportService reportService;
+
+	@Autowired
+	private NotificationService notificationService;
 
     //view task details
 	//view task details
@@ -77,6 +84,7 @@ public class TaskManagerService {
 			return null;
 		}
 		if (old != null) {
+			reportRepository.deleteByTask(old);
 			taskRepo.delete(old);
 			notificationService.deleteNotificationForTask(old);
 		}
@@ -95,6 +103,10 @@ public class TaskManagerService {
 
 	void setTaskRepo(TaskRepository taskRepo) {
 		this.taskRepo = taskRepo;
+	}
+
+	void setReportService(TaskReportService reportService) {
+		this.reportService = reportService;
 	}
 
 	/**
@@ -138,6 +150,7 @@ public class TaskManagerService {
 		if(task != null){
 			TaskStateMachine.COMPLETE(task);
 			taskRepo.save(task);
+			reportService.generateReport(task);
 			ts = task.getState();
 		}
 		return ts;
