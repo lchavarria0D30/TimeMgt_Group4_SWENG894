@@ -3,24 +3,16 @@ package com.apptime.auth.controller;
 import java.security.Principal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import com.apptime.auth.model.*;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.apptime.auth.service.TaskManagerService;
 
@@ -66,6 +58,19 @@ public class TaskManager {
 		}
 	}
 
+
+	@PostMapping("/due/start")
+	public ResponseEntity<Set<Task>> showAddedSince(@RequestBody FormatedDate start, Principal p) {
+		System.out.println("controller is found");
+		Set<Task>  tasks = taskService.getTasksStartedLaterThan(start.getDate(), p.getName());
+		if (tasks == null || tasks.isEmpty()) {
+			return new ResponseEntity<>(null,HttpStatus.OK);
+
+		} else {
+			return new ResponseEntity<Set<Task>>(tasks, HttpStatus.OK);
+		}
+	}
+
 	/**
 	 *
 	 * @param task task data to be created
@@ -74,6 +79,7 @@ public class TaskManager {
 	 */
 	@PostMapping("/newtask")
 	public ResponseEntity<Object> createTask(@RequestBody Task task, Principal p) {
+		//.out.println("frontend sent Date : "+ task.getScheduledstart().toString());
 		String user = getPrinciple(p).getName();
 		if(taskService.getTask(task.getId())==null) {
 			Task result = taskService.createTask(task,user);
