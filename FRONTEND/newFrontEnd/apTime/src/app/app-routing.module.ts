@@ -1,3 +1,12 @@
+/**
+ *
+ * Author(s): Yanisse/Asma
+ * Jira Task: N/A
+ * Description: The main module routing code for application. Holds the routes/links used in the application for the
+ * app's navigation.
+ *
+ **/
+
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AuthComponent } from './components/auth/auth.component';
