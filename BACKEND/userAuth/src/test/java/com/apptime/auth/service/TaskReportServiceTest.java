@@ -21,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -31,7 +32,7 @@ import static org.mockito.Mockito.verify;
  * Use Case: TMGP4-26, TMGP4-31
  */
 @SpringBootTest
-public class TaskReportServiceImplTest {
+public class TaskReportServiceTest {
     @Autowired
     private TaskRepository taskRepository;
 
@@ -50,26 +51,27 @@ public class TaskReportServiceImplTest {
 
     @Test
     public void testGenerateReportWithInvalidTask() {
-        TaskReportRepository reportRepository = mock(TaskReportRepository.class);
-        service.setReportRepository(reportRepository);
+        TaskReportRepository mockReportRepository = mock(TaskReportRepository.class);
+        service.setReportRepository(mockReportRepository);
         assertNull(service.generateReport(null));
-        verify(reportRepository, never()).findByTask(any());
+
+        verify(mockReportRepository, never()).findByTaskId(anyLong());
 
         Task task = new Task();
         task.setEnd(null);
         task.setScheduledEnd(null);
         assertNull(service.generateReport(task));
-        verify(reportRepository, never()).findByTask(any());
+        verify(mockReportRepository, never()).findByTaskId(anyLong());
 
         task.setEnd(new Date());
         task.setScheduledEnd(null);
         assertNull(service.generateReport(task));
-        verify(reportRepository, never()).findByTask(any());
+        verify(mockReportRepository, never()).findByTaskId(anyLong());
 
         task.setEnd(null);
         task.setScheduledEnd(new Date());
         assertNull(service.generateReport(task));
-        verify(reportRepository, never()).findByTask(any());
+        verify(mockReportRepository, never()).findByTaskId(anyLong());
     }
 
     @Test
@@ -131,7 +133,8 @@ public class TaskReportServiceImplTest {
 
         TaskReport report = new TaskReport();
         report.setType(TaskReportType.EARLIER);
-        report.setTask(task);
+        report.setTaskId(task.getId());
+        report.setOwner(username);
         report.setDifference(Duration.ofMillis(gap));
         reportRepository.save(report);
 

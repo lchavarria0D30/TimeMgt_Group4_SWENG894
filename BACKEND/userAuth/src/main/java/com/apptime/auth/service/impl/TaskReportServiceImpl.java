@@ -36,7 +36,7 @@ public class TaskReportServiceImpl implements TaskReportService {
         if (task == null || task.getEnd() == null || task.getScheduledEnd() == null) {
             return null;
         }
-        TaskReport existingReport = reportRepository.findByTask(task);
+        TaskReport existingReport = reportRepository.findByTaskId(task.getId());
         if (existingReport != null) {
             return null;
         }
@@ -59,7 +59,8 @@ public class TaskReportServiceImpl implements TaskReportService {
         Duration gapDuration = Duration.ofMillis(Math.abs(gapInMilSec));
 
         TaskReport report = new TaskReport();
-        report.setTask(task);
+        report.setTaskId(task.getId());
+        report.setOwner(task.getUserName());
         report.setType(type);
         report.setDifference(gapDuration);
 
@@ -76,6 +77,11 @@ public class TaskReportServiceImpl implements TaskReportService {
             return Collections.emptyList();
         }
         return reportRepository.findByOwner(owner);
+    }
+
+    @Override
+    public TaskReport findByTaskId(long id) {
+        return reportRepository.findByTaskId(id);
     }
 
     public void setReportRepository(TaskReportRepository reportRepository) {

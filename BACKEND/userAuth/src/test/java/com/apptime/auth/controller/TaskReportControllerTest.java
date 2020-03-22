@@ -120,7 +120,7 @@ public class TaskReportControllerTest {
         assertEquals(1, list.size());
         Map<String, Object> map = list.iterator().next();
         assertEquals(TaskReportType.EARLIER.name(), map.get("type"));
-        assertEquals(task1.getName(), ((Map<String, Object>) map.get("task")).get("name"));
+        assertEquals(task1.getId(), ((Number) map.get("taskId")).longValue());
 
         // create another task/report with different username
         Task task2 = new Task();
@@ -204,7 +204,7 @@ public class TaskReportControllerTest {
         ObjectMapper mapper = new ObjectMapper();
         Map<String, Object> map = mapper.readValue(content, Map.class);
         assertEquals(TaskReportType.EARLIER.name(), map.get("type"));
-        assertEquals(task.getName(), ((Map<String, Object>) map.get("task")).get("name"));
+        assertEquals(task.getId(), ((Number) map.get("taskId")).longValue());
     }
 
     @Test
