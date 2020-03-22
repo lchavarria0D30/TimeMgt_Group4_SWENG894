@@ -39,8 +39,20 @@ export class DashboardComponent implements OnInit {
 
   getDateTasks(): void {
 
+    let fromDate = new Date(this.date.value);
+    let toDate = new Date(this.date.value);
+
+    fromDate.setHours(0,0,0,0);
+
+    toDate.setDate(toDate.getDate() + 1);
+    toDate.setHours(0,0,0,0);
+
+    console.log(fromDate.toISOString());
+    console.log(toDate.toISOString());
+
     console.log('Date changed:');
     console.log(this.date.value.toISOString().substring(0,10));
+    console.log()
     let newDate = this.date.value.toISOString().substring(0,10);
 
     const headers = { Authorization: 'Bearer ' + this.sessionService.getToken()};
