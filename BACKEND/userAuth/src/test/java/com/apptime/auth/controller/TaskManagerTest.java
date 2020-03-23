@@ -80,16 +80,12 @@ public class TaskManagerTest {
 
         mockMvc = MockMvcBuilders
                 .webAppContextSetup(context)
-                .apply(springSecurity())
                 .build();
         SecurityContext securityContext = mock(SecurityContext.class);
         SecurityContextHolder.setContext(securityContext);
         Authentication authentication = mock(Authentication.class);
         when(authentication.getName()).thenReturn(USERNAME);
         when(securityContext.getAuthentication()).thenReturn(authentication);
-        Principal p = mock(Principal.class);
-        when(p.getName()).thenReturn(USERNAME);
-       // when(securityContext.getAuthentication()).thenReturn(Principal);
     }
 
     @Test
@@ -126,7 +122,7 @@ public class TaskManagerTest {
     }
 
     @Test
-    public void testshowAddedSince() throws Exception {
+    public void testShowAddedSince() throws Exception {
         FormatedDate start = new FormatedDate();
         String sDate="2020-03-22";
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -135,7 +131,6 @@ public class TaskManagerTest {
         Task task1 = createTaskWithDueDate(start,"task1");
         String body = (new ObjectMapper()).valueToTree(start).toString();
         mockMvc.perform(MockMvcRequestBuilders.post("/tasks/due/start")
-            .with(user(USERNAME))
             .contentType(MediaType.APPLICATION_JSON)
                 .content(body)
                 .accept(MediaType.APPLICATION_JSON))
@@ -146,7 +141,6 @@ public class TaskManagerTest {
         date=dateFormat.parse(sDate);
         body = (new ObjectMapper()).valueToTree(start).toString();
         mockMvc.perform(MockMvcRequestBuilders.post("/tasks/due/start")
-                .with(user(USERNAME))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body)
                 .accept(MediaType.APPLICATION_JSON))
@@ -159,7 +153,8 @@ public class TaskManagerTest {
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$", hasSize(0)));
-}
+    }
+
     private Task createTaskWithDueDate(FormatedDate start, String name) {
         Task task = createTask();
         task.setScheduledstart(start.getDate());

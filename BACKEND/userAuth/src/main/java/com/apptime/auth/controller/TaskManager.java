@@ -61,8 +61,7 @@ public class TaskManager {
 
 	@PostMapping("/due/start")
 	public ResponseEntity<Set<Task>> showAddedSince(@RequestBody FormatedDate start, Principal p) {
-		System.out.println("controller is found");
-		Set<Task>  tasks = taskService.getTasksStartedLaterThan(start.getDate(), p.getName());
+		Set<Task>  tasks = taskService.getTasksStartedLaterThan(start.getDate(), getPrinciple(p).getName());
 		if (tasks == null || tasks.isEmpty()) {
 			return new ResponseEntity<>(null,HttpStatus.OK);
 
