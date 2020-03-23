@@ -61,8 +61,6 @@ public class TaskManagerTest {
 
     @Autowired
     private TaskRepository taskRepository;
-    @Autowired
-    private TaskManagerService taskService;
 
 
     @Autowired
