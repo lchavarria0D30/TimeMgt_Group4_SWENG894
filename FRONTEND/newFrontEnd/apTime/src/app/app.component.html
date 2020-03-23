@@ -1,20 +1,26 @@
+<!--
+Author: Yanisse
+Jira Task: N/A
+Description: Template for the main application component.
+-->
 <div style="text-align:center">
   <!-- <h1>Welcome to {{ title }}!</h1> -->
   <mat-toolbar color="primary">
-  <mat-toolbar-row>
-    <button mat-button [matMenuTriggerFor]="menu">
-      <mat-icon class="header-text">menu</mat-icon>
-    </button>
+    <mat-toolbar-row>
+      <button mat-button [matMenuTriggerFor]="menu">
+        <mat-icon class="header-text">menu</mat-icon>
+      </button>
       <mat-menu #menu="matMenu">
-        <button mat-menu-item routerLink="/">Home</button>
-        <button mat-menu-item routerLink="/login">Login</button>
-        <button mat-menu-item routerLink="/login">Dashboard</button>
-        <button mat-menu-item routerLink="/category">Categories</button>
-        <button mat-menu-item routerLink="/tasks">Tasks</button>
+        <button mat-menu-item routerLink="/"><mat-icon>home</mat-icon>Home</button>
+        <button mat-menu-item routerLink="/dashboard" *ngIf="user!=null"><mat-icon>dashboard</mat-icon>Dashboard</button>
+        <button mat-menu-item routerLink="/tasks" *ngIf="user!=null"><mat-icon>assignment</mat-icon>Tasks</button>
+        <button mat-menu-item routerLink="/category" *ngIf="user!=null"><mat-icon>category</mat-icon>Categories</button>
+        <button mat-menu-item routerLink="/login" *ngIf="user==null"><mat-icon>account_box</mat-icon>Login</button>
+        <button mat-menu-item routerLink="/login" *ngIf="user!=null"><mat-icon>exit_to_app</mat-icon>Logout</button>
       </mat-menu>
-    <span class="header-text">TimeMngmt</span>
-  </mat-toolbar-row>
-</mat-toolbar>
+      <span class="header-text">TimeMngmt</span>
+    </mat-toolbar-row>
+  </mat-toolbar>
 </div>
 
 <!-- <h2>Links to the Pages</h2>
@@ -33,5 +39,8 @@
   </li>
 </ul> -->
 <!-- <hr /> -->
+
+<app-notifications></app-notifications>
 <router-outlet></router-outlet>
+
 <!-- <hr /> -->

@@ -1,3 +1,11 @@
+/**
+ *
+ * Author: Yanisse
+ * Jira Task: TMGP4-181, TMGP4-47, TMGP4-48, TMGP4-30, TMGP4-32, TMGP4-29
+ * Description: The component code for the general tasks view. User can see and manage all his tasks in this view.
+ *
+ **/
+
 import { Component, OnInit, Inject } from '@angular/core';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { HttpClient } from '@angular/common/http';
@@ -7,6 +15,8 @@ import { Validators, FormBuilder, FormGroup, FormControl } from '@angular/forms'
 import { CreateTaskDialogComponent } from '../create-task-dialog/create-task-dialog.component';
 import { DeleteTaskDialogComponent } from '../delete-task-dialog/delete-task-dialog.component';
 import { EditTaskDialogComponent } from '../edit-task-dialog/edit-task-dialog.component';
+import { StartTaskDialogComponent } from '../start-task-dialog/start-task-dialog.component';
+import { ConfirmTaskDialogComponent } from '../confirm-task-dialog/confirm-task-dialog.component';
 
 export interface DialogData {
   name: string;
@@ -23,6 +33,7 @@ export interface DialogData {
   number: string;
   id: number;
   token: string;
+  isDone: boolean;
   task: any;
 }
 
@@ -77,7 +88,32 @@ export class TasksComponent implements OnInit {
     });
   }
 
+  openConfirmDialog(i: number, name: string, isDone: boolean): void {
+
+    const dialogRef = this.dialog.open(
+        ConfirmTaskDialogComponent, {
+          // width: '250px',
+          data: {
+            id: i,
+            name,
+            isDone: isDone
+          }
+        });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The confirm dialog was closed');
+      this.getTasks();
+    });
+  }
+
   openEditDialog(i: number, index: number): void {
+    // let theTask = this.tasks[index];
+    // console.log("the task before: ", theTask);
+    // let date = new Date(theTask.scheduledstart);
+    // let ssTime = new Date(theTask.scheduledstart.substring(0, theTask.scheduledstart.length - 5));
+    // let ssDate = ssTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+
+
     const dialogRef = this.dialog.open(
     EditTaskDialogComponent, {
       data: {
@@ -92,6 +128,22 @@ export class TasksComponent implements OnInit {
     });
   }
 
+  openStartDialog(i: number, name: string): void {
+    const dialogRef = this.dialog.open(
+        StartTaskDialogComponent, {
+          data: {
+            id: i,
+            name
+          }
+        });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The start task dialog was closed');
+      this.getTasks();
+    });
+  }
+
+
   getTasks(): void {
       this.token = this.sessionService.getToken();
 
@@ -99,10 +151,14 @@ export class TasksComponent implements OnInit {
        };
 
       this.http.get('http://localhost:8001/tasks/', { headers }).subscribe({
-      next: data => this.tasks = data,
+      next: data => {
+        this.tasks = data
+        console.log(this.tasks);
+
+      },
       error: error => console.error('There was an error!', error)
       });
-  }
 
+  }
 
 }

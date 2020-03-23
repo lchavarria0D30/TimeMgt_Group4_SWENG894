@@ -1,0 +1,12 @@
+<div *ngFor="let alert of notes" class="alert alert-success alert-dismissable">
+  <a mat-button class="close" (click)="removeNote(alert)">&times;</a>
+  <h5 class="mat-h2">{{ alert.message }}</h5>
+  <div class="example-button-row">
+    <button mat-raised-button color="primary" (click)="cancel(alert)">
+      cancel
+    </button>
+    <button mat-raised-button color="accent" (click)="snooze(alert)">
+      snooze
+    </button>
+  </div>
+</div>
