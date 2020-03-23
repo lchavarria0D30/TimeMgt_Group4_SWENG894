@@ -1,10 +1,12 @@
 package com.apptime.auth.controller;
 
 import com.apptime.auth.config.TaskStateMachine;
+import com.apptime.auth.model.FormatedDate;
 import com.apptime.auth.model.Task;
 import com.apptime.auth.model.TaskState;
 import com.apptime.auth.repository.TaskReportRepository;
 import com.apptime.auth.repository.TaskRepository;
+import com.apptime.auth.service.TaskManagerService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,12 +26,17 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
+import org.springframework.security.test.context.support.WithMockUser;
+import static org.hamcrest.Matchers.*;
 
 import java.io.UnsupportedEncodingException;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.UUID;
+import java.security.Principal;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import static com.apptime.auth.controller.JsonUtil.asJsonString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -41,6 +48,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.*;
 
 /**
  * @author Qi Zhang
@@ -53,6 +61,7 @@ public class TaskManagerTest {
 
     @Autowired
     private TaskRepository taskRepository;
+
 
     @Autowired
     private TaskReportRepository reportRepository;
@@ -71,13 +80,16 @@ public class TaskManagerTest {
 
         mockMvc = MockMvcBuilders
                 .webAppContextSetup(context)
+                .apply(springSecurity())
                 .build();
-
         SecurityContext securityContext = mock(SecurityContext.class);
         SecurityContextHolder.setContext(securityContext);
         Authentication authentication = mock(Authentication.class);
         when(authentication.getName()).thenReturn(USERNAME);
         when(securityContext.getAuthentication()).thenReturn(authentication);
+        Principal p = mock(Principal.class);
+        when(p.getName()).thenReturn(USERNAME);
+       // when(securityContext.getAuthentication()).thenReturn(Principal);
     }
 
     @Test
@@ -111,6 +123,48 @@ public class TaskManagerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
         verifyResultsWithName(actions, 0, taskWithDifferentUser.getName());
+    }
+
+    @Test
+    public void testshowAddedSince() throws Exception {
+        FormatedDate start = new FormatedDate();
+        String sDate="2020-03-22";
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date date=dateFormat.parse(sDate);
+        start.setDate(date);
+        Task task1 = createTaskWithDueDate(start,"task1");
+        String body = (new ObjectMapper()).valueToTree(start).toString();
+        mockMvc.perform(MockMvcRequestBuilders.post("/tasks/due/start")
+            .with(user(USERNAME))
+            .contentType(MediaType.APPLICATION_JSON)
+                .content(body)
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$", hasSize(1)))
+            .andExpect(jsonPath("$[0].scheduledstart", is("2020-03-23")));
+           sDate="2020-04-22";
+        date=dateFormat.parse(sDate);
+        body = (new ObjectMapper()).valueToTree(start).toString();
+        mockMvc.perform(MockMvcRequestBuilders.post("/tasks/due/start")
+                .with(user(USERNAME))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(0)));
+        mockMvc.perform(MockMvcRequestBuilders.post("/tasks/due/start")
+                .with(user("unknown"))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$", hasSize(0)));
+}
+    private Task createTaskWithDueDate(FormatedDate start, String name) {
+        Task task = createTask();
+        task.setScheduledstart(start.getDate());
+        taskRepository.save(task);
+        return task;
     }
 
     private Task createTask() {

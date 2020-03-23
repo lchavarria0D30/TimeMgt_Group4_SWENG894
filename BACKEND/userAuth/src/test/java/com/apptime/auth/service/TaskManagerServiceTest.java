@@ -1,5 +1,6 @@
 package com.apptime.auth.service;
-
+import com.apptime.auth.config.TaskStateMachine;
+import com.apptime.auth.model.FormatedDate;
 import com.apptime.auth.model.Task;
 import com.apptime.auth.model.TaskState;
 import com.apptime.auth.repository.TaskReportRepository;
@@ -9,7 +10,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 import static com.apptime.auth.model.TaskState.ACTIVE;
@@ -192,6 +197,30 @@ public class TaskManagerServiceTest {
         assertEquals(COMPLETED, task.getState());
         verify(repository, times(1)).save(eq(task));
     }
+
+    @Test
+    public void testgetTasksStartedLaterThan() throws ParseException {
+        TaskRepository repository = mock(TaskRepository.class);
+        service.setTaskRepo(repository);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String sDate="2020-04-22";
+        Date start=dateFormat.parse(sDate);
+        String name = "userName";
+        Task task = new Task();
+        Set<Task> tasks = new HashSet<Task>();
+        //test empty result
+        when(repository.getTasksStartedLaterThan(start,name)).thenReturn(tasks);
+        Set<Task> resultSet =  service.getTasksStartedLaterThan(start,name);
+        assertEquals(0, resultSet.size());
+        tasks.add(task);
+        task.setScheduledstart(start);
+        when(repository.getTasksStartedLaterThan(start,name)).thenReturn(tasks);
+        Task result =  service.getTasksStartedLaterThan(start,name).iterator().next();
+        assertEquals(task.getScheduledstart(),result.getScheduledstart() );
+
+
+    }
+
 
     @Test
     public void testPause() {
