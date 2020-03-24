@@ -62,7 +62,10 @@ export class DashboardComponent implements OnInit {
 
 
     this.http.post('http://localhost:8001/tasks/due/start', body, { headers }).subscribe({
-      next: data => console.log(data),
+      next: data => {
+        // this.tasks = data;
+        console.log(data)
+      },
       error: error => console.error('There was an error!', error)
     });
 

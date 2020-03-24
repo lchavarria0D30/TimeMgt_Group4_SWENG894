@@ -26,7 +26,11 @@ Description: Template for the edit task dialog box. Includes the forms where use
 
             <mat-form-field>
                 <mat-label>Category</mat-label>
-                <input matInput [(ngModel)]="task.category" name="taskCat">
+                <mat-select [(ngModel)]="task.category" name="taskCat">
+                    <mat-option *ngFor="let category of categories" [value]="category.name">
+                        {{category.name}}
+                    </mat-option>
+                </mat-select>
             </mat-form-field>
 
             <mat-form-field>

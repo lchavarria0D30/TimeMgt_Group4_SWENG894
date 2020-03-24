@@ -29,6 +29,8 @@ export class EditTaskDialogComponent implements OnInit {
   scheduledEnd;
   actualStart;
   actualEnd;
+  selectedCategory = '';
+  categories;
   timeRegex = /^(?:(?:1[0-2]|0?[1-9]):[0-5]\d\s*[AaPp][Mm])?$/;
 
   nameFormControl = new FormControl('', [
@@ -125,28 +127,44 @@ export class EditTaskDialogComponent implements OnInit {
 
   ngOnInit() {
     this.showActuals = false;
+    this.getCategory();
 
     this.id = this.data.id;
 
     this.task = this.data.task;
-    
+
     setTimeout(() => {
       let date = this.task.scheduledstart.substring(0, this.task.scheduledstart.length - 5);
-      let ssDate = new Date(date);
-      let ssTime = ssDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+      const ssDate = new Date(date);
+      const ssTime = ssDate.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
       this.task.ssTime = ssTime;
       this.task.ssDate = ssDate;
 
       date = this.task.scheduledEnd.substring(0, this.task.scheduledEnd.length - 5);
-      let seDate = new Date(date);
-      let seTime = seDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+      const seDate = new Date(date);
+      const seTime = seDate.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
       this.task.seTime = seTime;
       this.task.seDate = seDate;
+
     });
 
     console.log('The task: ', this.task);
 
+
   }
 
+  getCategory(): void {
+
+    const headers = { Authorization: 'Bearer ' + this.sessionService.getToken()
+    };
+
+    this.http.get('http://localhost:8001/category/mine', { headers }).subscribe({
+      next: data => {
+        this.categories = data;
+        console.log(this.categories);
+      },
+      error: error => console.error('There was an error!', error)
+    });
+  }
 }
 
