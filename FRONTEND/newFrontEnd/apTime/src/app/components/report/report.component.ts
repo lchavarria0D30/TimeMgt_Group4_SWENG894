@@ -1,28 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
 import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { SessionService } from 'src/app/services/session.service';
 
-export interface PeriodicElement {
-  name: string;
-  position: number;
-  weight: number;
-  symbol: string;
+
+export class Report {
+  id: number;
+  taskId: number;
+  owner: string;
+  type: string;
+  difference: Date;
+  scheduledDuration: Date;
+  actualDuration: Date;
+  efficiency: number;
 }
 
-const ELEMENT_DATA: PeriodicElement[] = [
-  { position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H' },
-  { position: 2, name: 'Helium', weight: 4.0026, symbol: 'He' },
-  { position: 3, name: 'Lithium', weight: 6.941, symbol: 'Li' },
-  { position: 4, name: 'Beryllium', weight: 9.0122, symbol: 'Be' },
-  { position: 5, name: 'Boron', weight: 10.811, symbol: 'B' },
-  { position: 6, name: 'Carbon', weight: 12.0107, symbol: 'C' },
-  { position: 7, name: 'Nitrogen', weight: 14.0067, symbol: 'N' },
-  { position: 8, name: 'Oxygen', weight: 15.9994, symbol: 'O' },
-  { position: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F' },
-  { position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne' }
-];
 
 @Component({
   selector: 'app-report',
@@ -30,13 +23,66 @@ const ELEMENT_DATA: PeriodicElement[] = [
   styleUrls: ['./report.component.css']
 })
 export class ReportComponent implements OnInit {
-  displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
-  dataSource = ELEMENT_DATA;
+  reportSrc;
+  displayedColumns: string[] = [
+    'id',
+    'taskId',
+    'owner',
+    'type',
+    'difference',
+    'scheduledDuration',
+    'actualDuration',
+    'efficiency'
+  ];
+  dataSource: Report[];
   constructor(
     private route: Router,
     private _http: HttpClient,
     private sessionService: SessionService
   ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    const headers = {
+      Authorization: 'Bearer ' + this.sessionService.getToken(),
+      'Content-Type': 'application/json'
+    };
+    this._http
+      .get<Report[]>('http://localhost:8001/report/', {
+        headers
+      })
+      .subscribe({
+        next: data => {
+          this.dataSource = data;
+          console.log(this.reportSrc);
+        },
+        error: (error: Response) => console.error('There was an error!', error)
+      });
+  }
+
+  /* {
+    params: new HttpParams()
+      .set('courseId', courseId.toString())
+      .set('filter', filter)
+      .set('sortOrder', sortOrder)
+      .set('pageNumber', pageNumber.toString())
+      .set('pageSize', pageSize.toString())
+  }
+  */
+  getReport() {
+    const headers = {
+      Authorization: 'Bearer ' + this.sessionService.getToken(),
+      'Content-Type': 'application/json'
+    };
+    this._http
+      .get<Report[]>('http://localhost:8001/report/', {
+        headers
+      })
+      .subscribe({
+        next: data => {
+          this.dataSource = data;
+          console.log(this.reportSrc);
+        },
+        error: (error: Response) => console.error('There was an error!', error)
+      });
+  }
 }
