@@ -61,7 +61,6 @@ public class TaskManager {
 
 	@PostMapping("/due/start")
 	public ResponseEntity<Set<Task>> showAddedSince(@RequestBody FormatedDate start, Principal p) {
-		System.out.println("controller is found");
 		Set<Task>  tasks = taskService.getTasksStartedLaterThan(start.getDate(), p.getName());
 		if (tasks == null || tasks.isEmpty()) {
 			return new ResponseEntity<>(null,HttpStatus.OK);
@@ -80,6 +79,13 @@ public class TaskManager {
 	@PostMapping("/newtask")
 	public ResponseEntity<Object> createTask(@RequestBody Task task, Principal p) {
 		//.out.println("frontend sent Date : "+ task.getScheduledstart().toString());
+		SimpleDateFormat gmtDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		gmtDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+		try {
+			task.setScheduledstart(gmtDateFormat.parse(gmtDateFormat.format(task.getScheduledstart())));
+		}catch(  ParseException e){
+			return new ResponseEntity<Object>( HttpStatus.BAD_REQUEST);
+		}
 		String user = getPrinciple(p).getName();
 		if(taskService.getTask(task.getId())==null) {
 			Task result = taskService.createTask(task,user);
