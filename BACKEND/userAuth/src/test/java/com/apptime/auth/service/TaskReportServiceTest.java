@@ -11,11 +11,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import static com.apptime.auth.service.impl.TaskReportServiceImpl.DATE_PATTERN;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -40,6 +42,8 @@ public class TaskReportServiceTest {
 
     @Autowired
     private TaskReportServiceImpl service;
+
+    private SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_PATTERN);
 
     @BeforeEach
     public void init() {
@@ -148,6 +152,82 @@ public class TaskReportServiceTest {
         List<TaskReport> reportList = service.getReports(username);
         assertNotNull(reportList);
         assertEquals(1, reportList.size());
+
+        reportList = service.getReports(username, null, null);
+        assertNotNull(reportList);
+        assertEquals(1, reportList.size());
+
+        reportList = service.getReports(username, "", "");
+        assertNotNull(reportList);
+        assertEquals(1, reportList.size());
+
+        // find by start date
+        String startDate = dateFormat.format(actualEnd);
+        reportList = service.getReports(username, startDate, "");
+        assertNotNull(reportList);
+        assertEquals(1, reportList.size());
+
+        startDate = dateFormat.format(new Date(actualEnd.getTime() - 1000L * 60 * 60 * 24 * 2));
+        reportList = service.getReports(username, startDate, null);
+        assertNotNull(reportList);
+        assertEquals(1, reportList.size());
+
+        startDate = dateFormat.format(new Date(actualEnd.getTime() + 1000L * 60 * 60 * 24 * 2));
+        reportList = service.getReports(username, startDate, "");
+        assertNotNull(reportList);
+        assertTrue(reportList.isEmpty());
+
+        // find by end date
+        String endDate = dateFormat.format(actualEnd);
+        reportList = service.getReports(username, null, endDate);
+        assertNotNull(reportList);
+        assertEquals(1, reportList.size());
+
+        endDate = dateFormat.format(new Date(actualEnd.getTime() + 1000L * 60 * 60 * 24 * 2));
+        reportList = service.getReports(username, null, endDate);
+        assertNotNull(reportList);
+        assertEquals(1, reportList.size());
+
+        endDate = dateFormat.format(new Date(actualEnd.getTime() - 1000L * 60 * 60 * 24 * 2));
+        reportList = service.getReports(username, null, endDate);
+        assertNotNull(reportList);
+        assertTrue(reportList.isEmpty());
+
+        // find by start date and end date
+        startDate = dateFormat.format(actualEnd);
+        endDate = dateFormat.format(actualEnd);
+        reportList = service.getReports(username, startDate, endDate);
+        assertNotNull(reportList);
+        assertEquals(1, reportList.size());
+
+        endDate = dateFormat.format(new Date(actualEnd.getTime() + 1000L * 60 * 60 * 24 * 2));
+        reportList = service.getReports(username, startDate, endDate);
+        assertNotNull(reportList);
+        assertEquals(1, reportList.size());
+
+        startDate = dateFormat.format(new Date(actualEnd.getTime() - 1000L * 60 * 60 * 24 * 2));
+        reportList = service.getReports(username, startDate, endDate);
+        assertNotNull(reportList);
+        assertEquals(1, reportList.size());
+
+        // wrong range
+        reportList = service.getReports(username, endDate, startDate);
+        assertNotNull(reportList);
+        assertTrue(reportList.isEmpty());
+
+        // end date is earlier
+        startDate = dateFormat.format(new Date(actualEnd.getTime() - 1000L * 60 * 60 * 24 * 4));
+        endDate = dateFormat.format(new Date(actualEnd.getTime() - 1000L * 60 * 60 * 24 * 2));
+        reportList = service.getReports(username, endDate, startDate);
+        assertNotNull(reportList);
+        assertTrue(reportList.isEmpty());
+
+        // start date is later
+        startDate = dateFormat.format(new Date(actualEnd.getTime() + 1000L * 60 * 60 * 24 * 2));
+        endDate = dateFormat.format(new Date(actualEnd.getTime() + 1000L * 60 * 60 * 24 * 4));
+        reportList = service.getReports(username, endDate, startDate);
+        assertNotNull(reportList);
+        assertTrue(reportList.isEmpty());
 
         // use different username
         reportList = service.getReports(UUID.randomUUID().toString());

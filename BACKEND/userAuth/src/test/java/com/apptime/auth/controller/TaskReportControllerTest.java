@@ -25,11 +25,13 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import static com.apptime.auth.service.impl.TaskReportServiceImpl.DATE_PATTERN;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -164,6 +166,91 @@ public class TaskReportControllerTest {
         mapper = new ObjectMapper();
         list = mapper.readValue(content, List.class);
         assertEquals(2, list.size());
+
+        // get reports by time range
+        final SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_PATTERN);
+        String startDate = dateFormat.format(System.currentTimeMillis() - 1000L * 60 * 60 * 24 * 5);
+        actions = mockMvc.perform(MockMvcRequestBuilders.get("/report")
+                .param("startDate", startDate)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+        result = actions.andReturn();
+        content = result.getResponse().getContentAsString();
+        mapper = new ObjectMapper();
+        list = mapper.readValue(content, List.class);
+        assertEquals(2, list.size());
+
+        startDate = dateFormat.format(System.currentTimeMillis() + 1000L * 60 * 60 * 24 * 5);
+        actions = mockMvc.perform(MockMvcRequestBuilders.get("/report")
+                .param("startDate", startDate)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+        result = actions.andReturn();
+        content = result.getResponse().getContentAsString();
+        mapper = new ObjectMapper();
+        list = mapper.readValue(content, List.class);
+        assertEquals(0, list.size());
+
+        String endDate = dateFormat.format(System.currentTimeMillis() + 1000L * 60 * 60 * 24 * 5);
+        actions = mockMvc.perform(MockMvcRequestBuilders.get("/report")
+                .param("endDate", endDate)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+        result = actions.andReturn();
+        content = result.getResponse().getContentAsString();
+        mapper = new ObjectMapper();
+        list = mapper.readValue(content, List.class);
+        assertEquals(2, list.size());
+
+        endDate = dateFormat.format(System.currentTimeMillis() - 1000L * 60 * 60 * 24 * 5);
+        actions = mockMvc.perform(MockMvcRequestBuilders.get("/report")
+                .param("endDate", endDate)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+        result = actions.andReturn();
+        content = result.getResponse().getContentAsString();
+        mapper = new ObjectMapper();
+        list = mapper.readValue(content, List.class);
+        assertEquals(0, list.size());
+
+        startDate = dateFormat.format(System.currentTimeMillis() - 1000L * 60 * 60 * 24 * 5);
+        endDate = dateFormat.format(System.currentTimeMillis() + 1000L * 60 * 60 * 24 * 5);
+        actions = mockMvc.perform(MockMvcRequestBuilders.get("/report")
+                .param("startDate", startDate)
+                .param("endDate", endDate)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+        result = actions.andReturn();
+        content = result.getResponse().getContentAsString();
+        mapper = new ObjectMapper();
+        list = mapper.readValue(content, List.class);
+        assertEquals(2, list.size());
+
+        startDate = dateFormat.format(System.currentTimeMillis() - 1000L * 60 * 60 * 24 * 5);
+        endDate = dateFormat.format(System.currentTimeMillis() - 1000L * 60 * 60 * 24 * 3);
+        actions = mockMvc.perform(MockMvcRequestBuilders.get("/report")
+                .param("startDate", startDate)
+                .param("endDate", endDate)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+        result = actions.andReturn();
+        content = result.getResponse().getContentAsString();
+        mapper = new ObjectMapper();
+        list = mapper.readValue(content, List.class);
+        assertEquals(0, list.size());
+
+        startDate = dateFormat.format(System.currentTimeMillis() + 1000L * 60 * 60 * 24 * 3);
+        endDate = dateFormat.format(System.currentTimeMillis() + 1000L * 60 * 60 * 24 * 5);
+        actions = mockMvc.perform(MockMvcRequestBuilders.get("/report")
+                .param("startDate", startDate)
+                .param("endDate", endDate)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+        result = actions.andReturn();
+        content = result.getResponse().getContentAsString();
+        mapper = new ObjectMapper();
+        list = mapper.readValue(content, List.class);
+        assertEquals(0, list.size());
 
         // delete tasks
         taskManagerService.deleteTask(task1.getId());
