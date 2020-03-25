@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collection;
@@ -26,12 +27,12 @@ public class TaskReportController extends AbstractionAuthenticationController {
     private TaskReportService service;
 
     @GetMapping
-    public ResponseEntity<Collection<TaskReport>> getAll(Authentication authentication) {
+    public ResponseEntity<Collection<TaskReport>> getReports(@RequestParam(required = false) String startDate, @RequestParam(required = false) String endDate, Authentication authentication) {
         String username = getUsername(authentication);
         if (username == null || username.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
-        return new ResponseEntity<>(service.getReports(username), HttpStatus.OK);
+        return new ResponseEntity<>(service.getReports(username, startDate, endDate), HttpStatus.OK);
     }
 
     @GetMapping(value = "/task/{taskId}")
