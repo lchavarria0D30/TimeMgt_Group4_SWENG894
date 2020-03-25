@@ -75,7 +75,7 @@ export class AppComponent implements OnInit {
               )
             ),
             flatMap(v => v),
-            map(quote => quote) // Take the field you need
+            map(quote => quote)
           )
           .subscribe(x => {
             if (x.length > 0) {

@@ -20,7 +20,6 @@ import {
 } from '@angular/forms';
 import { CustomMaterialModule } from './modules/material.module';
 
-
 import { MatMenuModule } from '@angular/material/menu';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -29,6 +28,7 @@ import { TaskCategoryComponent } from './components/task-category/task-category.
 import { CreateTaskDialogComponent } from './components/create-task-dialog/create-task-dialog.component';
 import { DeleteTaskDialogComponent } from './components/delete-task-dialog/delete-task-dialog.component';
 import { EditTaskDialogComponent } from './components/edit-task-dialog/edit-task-dialog.component';
+import { ReportComponent } from './components/report/report.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +41,8 @@ import { EditTaskDialogComponent } from './components/edit-task-dialog/edit-task
     TaskCategoryComponent,
     CreateTaskDialogComponent,
     DeleteTaskDialogComponent,
-    EditTaskDialogComponent
+    EditTaskDialogComponent,
+    ReportComponent
   ],
 
   imports: [
@@ -59,10 +60,9 @@ import { EditTaskDialogComponent } from './components/edit-task-dialog/edit-task
   bootstrap: [AppComponent],
 
   entryComponents: [
-  CreateTaskDialogComponent,
+    CreateTaskDialogComponent,
     DeleteTaskDialogComponent,
     EditTaskDialogComponent
   ]
-
 })
 export class AppModule {}

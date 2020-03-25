@@ -8,14 +8,15 @@ import { AmplifyAngularModule, AmplifyService } from 'aws-amplify-angular';
 import { BrowserModule } from '@angular/platform-browser';
 import { TasksComponent } from './components/tasks/tasks.component';
 import { TaskCategoryComponent } from './components/task-category/task-category.component';
+import { ReportComponent } from './components/report/report.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent, pathMatch: 'full' },
   { path: 'login', component: AuthComponent, pathMatch: 'full' },
-  { path: 'dashboard', component: SecureComponent, pathMatch: 'full'},
-  {path: 'tasks', component: TasksComponent, pathMatch: 'full'},
-  { path: 'category', component: TaskCategoryComponent, pathMatch: 'full' }
-
+  { path: 'dashboard', component: SecureComponent, pathMatch: 'full' },
+  { path: 'tasks', component: TasksComponent, pathMatch: 'full' },
+  { path: 'category', component: TaskCategoryComponent, pathMatch: 'full' },
+  { path: 'report', component: ReportComponent, pathMatch: 'full' }
 ];
 
 @NgModule({
