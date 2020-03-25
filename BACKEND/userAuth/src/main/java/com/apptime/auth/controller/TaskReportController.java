@@ -1,6 +1,7 @@
 package com.apptime.auth.controller;
 
 import com.apptime.auth.model.TaskReport;
+import com.apptime.auth.model.to.Report;
 import com.apptime.auth.service.TaskReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 /**
  * @author Qi Zhang
@@ -27,16 +29,16 @@ public class TaskReportController extends AbstractionAuthenticationController {
     private TaskReportService service;
 
     @GetMapping
-    public ResponseEntity<Collection<TaskReport>> getReports(@RequestParam(required = false) String startDate, @RequestParam(required = false) String endDate, Authentication authentication) {
+    public ResponseEntity<Collection<Report>> getReports(@RequestParam(required = false) String startDate, @RequestParam(required = false) String endDate, Authentication authentication) {
         String username = getUsername(authentication);
         if (username == null || username.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
-        return new ResponseEntity<>(service.getReports(username, startDate, endDate), HttpStatus.OK);
+        return new ResponseEntity<>(service.getReports(username, startDate, endDate).stream().map(Report::parse).collect(Collectors.toList()), HttpStatus.OK);
     }
 
     @GetMapping(value = "/task/{taskId}")
-    public ResponseEntity<TaskReport> getByTask(@PathVariable Long taskId, Authentication authentication) {
+    public ResponseEntity<Report> getByTask(@PathVariable Long taskId, Authentication authentication) {
         String username = getUsername(authentication);
         if (username == null || username.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
@@ -45,6 +47,6 @@ public class TaskReportController extends AbstractionAuthenticationController {
         if (taskReport == null || !username.equals(taskReport.getOwner())) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(taskReport, HttpStatus.OK);
+        return new ResponseEntity<>(Report.parse(taskReport), HttpStatus.OK);
     }
 }
