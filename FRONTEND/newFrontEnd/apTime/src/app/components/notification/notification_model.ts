@@ -1,3 +1,11 @@
+/**
+ *
+ * Author: Asma
+ * Jira Task:
+ * Description:
+ *
+ **/
+
 export class Notification {
   type: NotificationType;
   id: string;

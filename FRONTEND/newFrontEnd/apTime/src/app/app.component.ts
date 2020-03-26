@@ -1,3 +1,12 @@
+/**
+ *
+ * Author(s): Yanisse/Asma
+ * Jira Task: N/A
+ * Description: The main component code for application. Holds the component code to be used in all the other components
+ * of the app.
+ *
+ **/
+
 import { Component, OnInit } from '@angular/core';
 import { AmplifyService } from 'aws-amplify-angular';
 import { Auth } from 'aws-amplify';
@@ -53,8 +62,10 @@ export class AppComponent implements OnInit {
           .catch(err => console.log(err));
       }
     });
-    //'https://api.chucknorris.io/jokes/random'
-    //https://rxjs-dev.firebaseapp.com/api/ajax/ajax
+
+ //'https://api.chucknorris.io/jokes/random'
+ //https://rxjs-dev.firebaseapp.com/api/ajax/ajax
+
   }
 
   ngOnInit() {

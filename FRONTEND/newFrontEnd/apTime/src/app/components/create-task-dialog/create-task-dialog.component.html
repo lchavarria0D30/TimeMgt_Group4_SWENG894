@@ -1,4 +1,8 @@
-
+<!--
+Author: Yanisse
+Jira Task: TMGP4-139
+Description: Template for the create task dialog box.
+-->
 <mat-toolbar color="primary" style="width:100%;">
     <mat-toolbar-row>
         <h1 mat-dialog-title>New Task</h1>
@@ -19,9 +23,18 @@
 
         </mat-form-field>
 
+<!--        <mat-form-field>-->
+<!--            <mat-label>Category</mat-label>-->
+<!--            <input matInput [(ngModel)]="data.category">-->
+<!--        </mat-form-field>-->
+
         <mat-form-field>
             <mat-label>Category</mat-label>
-            <input matInput [(ngModel)]="data.category">
+            <mat-select [(ngModel)]="selectedCategory">
+                <mat-option *ngFor="let category of categories" [value]="category.name">
+                    {{category.name}}
+                </mat-option>
+            </mat-select>
         </mat-form-field>
 
         <mat-form-field>

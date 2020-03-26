@@ -1,8 +1,9 @@
 package com.apptime.auth.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.Duration;
 import java.util.Date;
 
 /**
@@ -16,22 +17,29 @@ public class Task {
     @GeneratedValue
     private long id;
     private String name;
-
     private Date scheduledstart;
     @Column(nullable = true)
-    private LocalDateTime duration;
+    private Duration duration;
     private String userName;
     private String Description;
     @Enumerated(EnumType.STRING)
     private TaskState state;
+    private Date actualStart;
+    private Date actualEnd;
+    private Date scheduledEnd;
 
-	public Task() { }
-
+    public Date getEnd() {
+        return actualEnd;
+    }
+    public void setEnd(Date end) {
+        this.actualEnd = end;
+    }
     public Date getScheduledstart() {
         return scheduledstart;
     }
 
     public void setScheduledstart(Date scheduledstart) {
+
         this.scheduledstart = scheduledstart;
     }
 
@@ -66,15 +74,11 @@ public class Task {
     }
 
 
-    public Task(String string, Date date, int i) {
-
-    }
-
-    public LocalDateTime getDuration() {
+    public Duration getDuration() {
         return duration;
     }
 
-    public void setDuration(LocalDateTime duration) {
+    public void setDuration(Duration duration) {
         this.duration = duration;
     }
 
@@ -86,6 +90,25 @@ public class Task {
         Description = description;
     }
 
+    public void setState(TaskState state) {
+        this.state = state;
+    }
 
+    public TaskState getState() {
+        return state;
+    }
+    public void setStart(Date start) {
+        this.actualStart = start;
+    }
+    public Date getStart() {
+        return actualStart;
+    }
+    public Date getScheduledEnd() {
+        return scheduledEnd;
+    }
+
+    public void setScheduledEnd(Date scheduledEnd) {
+        this.scheduledEnd = scheduledEnd;
+    }
 }
 
