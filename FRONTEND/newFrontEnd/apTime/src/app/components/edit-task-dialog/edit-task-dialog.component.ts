@@ -170,5 +170,9 @@ export class EditTaskDialogComponent implements OnInit {
       error: error => console.error('There was an error!', error)
     });
   }
+
+  changeMinEndDate() {
+    this.minEndDate = this.data.ssDate;
+  }
 }
 
