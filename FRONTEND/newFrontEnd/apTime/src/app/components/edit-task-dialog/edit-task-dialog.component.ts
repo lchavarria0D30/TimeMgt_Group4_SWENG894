@@ -64,6 +64,7 @@ export class EditTaskDialogComponent implements OnInit {
       private sessionService: SessionService,
       @Inject(MAT_DIALOG_DATA) public data: DialogData) {
     this.minDate = new Date();
+    this.minEndDate = new Date();
   }
 
   onNoClick(): void {
@@ -172,7 +173,7 @@ export class EditTaskDialogComponent implements OnInit {
   }
 
   changeMinEndDate() {
-    this.minEndDate = this.data.ssDate;
+    this.minEndDate = this.task.ssDate;
   }
 }
 
