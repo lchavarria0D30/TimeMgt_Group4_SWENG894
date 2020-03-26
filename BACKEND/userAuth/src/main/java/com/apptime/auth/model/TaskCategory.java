@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import java.util.Objects;
 
 /**
  * @author Qi Zhang
@@ -57,5 +58,21 @@ public class TaskCategory {
 
     public void setPublic(boolean aPublic) {
         isPublic = aPublic;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TaskCategory category = (TaskCategory) o;
+        return getId() == category.getId() &&
+                isPublic() == category.isPublic() &&
+                Objects.equals(getOwner(), category.getOwner()) &&
+                Objects.equals(getName(), category.getName());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getOwner(), getName(), isPublic());
     }
 }

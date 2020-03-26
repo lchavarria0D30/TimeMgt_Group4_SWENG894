@@ -13,4 +13,5 @@ import java.util.List;
 public interface TaskCategoryRepository extends JpaRepository<TaskCategory, Integer> {
     List<TaskCategory> findByOwner(String owner);
     List<TaskCategory> findByIsPublic(boolean isPublic);
+    List<TaskCategory> findByName(String name);
 }

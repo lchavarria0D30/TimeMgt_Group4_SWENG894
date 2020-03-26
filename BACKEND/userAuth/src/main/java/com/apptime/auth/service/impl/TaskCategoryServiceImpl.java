@@ -31,11 +31,9 @@ public class TaskCategoryServiceImpl implements TaskCategoryService {
             return null;
         }
 
-        if (isPublic) {
-            existingCategories = taskCategoryRepository.findByIsPublic(true);
-            if (existingCategories != null && !existingCategories.isEmpty() && !existingCategories.stream().filter(c -> name.equals(c.getName())).collect(Collectors.toSet()).isEmpty()) {
-                return null;
-            }
+        Collection<TaskCategory> existingPublicCategories = taskCategoryRepository.findByIsPublic(true);
+        if (existingPublicCategories != null && !existingPublicCategories.isEmpty() && !existingPublicCategories.stream().filter(c -> name.equals(c.getName())).collect(Collectors.toSet()).isEmpty()) {
+            return null;
         }
 
         TaskCategory taskCategory = new TaskCategory(name, owner, isPublic);
