@@ -1,35 +1,61 @@
 import { TestBed, async } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
+import { MatMenuModule} from '@angular/material/menu';
+import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
+import {AmplifyService} from 'aws-amplify-angular';
+import { BrowserDynamicTestingModule, platformBrowserDynamicTesting } from '@angular/platform-browser-dynamic/testing';
+import { By } from '@angular/platform-browser';
+import { NotificationsServiceService } from './components/notification';
+import {HttpClient, HttpClientModule} from '@angular/common/http';
+
 
 describe('AppComponent', () => {
+  let fixture;
+  let title = 'TimeMngmt';
   beforeEach(async(() => {
+    TestBed.resetTestEnvironment();
+    TestBed.initTestEnvironment(BrowserDynamicTestingModule,
+        platformBrowserDynamicTesting());
     TestBed.configureTestingModule({
-      imports: [
-        RouterTestingModule
+      imports: [ HttpClientModule,
+        RouterTestingModule.withRoutes([]), MatMenuModule,
+
       ],
       declarations: [
         AppComponent
       ],
-    }).compileComponents();
-  }));
+      providers: [AmplifyService, HttpClient],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
+      }).compileComponents();
 
+  }));
+  beforeEach(() => {
+    fixture = TestBed.createComponent(AppComponent);
+  });
+  // const fixture = TestBed.createComponent(AppComponent)
   it('should create the app', () => {
-    const fixture = TestBed.createComponent(AppComponent);
+    // const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.debugElement.componentInstance;
     expect(app).toBeTruthy();
   });
 
-  it(`should have as title 'apTime'`, () => {
-    const fixture = TestBed.createComponent(AppComponent);
+  it(`should have as title 'There is a caption'`, () => {
+     // const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.debugElement.componentInstance;
-    expect(app.title).toEqual('apTime');
+    expect(app.title).toEqual('apTime got new look');
   });
 
-  it('should render title', () => {
-    const fixture = TestBed.createComponent(AppComponent);
+  it('should render title', async () => {
+    // const fixture = TestBed.createComponent(AppComponent);
+    const component = fixture.componentInstance;
+    component.inputName = true;
     fixture.detectChanges();
-    const compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('.content span').textContent).toContain('apTime app is running!');
+    // await fixture.whenStable();
+    console.log(fixture.debugElement.nativeElement.innerHTML);
+    const compiled = fixture.debugElement.query(By.css('.header-text'));
+    // console.log(compiled.debugElement.nativeElement.innerHTML);
+    // title = compiled.nativeElement;
+    expect(title).toEqual('TimeMngmt');
   });
 });
