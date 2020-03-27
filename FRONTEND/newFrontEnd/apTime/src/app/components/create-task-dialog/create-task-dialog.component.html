@@ -48,7 +48,8 @@ Description: Template for the create task dialog box.
         <div fxFlex="">
             <mat-form-field>
                 <mat-label>Start date</mat-label>
-                <input matInput [matDatepicker]="picker1" [(ngModel)]="data.ssDate" [formControl]="sDateFormControl">
+                <input matInput [matDatepicker]="picker1" [min]="minDate" [(ngModel)]="data.ssDate"
+                       [formControl]="sDateFormControl" (dateChange)="changeMinEndDate()">
                 <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                 <mat-datepicker #picker1></mat-datepicker>
                 <mat-error *ngIf="sDateFormControl.hasError('required')">
@@ -75,7 +76,8 @@ Description: Template for the create task dialog box.
         <div fxFlex="">
             <mat-form-field>
                 <mat-label>End date</mat-label>
-                <input matInput [matDatepicker]="picker2" [(ngModel)]="data.seDate" [formControl]="eDateFormControl">
+                <input matInput [matDatepicker]="picker2" [min]="minEndDate" [(ngModel)]="data.seDate"
+                       [formControl]="eDateFormControl" >
                 <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                 <mat-datepicker #picker2></mat-datepicker>
                 <mat-error *ngIf="eDateFormControl.hasError('required')">

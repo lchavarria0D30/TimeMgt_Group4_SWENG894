@@ -31,7 +31,9 @@ export class EditTaskDialogComponent implements OnInit {
   actualEnd;
   selectedCategory = '';
   categories;
-  timeRegex = /^(?:(?:1[0-2]|0?[1-9]):[0-5]\d\s*[AaPp][Mm])?$/;
+  minDate;
+  minEndDate;
+  timeRegex = /^(?:(?:1[0-2]|0?[1-9]):[0-5]\d\s[AaPp][Mm])?$/;
 
   nameFormControl = new FormControl('', [
     Validators.required
@@ -60,7 +62,10 @@ export class EditTaskDialogComponent implements OnInit {
       public dialogRef: MatDialogRef<EditTaskDialogComponent>,
       private http: HttpClient,
       private sessionService: SessionService,
-      @Inject(MAT_DIALOG_DATA) public data: DialogData) {}
+      @Inject(MAT_DIALOG_DATA) public data: DialogData) {
+    this.minDate = new Date();
+    this.minEndDate = new Date();
+  }
 
   onNoClick(): void {
 
@@ -165,6 +170,10 @@ export class EditTaskDialogComponent implements OnInit {
       },
       error: error => console.error('There was an error!', error)
     });
+  }
+
+  changeMinEndDate() {
+    this.minEndDate = this.task.ssDate;
   }
 }
 
