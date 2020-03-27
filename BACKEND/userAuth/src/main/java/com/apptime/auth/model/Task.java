@@ -17,7 +17,6 @@ public class Task {
     @GeneratedValue
     private long id;
     private String name;
-    @Temporal(TemporalType.DATE)
     private Date scheduledstart;
     @Column(nullable = true)
     private Duration duration;
@@ -25,11 +24,8 @@ public class Task {
     private String Description;
     @Enumerated(EnumType.STRING)
     private TaskState state;
-    @Temporal(TemporalType.DATE)
     private Date actualStart;
-    @Temporal(TemporalType.DATE)
     private Date actualEnd;
-    @Temporal(TemporalType.DATE)
     private Date scheduledEnd;
 
     public Date getEnd() {

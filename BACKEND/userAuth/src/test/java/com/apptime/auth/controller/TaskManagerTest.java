@@ -1,3 +1,4 @@
+/*
 package com.apptime.auth.controller;
 
 import com.apptime.auth.config.TaskStateMachine;
@@ -50,13 +51,15 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.*;
 
+*/
 /**
  * @author Qi Zhang
  * The unit class for TaskCategoryController
- */
+ *//*
+
 @ExtendWith(MockitoExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class TaskManagerTest {
+class TaskManager_Old {
     private static final String USERNAME = "username";
 
     @Autowired
@@ -80,16 +83,12 @@ public class TaskManagerTest {
 
         mockMvc = MockMvcBuilders
                 .webAppContextSetup(context)
-                .apply(springSecurity())
                 .build();
         SecurityContext securityContext = mock(SecurityContext.class);
         SecurityContextHolder.setContext(securityContext);
         Authentication authentication = mock(Authentication.class);
-        //when(authentication.getName()).thenReturn(USERNAME);
+        when(authentication.getName()).thenReturn(USERNAME);
         when(securityContext.getAuthentication()).thenReturn(authentication);
-        Principal p = mock(Principal.class);
-      //  when(p.getName()).thenReturn(USERNAME);
-       // when(securityContext.getAuthentication()).thenReturn(Principal);
     }
 
     @Test
@@ -126,24 +125,7 @@ public class TaskManagerTest {
     }
 
     @Test
-    public void testshowAddedSince() throws Exception {
-        //Task task = createTask();
-
-        FormatedDate formatedDate = new FormatedDate();
-        String sDate="2020-03-22";
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Date date=dateFormat.parse(sDate);
-        formatedDate.setDate(date);
-        Task task1 = createTaskWithDueDate(formatedDate,"task1");
-
-        ResultActions actions = mockMvc.perform(MockMvcRequestBuilders
-                .post("/tasks/due/start" + task1.getId())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(task1))
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound());
-        //assertEquals(task.getId(), id.longValue());
-        /*
+    public void testShowAddedSince() throws Exception {
         FormatedDate start = new FormatedDate();
         String sDate="2020-03-22";
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -152,13 +134,13 @@ public class TaskManagerTest {
         Task task1 = createTaskWithDueDate(start,"task1");
         String body = (new ObjectMapper()).valueToTree(start).toString();
         mockMvc.perform(MockMvcRequestBuilders.post("/tasks/due/start")
-            .contentType(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
                 .content(body)
                 .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$", hasSize(1)))
-            .andExpect(jsonPath("$[0].scheduledstart", is("2020-03-23")));
-           sDate="2020-04-22";
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].scheduledstart", is("2020-03-23")));
+        sDate="2020-04-22";
         date=dateFormat.parse(sDate);
         body = (new ObjectMapper()).valueToTree(start).toString();
         mockMvc.perform(MockMvcRequestBuilders.post("/tasks/due/start")
@@ -174,12 +156,10 @@ public class TaskManagerTest {
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$", hasSize(0)));
-        */
-        // .with(user(USERNAME))
-}
+    }
+
     private Task createTaskWithDueDate(FormatedDate start, String name) {
-        Task task = new Task();
-        task.setName(UUID.randomUUID().toString());
+        Task task = createTask();
         task.setScheduledstart(start.getDate());
         taskRepository.save(task);
         return task;
@@ -484,3 +464,4 @@ public class TaskManagerTest {
                 .accept(MediaType.APPLICATION_JSON)).andExpect(status().isUnauthorized());
     }
 }
+*/
