@@ -11,12 +11,15 @@ Description: Template for the main application component.
         <mat-icon class="header-text">menu</mat-icon>
       </button>
       <mat-menu #menu="matMenu">
+
         <button mat-menu-item routerLink="/"><mat-icon>home</mat-icon>Home</button>
         <button mat-menu-item routerLink="/dashboard" *ngIf="user!=null"><mat-icon>dashboard</mat-icon>Dashboard</button>
         <button mat-menu-item routerLink="/tasks" *ngIf="user!=null"><mat-icon>assignment</mat-icon>Tasks</button>
         <button mat-menu-item routerLink="/category" *ngIf="user!=null"><mat-icon>category</mat-icon>Categories</button>
+        <button mat-menu-item routerLink="/report"*ngIf="user!=null"><mat-icon>view_list</mat-icon>Report</button>
         <button mat-menu-item routerLink="/login" *ngIf="user==null"><mat-icon>account_box</mat-icon>Login</button>
         <button mat-menu-item routerLink="/login" *ngIf="user!=null"><mat-icon>exit_to_app</mat-icon>Logout</button>
+
       </mat-menu>
       <span class="header-text">TimeMngmt</span>
     </mat-toolbar-row>

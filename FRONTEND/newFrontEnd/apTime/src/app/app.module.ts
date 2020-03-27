@@ -28,7 +28,6 @@ import {
 } from '@angular/forms';
 import { CustomMaterialModule } from './modules/material.module';
 
-
 import { MatMenuModule } from '@angular/material/menu';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -37,9 +36,11 @@ import { TaskCategoryComponent } from './components/task-category/task-category.
 import { CreateTaskDialogComponent } from './components/create-task-dialog/create-task-dialog.component';
 import { DeleteTaskDialogComponent } from './components/delete-task-dialog/delete-task-dialog.component';
 import { EditTaskDialogComponent } from './components/edit-task-dialog/edit-task-dialog.component';
+import { ReportComponent } from './components/report/report.component';
 import { StartTaskDialogComponent } from './components/start-task-dialog/start-task-dialog.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { ConfirmTaskDialogComponent } from './components/confirm-task-dialog/confirm-task-dialog.component';
+
 
 @NgModule({
   declarations: [
@@ -53,6 +54,7 @@ import { ConfirmTaskDialogComponent } from './components/confirm-task-dialog/con
     CreateTaskDialogComponent,
     DeleteTaskDialogComponent,
     EditTaskDialogComponent,
+    ReportComponent,
     StartTaskDialogComponent,
     DashboardComponent,
     ConfirmTaskDialogComponent
@@ -73,12 +75,11 @@ import { ConfirmTaskDialogComponent } from './components/confirm-task-dialog/con
   bootstrap: [AppComponent],
 
   entryComponents: [
-  CreateTaskDialogComponent,
+    CreateTaskDialogComponent,
     DeleteTaskDialogComponent,
     EditTaskDialogComponent,
     StartTaskDialogComponent,
     ConfirmTaskDialogComponent
   ]
-
 })
 export class AppModule {}
