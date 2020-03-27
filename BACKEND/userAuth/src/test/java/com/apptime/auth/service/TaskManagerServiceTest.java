@@ -62,9 +62,9 @@ public class TaskManagerServiceTest {
 
     @BeforeEach
     public void init() {
+        repository.deleteAll();
         categoryRepository.deleteAll();
         reportRepository.deleteAll();
-        repository.deleteAll();
         notificationService = mock(NotificationService.class);
         service.setNotificationService(notificationService);
         reportService = mock(TaskReportService.class);
@@ -169,15 +169,34 @@ public class TaskManagerServiceTest {
 
     @Test
     public void testDeleteTask() {
+        String username = "username";
+
+        String adminUser = UUID.randomUUID().toString();
+        TaskCategory publicCategory = new TaskCategory("public", adminUser, true);
+        categoryRepository.save(publicCategory);
+
+        TaskCategory mineCategory = new TaskCategory("mine", username, false);
+        categoryRepository.save(mineCategory);
+
         Task task = new Task();
         String name = UUID.randomUUID().toString();
         task.setName(name);
-        String username = "username";
+
+        TaskCategory c1 = new TaskCategory();
+        c1.setId(publicCategory.getId());
+        task.addCategory(c1);
+        TaskCategory c2 = new TaskCategory();
+        c2.setName(mineCategory.getName());
+        task.addCategory(c2);
+
         Task savedTask = service.createTask(task, username);
 
         Task taskInDb = service.getTask(savedTask.getId());
         assertNotNull(taskInDb);
         assertEquals(savedTask.getId(), taskInDb.getId());
+        assertEquals(2, taskInDb.getCategories().size());
+
+        assertEquals(2, categoryRepository.findAll().size());
 
         Task deletedTask = service.deleteTask(taskInDb.getId());
         assertNotNull(deletedTask);
