@@ -1,4 +1,4 @@
-/** Linked Issue: TMGP4-30: Delete Task
+/** Linked Issue: TMGP4-184: Create Final Web Designs
  *
  *  Author: Chavarria Leo
  *
@@ -13,7 +13,7 @@ import { BrowserDynamicTestingModule, platformBrowserDynamicTesting } from '@ang
 import {RouterTestingModule} from '@angular/router/testing';
 import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { DeleteTaskDialogComponent } from './delete-task-dialog.component';
+import { HomeComponent } from './home.component';
 import {
   MatFormFieldModule,
   MatInputModule,
@@ -25,9 +25,9 @@ import {
   MatSelectModule
 } from '@angular/material';
 
-describe('DeleteTaskDialogComponent', () => {
-  let component: DeleteTaskDialogComponent;
-  let fixture: ComponentFixture<DeleteTaskDialogComponent>;
+describe('HomeComponent', () => {
+  let component: HomeComponent;
+  let fixture: ComponentFixture<HomeComponent>;
 
   beforeEach(async(() => {
     TestBed.resetTestEnvironment();
@@ -48,13 +48,13 @@ describe('DeleteTaskDialogComponent', () => {
         useValue: {}},
         { provide: MAT_DIALOG_DATA, useValue: {}}],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
-      declarations: [ DeleteTaskDialogComponent ]
+      declarations: [ HomeComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DeleteTaskDialogComponent);
+    fixture = TestBed.createComponent(HomeComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -63,11 +63,12 @@ describe('DeleteTaskDialogComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should verify onNoClick', () => {
-    expect(component.onNoClick).toBeTruthy();
-  });
+  it('should be Defined getTasks', async(() => {
+    spyOn(component, 'getTasks').and.callThrough();
+    fixture.whenStable().then(() => {
+      expect(component.getTasks).toBeDefined();
+      expect(component.getTasks).toHaveBeenCalledTimes(0);
+    });
+  }));
 
-  it('should verify onYesClick', () => {
-    expect(component.onYesClick).toBeTruthy();
-  });
 });

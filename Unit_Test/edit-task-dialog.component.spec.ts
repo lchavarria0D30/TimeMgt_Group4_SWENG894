@@ -1,3 +1,9 @@
+/** Linked Issue: TMGP4-32: Update Task
+ *
+ *  Author: Chavarria Leo
+ *
+ *  Unit Test - Frontend
+ */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatIconModule} from '@angular/material/icon';
 import {CustomMaterialModule} from '../../modules/material.module';
@@ -8,6 +14,10 @@ import {RouterTestingModule} from '@angular/router/testing';
 import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { EditTaskDialogComponent } from './edit-task-dialog.component';
+import {Component, Inject, OnInit} from '@angular/core';
+import {FormControl, Validators} from '@angular/forms';
+import {SessionService} from '../../services/session.service';
+import {DialogData} from '../tasks/tasks.component';
 import {
   MatFormFieldModule,
   MatInputModule,
@@ -15,10 +25,10 @@ import {
   MatDialogRef,
   MAT_DIALOG_DATA,
   MatButtonModule,
+  MatToolbar,
   MatRadioModule,
   MatSelectModule
 } from '@angular/material';
-
 
 describe('EditTaskDialogComponent', () => {
   let component: EditTaskDialogComponent;
@@ -37,6 +47,8 @@ describe('EditTaskDialogComponent', () => {
         MatFormFieldModule,
         MatInputModule,
         MatDialogModule,
+
+
       ],
       providers: [AmplifyService, HttpClient, {
         provide: MatDialogRef,
@@ -57,16 +69,4 @@ describe('EditTaskDialogComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-
-  it('should', async(() => {
-    spyOn(component, 'onYesClick');
-    let button = fixture.debugElement.nativeElement.querySelector('button');
-    button.click();
-
-    fixture.whenStable().then(() => {
-      expect(component.onYesClick).toHaveBeenCalled();
-    });
-
-  }));
-
 });
