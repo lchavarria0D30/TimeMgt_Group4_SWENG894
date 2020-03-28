@@ -277,7 +277,7 @@ public class TaskManagerTest extends AbstractControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.put("/tasks/task")
                 .content(asJsonString(taskWithDifferentUser))
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isNotFound());
+                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest());
     }
 
     @Test
@@ -286,6 +286,7 @@ public class TaskManagerTest extends AbstractControllerTest {
         Task request = new Task();
         String name = UUID.randomUUID().toString();
         request.setName(name);
+        request.setScheduledstart(new Date());
         ResultActions actions = mockMvc.perform(MockMvcRequestBuilders.post("/tasks/newtask")
                 .content(asJsonString(request))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -335,7 +336,7 @@ public class TaskManagerTest extends AbstractControllerTest {
         taskRepository.save(taskWithDifferentUser);
         mockMvc.perform(MockMvcRequestBuilders.delete("/tasks/task/" + taskWithDifferentUser.getId())
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isNotFound());
+                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest());
     }
 
     @Test
