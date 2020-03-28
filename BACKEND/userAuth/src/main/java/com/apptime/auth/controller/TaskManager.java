@@ -118,7 +118,7 @@ public class TaskManager {
 		gmtDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 		try {
 			task.setScheduledstart(gmtDateFormat.parse(gmtDateFormat.format(task.getScheduledstart())));
-		}catch(  ParseException e){
+		} catch (ParseException e){
 			return new ResponseEntity<Object>( HttpStatus.BAD_REQUEST);
 		}
 		String user = getPrinciple(p).getName();
@@ -144,11 +144,11 @@ public class TaskManager {
 		if(old.getState() != TaskState.CREATED){
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
-		if(!old.getUserName().equals(p.getName())){
+		if(!old.getUserName().equals(getPrinciple(p).getName())){
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
 		task.setState(TaskState.CREATED);
-		task.setUserName(p.getName());
+		task.setUserName(getPrinciple(p).getName());
 		Task updatedTask = taskService.updateTask(removeCategoryOwner(task), getPrinciple(p).getName());
 			return new ResponseEntity<>(updatedTask, HttpStatus.OK);
 	}
@@ -168,7 +168,7 @@ public class TaskManager {
 		if(task.getState() != TaskState.CREATED){
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
-		if(!task.getUserName().equals(p.getName())){
+		if(!task.getUserName().equals(getPrinciple(p).getName())){
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
 
