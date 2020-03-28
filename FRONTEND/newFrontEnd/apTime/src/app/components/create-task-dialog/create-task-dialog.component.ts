@@ -27,7 +27,7 @@ export class CreateTaskDialogComponent implements OnInit {
   categories;
   minDate;
   minEndDate;
-  timeRegex = /^(?:(?:1[0-2]|0?[1-9]):[0-5]\d\s[AaPp][Mm])?$/;
+  timeRegex = /^(?:(?:1[0-2]|0?[1-9]):[0-5]\d\s[AP][M])?$/;
   isWrongDate = false;
 
   nameFormControl = new FormControl('', [
