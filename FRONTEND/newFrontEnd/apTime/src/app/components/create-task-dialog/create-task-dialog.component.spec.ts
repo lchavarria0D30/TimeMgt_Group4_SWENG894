@@ -1,3 +1,9 @@
+/** Linked Issue: TMGP4-29: Create Task
+ *
+ *  Author: Chavarria Leo
+ *
+ *  Unit Test - Frontend
+ */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatIconModule} from "@angular/material/icon";
 import { CreateTaskDialogComponent } from './create-task-dialog.component';
@@ -58,7 +64,31 @@ describe('CreateTaskDialogComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should create', () => {
+  it('should onNoclick', () => {
     expect(component.onNoClick).toBeTruthy();
   });
+
+  it('should onYesClick', () => {
+    expect(component.onYesClick).toBeTruthy();
+  });
+
+  it('should dateConversion', () => {
+    expect(component.dateConversion).toBeTruthy();
+  });
+
+  it('should be Defined onNoClick', async(() => {
+    spyOn(component, 'onNoClick').and.callThrough();
+    fixture.whenStable().then(() => {
+      expect(component.onNoClick).toBeDefined();
+      expect(component.onNoClick).toHaveBeenCalledTimes(0);
+    });
+  }));
+
+  it('should be Defined onYesClick', async(() => {
+    spyOn(component, 'onYesClick').and.callThrough();
+    fixture.whenStable().then(() => {
+      expect(component.onYesClick).toBeDefined();
+      expect(component.onYesClick).toHaveBeenCalledTimes(0);
+    });
+  }));
 });
