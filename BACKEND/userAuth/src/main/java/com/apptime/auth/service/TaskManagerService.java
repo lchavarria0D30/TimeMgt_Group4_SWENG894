@@ -1,17 +1,17 @@
 package com.apptime.auth.service;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import com.apptime.auth.config.TaskStateMachine;
-import com.apptime.auth.model.Task;
-import com.apptime.auth.model.TaskCategory;
-import com.apptime.auth.model.TaskState;
-import com.apptime.auth.repository.TaskCategoryRepository;
-import com.apptime.auth.repository.TaskReportRepository;
-import com.apptime.auth.repository.TaskRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
-import javax.transaction.Transactional;
+		import java.text.SimpleDateFormat;
+		import java.util.*;
+		import com.apptime.auth.config.TaskStateMachine;
+		import com.apptime.auth.model.Task;
+		import com.apptime.auth.model.TaskCategory;
+		import com.apptime.auth.model.TaskState;
+		import com.apptime.auth.repository.TaskCategoryRepository;
+		import com.apptime.auth.repository.TaskReportRepository;
+		import com.apptime.auth.repository.TaskRepository;
+		import org.springframework.beans.factory.annotation.Autowired;
+		import org.springframework.stereotype.Service;
+		import org.springframework.web.bind.annotation.RequestBody;
+		import javax.transaction.Transactional;
 
 /**
  * @author Bashiir Mohamed
@@ -34,7 +34,7 @@ public class TaskManagerService {
 	@Autowired
 	private TaskCategoryRepository categoryRepository;
 
-    //view task details
+	//view task details
 	//view task details
 	public Task getTask(long id) {
 		return taskRepo.findById(id);
@@ -195,20 +195,12 @@ public class TaskManagerService {
 		return ts;
 	}
 
-    public Set<Task> getTasksStartedLaterThan(Date start, String name) {
-		Set<Task> tasks = taskRepo.getTasksStartedLaterThan(start,name);
-		Set<Task> result = new HashSet<Task>();
+	public Set<Task> getTasksStartedLaterThan(Date start, String name) {
 		String pattern = "yyyy-MM-dd";
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-		String stDate = simpleDateFormat.format(start);
-		if(tasks != null && !tasks.isEmpty()){
-			for(Task task : tasks){
-				String schldDate = simpleDateFormat.format(task.getScheduledstart());
-				if (schldDate.equals(stDate)) {
-					result.add(task);
-				}
-			}
-		}
+		java.sql.Date qdate = new java.sql.Date(start.getTime());
+		Set<Task> result = new HashSet<Task>();
+		result = taskRepo.getTasksStartedLaterThan(qdate,name);
 		return result;
-    }
+	}
 }
