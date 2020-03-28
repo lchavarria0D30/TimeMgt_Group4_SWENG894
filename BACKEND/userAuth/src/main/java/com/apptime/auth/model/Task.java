@@ -1,10 +1,10 @@
 package com.apptime.auth.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 import javax.persistence.*;
 import java.time.Duration;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Bashiir Mohamed
@@ -28,22 +28,26 @@ public class Task {
     private Date actualEnd;
     private Date scheduledEnd;
 
+    @ManyToMany(fetch=FetchType.EAGER)
+    private Set<TaskCategory> categories;
+
     public Date getEnd() {
         return actualEnd;
     }
     public void setEnd(Date end) {
         this.actualEnd = end;
     }
-    public Date getScheduledstart() {
-        return scheduledstart;
+    public Date getScheduledstart()
+    {
+
+       return scheduledstart;
     }
 
     public void setScheduledstart(Date scheduledstart) {
 
-        this.scheduledstart = scheduledstart;
+
+       this.scheduledstart = scheduledstart;
     }
-
-
 
     public String getUserName() {
         return userName;
@@ -108,7 +112,33 @@ public class Task {
     }
 
     public void setScheduledEnd(Date scheduledEnd) {
+
         this.scheduledEnd = scheduledEnd;
+    }
+
+    public Set<TaskCategory> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(Set<TaskCategory> categories) {
+        this.categories = categories;
+    }
+
+    public void addCategory(TaskCategory category) {
+        if (categories == null) {
+            categories = new HashSet<>();
+        }
+
+        boolean existing = false;
+        for (TaskCategory tc : categories) {
+            if (tc.getId() == category.getId() || (tc.getName() != null && tc.getName().equals(category.getName()))) {
+                existing = true;
+                break;
+            }
+        }
+        if (!existing) {
+            categories.add(category);
+        }
     }
 }
 

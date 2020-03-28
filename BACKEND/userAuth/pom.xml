@@ -16,19 +16,19 @@
 			<id>dev</id>
 			<activation>
 				<!-- this profile is active by default -->
-				<activeByDefault>true</activeByDefault>
-				<!-- activate if system properties 'env=dev' -->
+				<activeByDefault>false</activeByDefault>
+			<!--	 activate if system properties 'env=dev' -->
 				<property>
 					<name>env</name>
 					<value>dev</value>
 				</property>
 			</activation>
-
 			<properties>
 				<db.driverClassName>org.h2.Driver</db.driverClassName>
 				<db.url>jdbc:h2:mem:testdb</db.url>
 				<db.username>sa</db.username>
 				<db.password>sa</db.password>
+
 			</properties>
 
 			<dependencies>
@@ -47,7 +47,7 @@
 		<profile>
 			<id>postgres</id>
 			<activation>
-				<!--  	<activeByDefault>false</activeByDefault> -->
+				 	<activeByDefault>false</activeByDefault>
 
 
 				<property>

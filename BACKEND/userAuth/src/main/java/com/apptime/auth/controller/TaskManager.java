@@ -6,9 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import com.apptime.auth.model.*;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,6 +22,8 @@ import com.apptime.auth.service.TaskManagerService;
 @RestController
 @RequestMapping(value = "/tasks")
 public class TaskManager {
+	private static final String DATE_PATTERN = "yyyy-MM-dd";
+
 	@Autowired
 	TaskManagerService taskService;
 
@@ -37,9 +37,33 @@ public class TaskManager {
 	public ResponseEntity<List<Task>> getTasks(Principal p) {
 		String user = getPrinciple(p).getName();
 		List<Task> tasks = taskService.findUserTasks(user);
-		return new ResponseEntity<List<Task>>(tasks, HttpStatus.OK);
+		return new ResponseEntity<List<Task>>(removeCategoryOwner(tasks), HttpStatus.OK);
 	}
 
+	private List<Task> removeCategoryOwner(List<Task> tasks) {
+		if (tasks != null) {
+			tasks.forEach(this::removeCategoryOwner);
+		}
+		return tasks;
+	}
+
+	private Set<Task> removeCategoryOwner(Set<Task> tasks) {
+		if (tasks != null) {
+			tasks.forEach(this::removeCategoryOwner);
+		}
+		return tasks;
+	}
+
+	private Task removeCategoryOwner(Task task) {
+		if (task == null || task.getCategories() == null) {
+			return task;
+		}
+
+		for (TaskCategory category : task.getCategories()) {
+			category.setOwner(null);
+		}
+		return task;
+	}
 
 	/**
 	 *
@@ -52,7 +76,7 @@ public class TaskManager {
 	public ResponseEntity<Task> getTask(@PathVariable("id") int taskId, Principal p) {
 		Task task = taskService.getTask(taskId);
 		if (task.getUserName().equals(getPrinciple(p).getName())) {
-			return new ResponseEntity<Task>(task, HttpStatus.OK);
+			return new ResponseEntity<Task>(removeCategoryOwner(task), HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
@@ -61,13 +85,24 @@ public class TaskManager {
 
 	@PostMapping("/due/start")
 	public ResponseEntity<Set<Task>> showAddedSince(@RequestBody FormatedDate start, Principal p) {
-		Set<Task>  tasks = taskService.getTasksStartedLaterThan(start.getDate(), getPrinciple(p).getName());
+		Set<Task>  tasks = null;
+		try {
+			tasks = taskService.getTasksStartedLaterThan(parseDate(start.getDate()), getPrinciple(p).getName());
+		} catch (ParseException e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+
 		if (tasks == null || tasks.isEmpty()) {
-			return new ResponseEntity<>(null,HttpStatus.OK);
+			return new ResponseEntity<>(Collections.emptySet(), HttpStatus.OK);
 
 		} else {
-			return new ResponseEntity<Set<Task>>(tasks, HttpStatus.OK);
+			return new ResponseEntity<>(removeCategoryOwner(tasks), HttpStatus.OK);
 		}
+	}
+
+	private Date parseDate(String str) throws ParseException {
+		SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_PATTERN);
+		return dateFormat.parse(str);
 	}
 
 	/**
@@ -79,10 +114,17 @@ public class TaskManager {
 	@PostMapping("/newtask")
 	public ResponseEntity<Object> createTask(@RequestBody Task task, Principal p) {
 		//.out.println("frontend sent Date : "+ task.getScheduledstart().toString());
+		SimpleDateFormat gmtDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		gmtDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+		try {
+			task.setScheduledstart(gmtDateFormat.parse(gmtDateFormat.format(task.getScheduledstart())));
+		}catch(  ParseException e){
+			return new ResponseEntity<Object>( HttpStatus.BAD_REQUEST);
+		}
 		String user = getPrinciple(p).getName();
 		if(taskService.getTask(task.getId())==null) {
 			Task result = taskService.createTask(task,user);
-			return new ResponseEntity<Object>(result, HttpStatus.OK);
+			return new ResponseEntity<Object>(removeCategoryOwner(result), HttpStatus.OK);
 		}
 		return new ResponseEntity<Object>("{status: didn't create }", HttpStatus.NOT_FOUND);
 	}
@@ -95,12 +137,20 @@ public class TaskManager {
 	 */
 	@PutMapping("/task")
 	public ResponseEntity<Task> updateTask(@RequestBody Task task, Principal p) {
-		Task updatedTask = taskService.updateTask(task, getPrinciple(p).getName());
-		if (updatedTask != null) {
-			return new ResponseEntity<>(updatedTask, HttpStatus.OK);
-		} else {
+		Task old = taskService.getTask(task.getId());
+		if(old==null){
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
+		if(old.getState() != TaskState.CREATED){
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		if(!old.getUserName().equals(p.getName())){
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		}
+		task.setState(TaskState.CREATED);
+		task.setUserName(p.getName());
+		Task updatedTask = taskService.updateTask(removeCategoryOwner(task), getPrinciple(p).getName());
+			return new ResponseEntity<>(updatedTask, HttpStatus.OK);
 	}
 
 	/**
@@ -112,10 +162,17 @@ public class TaskManager {
 	@DeleteMapping("/task/{id}")
 	public ResponseEntity<Task> deleteTask(@PathVariable Long id, Principal p) {
 		Task task = taskService.getTask(id);
-		if (task == null || !getPrinciple(p).getName().equals(task.getUserName())) {
+		if(task==null){
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-		return new ResponseEntity<>(taskService.deleteTask(id), HttpStatus.OK);
+		if(task.getState() != TaskState.CREATED){
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		if(!task.getUserName().equals(p.getName())){
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		}
+
+		return new ResponseEntity<>(removeCategoryOwner(taskService.deleteTask(id)), HttpStatus.OK);
 	}
 
 	/**
@@ -134,10 +191,10 @@ public class TaskManager {
 		//check for currently other active tasks
 		Task active = taskService.getTask(TaskState.ACTIVE, userName);
 		if(active != null){
-			return new ResponseEntity<TaskError>(new TaskError(ErrorType.Concurrent_Active_Task_Not_Allowed, active),HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<TaskError>(new TaskError(ErrorType.Concurrent_Active_Task_Not_Allowed, removeCategoryOwner(active)),HttpStatus.BAD_REQUEST);
 		}
 		if(!isAuthorized(p,task)){
-			return new ResponseEntity<TaskError>(new TaskError(ErrorType.Task_Not_Found, null),HttpStatus.UNAUTHORIZED);
+			return new ResponseEntity<TaskError>(new TaskError(ErrorType.unauthorized_Action, null),HttpStatus.UNAUTHORIZED);
 		}
 		return new ResponseEntity<TaskState>(taskService.start(id), HttpStatus.OK);
 	}
@@ -156,7 +213,7 @@ public class TaskManager {
 			return new ResponseEntity<TaskError>( new TaskError(ErrorType.Task_Not_Found, null), HttpStatus.NOT_FOUND);
 		}
 		if(!isAuthorized(p,task)){
-			return new ResponseEntity<TaskError>(new TaskError(ErrorType.Task_Not_Found, null),HttpStatus.UNAUTHORIZED);
+			return new ResponseEntity<TaskError>(new TaskError(ErrorType.unauthorized_Action, null),HttpStatus.UNAUTHORIZED);
 		}
 		return new ResponseEntity<TaskState>(taskService.pause(id), HttpStatus.OK);
 	}
@@ -174,11 +231,10 @@ public class TaskManager {
 			return new ResponseEntity<TaskError>( new TaskError(ErrorType.Task_Not_Found, null), HttpStatus.NOT_FOUND);
 		}
 		if(!isAuthorized(p,task)){
-			return new ResponseEntity<TaskError>(new TaskError(ErrorType.Task_Not_Found, null),HttpStatus.UNAUTHORIZED);
+			return new ResponseEntity<TaskError>(new TaskError(ErrorType.unauthorized_Action, null),HttpStatus.UNAUTHORIZED);
 		}
 		return new ResponseEntity<TaskState>(taskService.complete(id), HttpStatus.OK);
 	}
-
 
 	/**
 	 *
@@ -189,9 +245,8 @@ public class TaskManager {
 	private Principal getPrinciple(Principal p) {
 		return p != null ? p : SecurityContextHolder.getContext().getAuthentication();
 	}
+
 	private Boolean isAuthorized(Principal p, Task task){
 		return task.getUserName().equals(getPrinciple(p).getName());
 	}
-
-
 }

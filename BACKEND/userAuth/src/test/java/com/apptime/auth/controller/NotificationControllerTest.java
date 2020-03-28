@@ -11,15 +11,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
 import java.util.Date;
 import java.util.List;
@@ -31,8 +25,6 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
@@ -42,43 +34,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @ExtendWith(MockitoExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class NotificationControllerTest {
+public class NotificationControllerTest extends AbstractControllerTest {
     private static final String USERNAME = "username";
-
-    private MockMvc mockMvc;
 
     @Autowired
     private NotificationRepository notificationRepository;
-
-    @Autowired
-    private WebApplicationContext context;
-
-    private SecurityContext securityContext;
 
     @BeforeEach
     public void init() {
         MockitoAnnotations.initMocks(this);
         notificationRepository.deleteAll();
-        mockMvc = MockMvcBuilders
-                .webAppContextSetup(context)
-                .build();
-
-        securityContext = mock(SecurityContext.class);
-        SecurityContextHolder.setContext(securityContext);
-    }
-
-    private void mockAuthentication(String username) {
-        Authentication authentication = mock(Authentication.class);
-        when(authentication.getName()).thenReturn(username);
-        mockAuthentication(authentication);
-    }
-
-    private void mockAuthentication() {
-        mockAuthentication(USERNAME);
-    }
-
-    private void mockAuthentication(Authentication authentication) {
-        when(securityContext.getAuthentication()).thenReturn(authentication);
+        initMvc();
     }
 
     @Test

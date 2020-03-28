@@ -1,3 +1,10 @@
+# To run the Angular project
+1. Go to the FRONTEND/newFrontEnd/apTime folder
+2. Open the terminal/command prompt and run:
+  - npx npm-force-resolutions 
+  - npm install
+  - ng serve -o
+  
 # To run the auth service.
 clone the repo.
 
