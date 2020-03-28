@@ -1,3 +1,10 @@
+/** Linked Issue: TMGP4-184: Create Final Web Designs
+ *
+ *  Author: Chavarria Leo
+ *
+ *  Unit Test - Frontend
+ */
+
 import { TestBed, async } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
@@ -13,6 +20,9 @@ import {HttpClient, HttpClientModule} from '@angular/common/http';
 describe('AppComponent', () => {
   let fixture;
   let title = 'TimeMngmt';
+  let comp: AppComponent;
+
+
   beforeEach(async(() => {
     TestBed.resetTestEnvironment();
     TestBed.initTestEnvironment(BrowserDynamicTestingModule,
@@ -47,7 +57,6 @@ describe('AppComponent', () => {
   });
 
   it('should render title', async () => {
-    // const fixture = TestBed.createComponent(AppComponent);
     const component = fixture.componentInstance;
     component.inputName = true;
     fixture.detectChanges();
