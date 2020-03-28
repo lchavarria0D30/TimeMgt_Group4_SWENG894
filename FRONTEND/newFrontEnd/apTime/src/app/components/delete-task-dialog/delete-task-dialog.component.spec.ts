@@ -1,3 +1,9 @@
+/** Linked Issue: TMGP4-30: Delete Task
+ *
+ *  Author: Chavarria Leo
+ *
+ *  Unit Test - Frontend
+ */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatIconModule} from '@angular/material/icon';
 import {CustomMaterialModule} from '../../modules/material.module';
@@ -57,11 +63,11 @@ describe('DeleteTaskDialogComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should create', () => {
+  it('should verify onNoClick', () => {
     expect(component.onNoClick).toBeTruthy();
   });
 
-  it('should create', () => {
+  it('should verify onYesClick', () => {
     expect(component.onYesClick).toBeTruthy();
   });
 });
