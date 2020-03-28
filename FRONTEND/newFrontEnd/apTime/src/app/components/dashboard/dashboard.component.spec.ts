@@ -19,6 +19,7 @@ import {
   MatSelectModule
 } from '@angular/material';
 import { DashboardComponent } from './dashboard.component';
+import {FormControl} from "@angular/forms";
 
 describe('DashboardComponent', () => {
   let component: DashboardComponent;
@@ -57,4 +58,25 @@ describe('DashboardComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should selectedTask', () => {
+    expect(component.selectedTask).toBeTruthy();
+  });
+
+  it('should getDateTasks', () => {
+    expect(component.getDateTasks).toBeTruthy();
+  });
+
+  it('should getTasks', () => {
+    expect(component.getTasks).toBeTruthy();
+  });
+
+  it('should be Defined getTasks', async(() => {
+    spyOn(component, 'getTasks').and.callThrough();
+    fixture.whenStable().then(() => {
+    expect(component.getTasks).toBeDefined();
+    expect(component.getTasks).toHaveBeenCalledTimes(0);
+    });
+  }));
+
 });
