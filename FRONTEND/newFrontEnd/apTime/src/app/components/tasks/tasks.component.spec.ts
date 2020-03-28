@@ -1,3 +1,9 @@
+/** Linked Issue: TMGP4-229: Create Task
+ *
+ *  Author: Chavarria Leo
+ *
+ *  Unit Test - Frontend
+ */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatIconModule} from '@angular/material/icon';
 import {CustomMaterialModule} from '../../modules/material.module';
@@ -69,4 +75,11 @@ describe('TasksComponent', () => {
 
   }));
 
+  it('should be Defined openDialog', async(() => {
+    spyOn(component, 'openDialog').and.callThrough();
+    fixture.whenStable().then(() => {
+      expect(component.openDialog).toBeDefined();
+      expect(component.openDialog).toHaveBeenCalledTimes(0);
+    });
+  }));
 });

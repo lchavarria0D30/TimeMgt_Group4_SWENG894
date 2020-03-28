@@ -114,6 +114,13 @@ public class TaskManager {
 	@PostMapping("/newtask")
 	public ResponseEntity<Object> createTask(@RequestBody Task task, Principal p) {
 		//.out.println("frontend sent Date : "+ task.getScheduledstart().toString());
+		SimpleDateFormat gmtDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		gmtDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+		try {
+			task.setScheduledstart(gmtDateFormat.parse(gmtDateFormat.format(task.getScheduledstart())));
+		}catch(  ParseException e){
+			return new ResponseEntity<Object>( HttpStatus.BAD_REQUEST);
+		}
 		String user = getPrinciple(p).getName();
 		if(taskService.getTask(task.getId())==null) {
 			Task result = taskService.createTask(task,user);
@@ -130,12 +137,20 @@ public class TaskManager {
 	 */
 	@PutMapping("/task")
 	public ResponseEntity<Task> updateTask(@RequestBody Task task, Principal p) {
-		Task updatedTask = taskService.updateTask(task, getPrinciple(p).getName());
-		if (updatedTask != null) {
-			return new ResponseEntity<>(removeCategoryOwner(updatedTask), HttpStatus.OK);
-		} else {
+		Task old = taskService.getTask(task.getId());
+		if(old==null){
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
+		if(old.getState() != TaskState.CREATED){
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		if(!old.getUserName().equals(p.getName())){
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		}
+		task.setState(TaskState.CREATED);
+		task.setUserName(p.getName());
+		Task updatedTask = taskService.updateTask(removeCategoryOwner(task), getPrinciple(p).getName());
+			return new ResponseEntity<>(updatedTask, HttpStatus.OK);
 	}
 
 	/**
@@ -147,9 +162,16 @@ public class TaskManager {
 	@DeleteMapping("/task/{id}")
 	public ResponseEntity<Task> deleteTask(@PathVariable Long id, Principal p) {
 		Task task = taskService.getTask(id);
-		if (task == null || !getPrinciple(p).getName().equals(task.getUserName())) {
+		if(task==null){
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
+		if(task.getState() != TaskState.CREATED){
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		if(!task.getUserName().equals(p.getName())){
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		}
+
 		return new ResponseEntity<>(removeCategoryOwner(taskService.deleteTask(id)), HttpStatus.OK);
 	}
 
@@ -172,7 +194,7 @@ public class TaskManager {
 			return new ResponseEntity<TaskError>(new TaskError(ErrorType.Concurrent_Active_Task_Not_Allowed, removeCategoryOwner(active)),HttpStatus.BAD_REQUEST);
 		}
 		if(!isAuthorized(p,task)){
-			return new ResponseEntity<TaskError>(new TaskError(ErrorType.Task_Not_Found, null),HttpStatus.UNAUTHORIZED);
+			return new ResponseEntity<TaskError>(new TaskError(ErrorType.unauthorized_Action, null),HttpStatus.UNAUTHORIZED);
 		}
 		return new ResponseEntity<TaskState>(taskService.start(id), HttpStatus.OK);
 	}
@@ -191,7 +213,7 @@ public class TaskManager {
 			return new ResponseEntity<TaskError>( new TaskError(ErrorType.Task_Not_Found, null), HttpStatus.NOT_FOUND);
 		}
 		if(!isAuthorized(p,task)){
-			return new ResponseEntity<TaskError>(new TaskError(ErrorType.Task_Not_Found, null),HttpStatus.UNAUTHORIZED);
+			return new ResponseEntity<TaskError>(new TaskError(ErrorType.unauthorized_Action, null),HttpStatus.UNAUTHORIZED);
 		}
 		return new ResponseEntity<TaskState>(taskService.pause(id), HttpStatus.OK);
 	}
@@ -209,7 +231,7 @@ public class TaskManager {
 			return new ResponseEntity<TaskError>( new TaskError(ErrorType.Task_Not_Found, null), HttpStatus.NOT_FOUND);
 		}
 		if(!isAuthorized(p,task)){
-			return new ResponseEntity<TaskError>(new TaskError(ErrorType.Task_Not_Found, null),HttpStatus.UNAUTHORIZED);
+			return new ResponseEntity<TaskError>(new TaskError(ErrorType.unauthorized_Action, null),HttpStatus.UNAUTHORIZED);
 		}
 		return new ResponseEntity<TaskState>(taskService.complete(id), HttpStatus.OK);
 	}

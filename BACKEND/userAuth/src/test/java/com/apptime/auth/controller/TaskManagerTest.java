@@ -127,6 +127,7 @@ public class TaskManagerTest extends AbstractControllerTest {
 
         sDate="2020-04-22";
         start.setDate(sDate);
+
         body = (new ObjectMapper()).valueToTree(start).toString();
         actions = mockMvc.perform(MockMvcRequestBuilders.post("/tasks/due/start")
                 .contentType(MediaType.APPLICATION_JSON)

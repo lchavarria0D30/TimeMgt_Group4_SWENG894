@@ -1,3 +1,9 @@
+/** Linked Issue: TMGP4-184: Create Final Web Designs
+ *
+ *  Author: Chavarria Leo
+ *
+ *  Unit Test - Frontend
+ */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatIconModule} from '@angular/material/icon';
 import {CustomMaterialModule} from '../../modules/material.module';
@@ -56,4 +62,13 @@ describe('HomeComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should be Defined getTasks', async(() => {
+    spyOn(component, 'getTasks').and.callThrough();
+    fixture.whenStable().then(() => {
+      expect(component.getTasks).toBeDefined();
+      expect(component.getTasks).toHaveBeenCalledTimes(0);
+    });
+  }));
+
 });

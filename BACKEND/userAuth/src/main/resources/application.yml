@@ -14,9 +14,20 @@ spring:
     url: jdbc:h2:mem:testdb
     driver-class-name: org.h2.Driver
     username: sa
-    password: 
+    password: sa
   h2:
     console:
       enabled: true
     path: /h2
-      
+#spring:
+#  jpa:
+#    database: POSTGRESQL
+#    show-sql: true
+#    hibernate:
+#      ddl-auto: create-drop
+#  datasource:
+#    platform: postgres
+#    url: jdbc:postgresql://localhost:5432/authDb
+#    username: flowable
+#    password: flowable
+#    driverClassName: org.postgresql.Driver
