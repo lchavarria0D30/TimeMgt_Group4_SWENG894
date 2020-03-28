@@ -34,6 +34,7 @@ export class EditTaskDialogComponent implements OnInit {
   minDate;
   minEndDate;
   timeRegex = /^(?:(?:1[0-2]|0?[1-9]):[0-5]\d\s[AaPp][Mm])?$/;
+  isWrongDate = false;
 
   nameFormControl = new FormControl('', [
     Validators.required
@@ -79,29 +80,38 @@ export class EditTaskDialogComponent implements OnInit {
     // this.actualStart = this.dateConversion(this.task.asTime, this.task.asDate);
     // this.actualEnd = this.dateConversion(this.task.aeTime, this.task.aeDate);
 
-    const headers = { Authorization: 'Bearer ' + this.sessionService.getToken()};
+    if (this.scheduledEnd < this.scheduledStart) {
 
-    const body = {
-      id: this.task.id,
-      name: this.task.name,
-      description: this.task.description,
-      category: this.task.category,
-      scheduledstart: this.scheduledStart,
-      scheduledEnd: this.scheduledEnd
-      // actualstart: this.actualStart,
-      // actualend: this.actualEnd
+      this.isWrongDate = true;
 
-    };
-
-    console.log('Log body before put: ', body);
-    console.log('BEFORE put');
-    this.http.put('http://localhost:8001/tasks/task', body, { headers }).subscribe({
-      next: data => console.log(data),
-      error: error => console.error('There was an error!', error)
-    });
+    } else {
+      this.isWrongDate = false;
 
 
-    this.dialogRef.close();
+      const headers = {Authorization: 'Bearer ' + this.sessionService.getToken()};
+
+      const body = {
+        id: this.task.id,
+        name: this.task.name,
+        description: this.task.description,
+        category: this.task.category,
+        scheduledstart: this.scheduledStart,
+        scheduledEnd: this.scheduledEnd
+        // actualstart: this.actualStart,
+        // actualend: this.actualEnd
+
+      };
+
+      console.log('Log body before put: ', body);
+      console.log('BEFORE put');
+      this.http.put('http://localhost:8001/tasks/task', body, {headers}).subscribe({
+        next: data => console.log(data),
+        error: error => console.error('There was an error!', error)
+      });
+
+
+      this.dialogRef.close();
+    }
   }
 
   onActualsClick(): void {

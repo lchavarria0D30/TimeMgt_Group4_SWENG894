@@ -83,7 +83,7 @@ Description: Template for the edit task dialog box. Includes the forms where use
             <div fxFlex="" fxLayoutGap="15px">
                 <mat-form-field>
                     <mat-label>End Time</mat-label>
-                    <input matInput [(ngModel)]="task.seTime" name="taskseTime" [formControl]="eTimeFormControl">
+                    <input matInput [(ngModel)]="task.seTime" name="taskseTime" [formControl]="eTimeFormControl" [disabled]="true">
 
                     <mat-error *ngIf="eTimeFormControl.hasError('required')"> End Time is <strong>required</strong>
                     </mat-error>
@@ -145,7 +145,9 @@ Description: Template for the edit task dialog box. Includes the forms where use
     </form>
 </div>
 <div mat-dialog-actions align="end" class="header-text">
-    <button mat-raised-button color="primary" [mat-dialog-close]="data"  (click)="onYesClick()" cdkFocusInitial
+    <mat-error *ngIf="isWrongDate"> End date and time should be later than start date and time.
+    </mat-error>
+    <button mat-raised-button color="primary" (click)="onYesClick()" cdkFocusInitial
             [disabled]="!eTimeFormControl.valid || !sTimeFormControl.valid || !eDateFormControl.valid ||
             !sDateFormControl.valid || !nameFormControl.valid">Save</button>
 </div>

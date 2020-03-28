@@ -28,6 +28,7 @@ export class CreateTaskDialogComponent implements OnInit {
   minDate;
   minEndDate;
   timeRegex = /^(?:(?:1[0-2]|0?[1-9]):[0-5]\d\s[AaPp][Mm])?$/;
+  isWrongDate = false;
 
   nameFormControl = new FormControl('', [
     Validators.required
@@ -67,30 +68,37 @@ export class CreateTaskDialogComponent implements OnInit {
 
   onYesClick(): void {
 
+
     this.scheduledStart = this.dateConversion(this.data.ssTime, this.data.ssDate);
     this.scheduledEnd = this.dateConversion(this.data.seTime, this.data.seDate);
 
-    console.log(this.scheduledStart);
-    console.log(this.scheduledEnd);
-    console.log('Before POST');
+    if (this.scheduledEnd < this.scheduledStart) {
+      this.isWrongDate = true;
 
-    const headers = { Authorization: 'Bearer ' + this.sessionService.getToken()};
+    } else {
+      this.isWrongDate = false;
+      console.log(this.scheduledStart);
+      console.log(this.scheduledEnd);
+      console.log('Before POST');
 
-    const body = { name: this.data.name,
-      description: this.data.description,
-      category: this.selectedCategory,
-      scheduledstart: this.scheduledStart,
-      scheduledEnd: this.scheduledEnd,
-    };
+      const headers = { Authorization: 'Bearer ' + this.sessionService.getToken()};
+
+      const body = { name: this.data.name,
+        description: this.data.description,
+        category: this.selectedCategory,
+        scheduledstart: this.scheduledStart,
+        scheduledEnd: this.scheduledEnd,
+      };
 
 
-    this.http.post('http://localhost:8001/tasks/newtask', body, { headers }).subscribe({
-      next: data => console.log(data),
-      error: error => console.error('There was an error!', error)
-    });
+      this.http.post('http://localhost:8001/tasks/newtask', body, { headers }).subscribe({
+        next: data => console.log(data),
+        error: error => console.error('There was an error!', error)
+      });
 
+      this.dialogRef.close();
+    }
 
-    this.dialogRef.close();
   }
 
   dateConversion(time: string, date: Date): Date {
