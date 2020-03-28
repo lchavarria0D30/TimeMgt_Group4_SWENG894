@@ -1,3 +1,10 @@
+/** Linked Issue: TMGP4-43: Create Private Task Category
+ * & TMGP4-39: Create Public Task Category
+ *
+ *  Author: Chavarria Leo
+ *
+ *  Unit Test - Frontend
+ */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatIconModule} from "@angular/material/icon";
 import { TaskCategoryComponent } from './task-category.component';
@@ -70,4 +77,11 @@ describe('TaskCategoryComponent', () => {
     expect(component.canCreateTask).toBeFalsy();
   });
 
+  it('should be Defined openSnackBar', async(() => {
+    spyOn(component, 'openSnackBar').and.callThrough();
+    fixture.whenStable().then(() => {
+      expect(component.openSnackBar).toBeDefined();
+      expect(component.openSnackBar).toHaveBeenCalledTimes(0);
+    });
+  }));
 });
