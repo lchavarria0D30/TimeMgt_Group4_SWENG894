@@ -2,7 +2,9 @@ package com.apptime.auth.service;
 import com.apptime.auth.config.TaskStateMachine;
 import com.apptime.auth.model.FormatedDate;
 import com.apptime.auth.model.Task;
+import com.apptime.auth.model.TaskCategory;
 import com.apptime.auth.model.TaskState;
+import com.apptime.auth.repository.TaskCategoryRepository;
 import com.apptime.auth.repository.TaskReportRepository;
 import com.apptime.auth.repository.TaskRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,6 +27,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
@@ -48,6 +51,9 @@ public class TaskManagerServiceTest {
     private TaskRepository repository;
 
     @Autowired
+    private TaskCategoryRepository categoryRepository;
+
+    @Autowired
     private TaskReportRepository reportRepository;
 
     private NotificationService notificationService;
@@ -56,8 +62,9 @@ public class TaskManagerServiceTest {
 
     @BeforeEach
     public void init() {
-        reportRepository.deleteAll();
         repository.deleteAll();
+        categoryRepository.deleteAll();
+        reportRepository.deleteAll();
         notificationService = mock(NotificationService.class);
         service.setNotificationService(notificationService);
         reportService = mock(TaskReportService.class);
@@ -76,15 +83,44 @@ public class TaskManagerServiceTest {
         assertEquals(name, savedTask.getName());
         assertEquals(username, savedTask.getUserName());
         assertEquals(TaskState.CREATED, task.getState());
-
+        assertTrue(savedTask.getCategories() == null || savedTask.getCategories().isEmpty());
         verify(notificationService, times(1)).createNotificationForTask(any(Task.class));
+
+        String adminUser = UUID.randomUUID().toString();
+        TaskCategory publicCategory = new TaskCategory("public", adminUser, true);
+        categoryRepository.save(publicCategory);
+
+        TaskCategory mineCategory = new TaskCategory("mine", username, false);
+        categoryRepository.save(mineCategory);
+
+        TaskCategory wrongCategory = new TaskCategory("wrong", UUID.randomUUID().toString(), false);
+        categoryRepository.save(wrongCategory);
 
         Task task2 = new Task();
         String name2 = UUID.randomUUID().toString();
         task2.setName(name2);
+
+        TaskCategory c1 = new TaskCategory();
+        c1.setId(publicCategory.getId());
+        task2.addCategory(c1);
+        TaskCategory c2 = new TaskCategory();
+        c2.setName(mineCategory.getName());
+        task2.addCategory(c2);
+        TaskCategory c3 = new TaskCategory();
+        c3.setName(wrongCategory.getName());
+        task2.addCategory(c3);
+        TaskCategory c4 = new TaskCategory();
+        c4.setName(UUID.randomUUID().toString());
+        task2.addCategory(c4); // nonexistent category
+
+
         Task savedTask2 = service.createTask(task2, username);
         assertEquals(name2, savedTask2.getName());
         assertEquals(username, savedTask2.getUserName());
+
+        assertEquals(2, savedTask2.getCategories().size());
+        assertTrue(savedTask2.getCategories().contains(publicCategory));
+        assertTrue(savedTask2.getCategories().contains(mineCategory));
 
         assertNotEquals(savedTask.getId(), savedTask2.getId());
 
@@ -133,15 +169,34 @@ public class TaskManagerServiceTest {
 
     @Test
     public void testDeleteTask() {
+        String username = "username";
+
+        String adminUser = UUID.randomUUID().toString();
+        TaskCategory publicCategory = new TaskCategory("public", adminUser, true);
+        categoryRepository.save(publicCategory);
+
+        TaskCategory mineCategory = new TaskCategory("mine", username, false);
+        categoryRepository.save(mineCategory);
+
         Task task = new Task();
         String name = UUID.randomUUID().toString();
         task.setName(name);
-        String username = "username";
+
+        TaskCategory c1 = new TaskCategory();
+        c1.setId(publicCategory.getId());
+        task.addCategory(c1);
+        TaskCategory c2 = new TaskCategory();
+        c2.setName(mineCategory.getName());
+        task.addCategory(c2);
+
         Task savedTask = service.createTask(task, username);
 
         Task taskInDb = service.getTask(savedTask.getId());
         assertNotNull(taskInDb);
         assertEquals(savedTask.getId(), taskInDb.getId());
+        assertEquals(2, taskInDb.getCategories().size());
+
+        assertEquals(2, categoryRepository.findAll().size());
 
         Task deletedTask = service.deleteTask(taskInDb.getId());
         assertNotNull(deletedTask);

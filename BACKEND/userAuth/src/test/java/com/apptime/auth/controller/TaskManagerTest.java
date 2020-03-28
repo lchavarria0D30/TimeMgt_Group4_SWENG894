@@ -1,4 +1,3 @@
-/*
 package com.apptime.auth.controller;
 
 import com.apptime.auth.config.TaskStateMachine;
@@ -51,15 +50,13 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.*;
 
-*/
 /**
  * @author Qi Zhang
  * The unit class for TaskCategoryController
- *//*
-
+ */
 @ExtendWith(MockitoExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class TaskManager_Old {
+public class TaskManagerTest {
     private static final String USERNAME = "username";
 
     @Autowired
@@ -464,4 +461,3 @@ class TaskManager_Old {
                 .accept(MediaType.APPLICATION_JSON)).andExpect(status().isUnauthorized());
     }
 }
-*/

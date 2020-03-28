@@ -25,11 +25,13 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import static com.apptime.auth.service.impl.TaskReportServiceImpl.DATE_PATTERN;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -120,7 +122,7 @@ public class TaskReportControllerTest {
         assertEquals(1, list.size());
         Map<String, Object> map = list.iterator().next();
         assertEquals(TaskReportType.EARLIER.name(), map.get("type"));
-        assertEquals(task1.getName(), ((Map<String, Object>) map.get("task")).get("name"));
+        assertEquals(task1.getId(), ((Number) map.get("taskId")).longValue());
 
         // create another task/report with different username
         Task task2 = new Task();
@@ -165,6 +167,91 @@ public class TaskReportControllerTest {
         list = mapper.readValue(content, List.class);
         assertEquals(2, list.size());
 
+        // get reports by time range
+        final SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_PATTERN);
+        String startDate = dateFormat.format(System.currentTimeMillis() - 1000L * 60 * 60 * 24 * 5);
+        actions = mockMvc.perform(MockMvcRequestBuilders.get("/report")
+                .param("startDate", startDate)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+        result = actions.andReturn();
+        content = result.getResponse().getContentAsString();
+        mapper = new ObjectMapper();
+        list = mapper.readValue(content, List.class);
+        assertEquals(2, list.size());
+
+        startDate = dateFormat.format(System.currentTimeMillis() + 1000L * 60 * 60 * 24 * 5);
+        actions = mockMvc.perform(MockMvcRequestBuilders.get("/report")
+                .param("startDate", startDate)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+        result = actions.andReturn();
+        content = result.getResponse().getContentAsString();
+        mapper = new ObjectMapper();
+        list = mapper.readValue(content, List.class);
+        assertEquals(0, list.size());
+
+        String endDate = dateFormat.format(System.currentTimeMillis() + 1000L * 60 * 60 * 24 * 5);
+        actions = mockMvc.perform(MockMvcRequestBuilders.get("/report")
+                .param("endDate", endDate)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+        result = actions.andReturn();
+        content = result.getResponse().getContentAsString();
+        mapper = new ObjectMapper();
+        list = mapper.readValue(content, List.class);
+        assertEquals(2, list.size());
+
+        endDate = dateFormat.format(System.currentTimeMillis() - 1000L * 60 * 60 * 24 * 5);
+        actions = mockMvc.perform(MockMvcRequestBuilders.get("/report")
+                .param("endDate", endDate)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+        result = actions.andReturn();
+        content = result.getResponse().getContentAsString();
+        mapper = new ObjectMapper();
+        list = mapper.readValue(content, List.class);
+        assertEquals(0, list.size());
+
+        startDate = dateFormat.format(System.currentTimeMillis() - 1000L * 60 * 60 * 24 * 5);
+        endDate = dateFormat.format(System.currentTimeMillis() + 1000L * 60 * 60 * 24 * 5);
+        actions = mockMvc.perform(MockMvcRequestBuilders.get("/report")
+                .param("startDate", startDate)
+                .param("endDate", endDate)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+        result = actions.andReturn();
+        content = result.getResponse().getContentAsString();
+        mapper = new ObjectMapper();
+        list = mapper.readValue(content, List.class);
+        assertEquals(2, list.size());
+
+        startDate = dateFormat.format(System.currentTimeMillis() - 1000L * 60 * 60 * 24 * 5);
+        endDate = dateFormat.format(System.currentTimeMillis() - 1000L * 60 * 60 * 24 * 3);
+        actions = mockMvc.perform(MockMvcRequestBuilders.get("/report")
+                .param("startDate", startDate)
+                .param("endDate", endDate)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+        result = actions.andReturn();
+        content = result.getResponse().getContentAsString();
+        mapper = new ObjectMapper();
+        list = mapper.readValue(content, List.class);
+        assertEquals(0, list.size());
+
+        startDate = dateFormat.format(System.currentTimeMillis() + 1000L * 60 * 60 * 24 * 3);
+        endDate = dateFormat.format(System.currentTimeMillis() + 1000L * 60 * 60 * 24 * 5);
+        actions = mockMvc.perform(MockMvcRequestBuilders.get("/report")
+                .param("startDate", startDate)
+                .param("endDate", endDate)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+        result = actions.andReturn();
+        content = result.getResponse().getContentAsString();
+        mapper = new ObjectMapper();
+        list = mapper.readValue(content, List.class);
+        assertEquals(0, list.size());
+
         // delete tasks
         taskManagerService.deleteTask(task1.getId());
         taskManagerService.deleteTask(task3.getId());
@@ -204,7 +291,7 @@ public class TaskReportControllerTest {
         ObjectMapper mapper = new ObjectMapper();
         Map<String, Object> map = mapper.readValue(content, Map.class);
         assertEquals(TaskReportType.EARLIER.name(), map.get("type"));
-        assertEquals(task.getName(), ((Map<String, Object>) map.get("task")).get("name"));
+        assertEquals(task.getId(), ((Number) map.get("taskId")).longValue());
     }
 
     @Test

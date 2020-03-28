@@ -6,9 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import com.apptime.auth.model.*;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -37,9 +35,33 @@ public class TaskManager {
 	public ResponseEntity<List<Task>> getTasks(Principal p) {
 		String user = getPrinciple(p).getName();
 		List<Task> tasks = taskService.findUserTasks(user);
-		return new ResponseEntity<List<Task>>(tasks, HttpStatus.OK);
+		return new ResponseEntity<List<Task>>(removeCategoryOwner(tasks), HttpStatus.OK);
 	}
 
+	private List<Task> removeCategoryOwner(List<Task> tasks) {
+		if (tasks != null) {
+			tasks.forEach(this::removeCategoryOwner);
+		}
+		return tasks;
+	}
+
+	private Set<Task> removeCategoryOwner(Set<Task> tasks) {
+		if (tasks != null) {
+			tasks.forEach(this::removeCategoryOwner);
+		}
+		return tasks;
+	}
+
+	private Task removeCategoryOwner(Task task) {
+		if (task == null || task.getCategories() == null) {
+			return task;
+		}
+
+		for (TaskCategory category : task.getCategories()) {
+			category.setOwner(null);
+		}
+		return task;
+	}
 
 	/**
 	 *
@@ -52,7 +74,7 @@ public class TaskManager {
 	public ResponseEntity<Task> getTask(@PathVariable("id") int taskId, Principal p) {
 		Task task = taskService.getTask(taskId);
 		if (task.getUserName().equals(getPrinciple(p).getName())) {
-			return new ResponseEntity<Task>(task, HttpStatus.OK);
+			return new ResponseEntity<Task>(removeCategoryOwner(task), HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
@@ -61,12 +83,12 @@ public class TaskManager {
 
 	@PostMapping("/due/start")
 	public ResponseEntity<Set<Task>> showAddedSince(@RequestBody FormatedDate start, Principal p) {
-		Set<Task>  tasks = taskService.getTasksStartedLaterThan(start.getDate(), p.getName());
+		Set<Task>  tasks = taskService.getTasksStartedLaterThan(start.getDate(), getPrinciple(p).getName());
 		if (tasks == null || tasks.isEmpty()) {
 			return new ResponseEntity<>(null,HttpStatus.OK);
 
 		} else {
-			return new ResponseEntity<Set<Task>>(tasks, HttpStatus.OK);
+			return new ResponseEntity<Set<Task>>(removeCategoryOwner(tasks), HttpStatus.OK);
 		}
 	}
 
@@ -89,7 +111,7 @@ public class TaskManager {
 		String user = getPrinciple(p).getName();
 		if(taskService.getTask(task.getId())==null) {
 			Task result = taskService.createTask(task,user);
-			return new ResponseEntity<Object>(result, HttpStatus.OK);
+			return new ResponseEntity<Object>(removeCategoryOwner(result), HttpStatus.OK);
 		}
 		return new ResponseEntity<Object>("{status: didn't create }", HttpStatus.NOT_FOUND);
 	}
@@ -114,7 +136,7 @@ public class TaskManager {
 		}
 		task.setState(TaskState.CREATED);
 		task.setUserName(p.getName());
-		Task updatedTask = taskService.updateTask(task, getPrinciple(p).getName());
+		Task updatedTask = taskService.updateTask(removeCategoryOwner(task), getPrinciple(p).getName());
 			return new ResponseEntity<>(updatedTask, HttpStatus.OK);
 	}
 
@@ -136,7 +158,8 @@ public class TaskManager {
 		if(!task.getUserName().equals(p.getName())){
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
-		return new ResponseEntity<Task>(taskService.deleteTask(id), HttpStatus.OK);
+
+		return new ResponseEntity<>(removeCategoryOwner(taskService.deleteTask(id)), HttpStatus.OK);
 	}
 
 	/**
@@ -155,7 +178,7 @@ public class TaskManager {
 		//check for currently other active tasks
 		Task active = taskService.getTask(TaskState.ACTIVE, userName);
 		if(active != null){
-			return new ResponseEntity<TaskError>(new TaskError(ErrorType.Concurrent_Active_Task_Not_Allowed, active),HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<TaskError>(new TaskError(ErrorType.Concurrent_Active_Task_Not_Allowed, removeCategoryOwner(active)),HttpStatus.BAD_REQUEST);
 		}
 		if(!isAuthorized(p,task)){
 			return new ResponseEntity<TaskError>(new TaskError(ErrorType.unauthorized_Action, null),HttpStatus.UNAUTHORIZED);
@@ -200,7 +223,6 @@ public class TaskManager {
 		return new ResponseEntity<TaskState>(taskService.complete(id), HttpStatus.OK);
 	}
 
-
 	/**
 	 *
 	 * @param p current authenticated user(principle)
@@ -210,9 +232,8 @@ public class TaskManager {
 	private Principal getPrinciple(Principal p) {
 		return p != null ? p : SecurityContextHolder.getContext().getAuthentication();
 	}
+
 	private Boolean isAuthorized(Principal p, Task task){
 		return task.getUserName().equals(getPrinciple(p).getName());
 	}
-
-
 }

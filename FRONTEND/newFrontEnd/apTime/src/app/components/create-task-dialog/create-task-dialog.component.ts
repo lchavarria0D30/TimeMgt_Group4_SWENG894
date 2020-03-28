@@ -25,7 +25,9 @@ export class CreateTaskDialogComponent implements OnInit {
   token;
   selectedCategory = '';
   categories;
-  timeRegex = /^(?:(?:1[0-2]|0?[1-9]):[0-5]\d\s*[AaPp][Mm])?$/;
+  minDate;
+  minEndDate;
+  timeRegex = /^(?:(?:1[0-2]|0?[1-9]):[0-5]\d\s[AaPp][Mm])?$/;
 
   nameFormControl = new FormControl('', [
     Validators.required
@@ -53,7 +55,11 @@ export class CreateTaskDialogComponent implements OnInit {
       public dialogRef: MatDialogRef<CreateTaskDialogComponent>,
       private http: HttpClient,
       private sessionService: SessionService,
-      @Inject(MAT_DIALOG_DATA) public data: DialogData) {}
+      @Inject(MAT_DIALOG_DATA) public data: DialogData) {
+
+    this.minDate = new Date();
+
+  }
 
   onNoClick(): void {
     this.dialogRef.close();
@@ -97,6 +103,7 @@ export class CreateTaskDialogComponent implements OnInit {
       const  minutes = parseInt(parts[2], 10);
       const  tt = parts[3];
       if (tt === 'PM' && hours < 12) { hours += 12; }
+      if (tt == 'AM' && hours == 12) {hours = 0; }
       date.setHours(hours, minutes, 0, 0);
     }
 
@@ -121,6 +128,10 @@ export class CreateTaskDialogComponent implements OnInit {
       },
       error: error => console.error('There was an error!', error)
     });
+  }
+
+  changeMinEndDate() {
+      this.minEndDate = this.data.ssDate;
   }
 
 }
