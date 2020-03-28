@@ -37,13 +37,16 @@ public class Task {
     public void setEnd(Date end) {
         this.actualEnd = end;
     }
-    public Date getScheduledstart() {
-        return scheduledstart;
+    public Date getScheduledstart()
+    {
+
+       return scheduledstart;
     }
 
     public void setScheduledstart(Date scheduledstart) {
 
-        this.scheduledstart = scheduledstart;
+
+       this.scheduledstart = scheduledstart;
     }
 
     public String getUserName() {
@@ -109,6 +112,7 @@ public class Task {
     }
 
     public void setScheduledEnd(Date scheduledEnd) {
+
         this.scheduledEnd = scheduledEnd;
     }
 

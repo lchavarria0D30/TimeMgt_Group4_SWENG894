@@ -16,7 +16,7 @@ import com.apptime.auth.model.ClientUser;
  */
 @RestController
 @RequestMapping("/api/admin")
-@PreAuthorize("hasRole('ROLE_ADMIN')")
+//@PreAuthorize("hasRole('ROLE_ADMIN')")
 public class AdminController {
 
   @GetMapping("/message")

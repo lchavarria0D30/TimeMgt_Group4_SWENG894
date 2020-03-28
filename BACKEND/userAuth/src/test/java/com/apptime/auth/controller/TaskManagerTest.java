@@ -131,13 +131,13 @@ public class TaskManagerTest {
         Task task1 = createTaskWithDueDate(start,"task1");
         String body = (new ObjectMapper()).valueToTree(start).toString();
         mockMvc.perform(MockMvcRequestBuilders.post("/tasks/due/start")
-            .contentType(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
                 .content(body)
                 .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$", hasSize(1)))
-            .andExpect(jsonPath("$[0].scheduledstart", is("2020-03-23")));
-           sDate="2020-04-22";
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].scheduledstart", is("2020-03-23")));
+        sDate="2020-04-22";
         date=dateFormat.parse(sDate);
         body = (new ObjectMapper()).valueToTree(start).toString();
         mockMvc.perform(MockMvcRequestBuilders.post("/tasks/due/start")
