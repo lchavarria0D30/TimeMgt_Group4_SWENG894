@@ -13,6 +13,8 @@ Description: Template for the view all tasks view.
 			<mat-card-header>
 
 				<div fxFlex="50">
+					<mat-card-subtitle class="running-color" *ngIf="task.state == 'ACTIVE' "><b>Running</b></mat-card-subtitle>
+					<mat-card-subtitle class="paused-color" *ngIf="task.state == 'PAUSED' "><b>Paused</b></mat-card-subtitle>
 					<mat-card-title>{{task.name}}</mat-card-title>
 					<mat-card-subtitle>{{task.description}}</mat-card-subtitle>
 				</div>
