@@ -1,3 +1,9 @@
+/** Linked Issue: TMGP4-47: Start Task
+ *
+ *  Author: Chavarria Leo
+ *
+ *  Unit Test - Frontend
+ */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatIconModule} from '@angular/material/icon';
 import {CustomMaterialModule} from '../../modules/material.module';
@@ -18,6 +24,7 @@ import {
   MatRadioModule,
   MatSelectModule
 } from '@angular/material';
+import {NotificationsServiceService} from "../notification";
 
 describe('StartTaskDialogComponent', () => {
   let component: StartTaskDialogComponent;
@@ -56,4 +63,20 @@ describe('StartTaskDialogComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should be Defined onNoClick', async(() => {
+    spyOn(component, 'onNoClick').and.callThrough();
+    fixture.whenStable().then(() => {
+      expect(component.onNoClick).toBeDefined();
+      expect(component.onNoClick).toHaveBeenCalledTimes(0);
+    });
+  }));
+
+  it('should be Defined onYesClick', async(() => {
+    spyOn(component, 'onYesClick').and.callThrough();
+    fixture.whenStable().then(() => {
+      expect(component.onYesClick).toBeDefined();
+      expect(component.onYesClick).toHaveBeenCalledTimes(0);
+    });
+  }));
 });
