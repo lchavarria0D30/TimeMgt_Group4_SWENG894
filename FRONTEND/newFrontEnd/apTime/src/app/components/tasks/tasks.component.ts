@@ -152,8 +152,18 @@ export class TasksComponent implements OnInit {
 
       this.http.get('http://localhost:8001/tasks/', { headers }).subscribe({
       next: data => {
-        this.tasks = data
+
         console.log(this.tasks);
+        this.tasks = data
+
+        this.tasks.sort((a, b) => {
+          return <any> new Date(b.scheduledstart.substring(0, b.scheduledstart.length - 5)) -
+          <any> new Date(a.scheduledstart.substring(0, a.scheduledstart.length - 5));
+        });
+
+        console.log('sorted: ', this.tasks);
+
+
 
       },
       error: error => console.error('There was an error!', error)
