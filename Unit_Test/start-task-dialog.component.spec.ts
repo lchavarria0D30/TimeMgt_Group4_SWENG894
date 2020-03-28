@@ -1,4 +1,4 @@
-/** Linked Issue: TMGP4-30: Delete Task
+/** Linked Issue: TMGP4-47: Start Task
  *
  *  Author: Chavarria Leo
  *
@@ -13,7 +13,7 @@ import { BrowserDynamicTestingModule, platformBrowserDynamicTesting } from '@ang
 import {RouterTestingModule} from '@angular/router/testing';
 import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { DeleteTaskDialogComponent } from './delete-task-dialog.component';
+import { StartTaskDialogComponent } from './start-task-dialog.component';
 import {
   MatFormFieldModule,
   MatInputModule,
@@ -24,10 +24,11 @@ import {
   MatRadioModule,
   MatSelectModule
 } from '@angular/material';
+import {NotificationsServiceService} from "../notification";
 
-describe('DeleteTaskDialogComponent', () => {
-  let component: DeleteTaskDialogComponent;
-  let fixture: ComponentFixture<DeleteTaskDialogComponent>;
+describe('StartTaskDialogComponent', () => {
+  let component: StartTaskDialogComponent;
+  let fixture: ComponentFixture<StartTaskDialogComponent>;
 
   beforeEach(async(() => {
     TestBed.resetTestEnvironment();
@@ -48,13 +49,13 @@ describe('DeleteTaskDialogComponent', () => {
         useValue: {}},
         { provide: MAT_DIALOG_DATA, useValue: {}}],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
-      declarations: [ DeleteTaskDialogComponent ]
+      declarations: [ StartTaskDialogComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DeleteTaskDialogComponent);
+    fixture = TestBed.createComponent(StartTaskDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -63,11 +64,19 @@ describe('DeleteTaskDialogComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should verify onNoClick', () => {
-    expect(component.onNoClick).toBeTruthy();
-  });
+  it('should be Defined onNoClick', async(() => {
+    spyOn(component, 'onNoClick').and.callThrough();
+    fixture.whenStable().then(() => {
+      expect(component.onNoClick).toBeDefined();
+      expect(component.onNoClick).toHaveBeenCalledTimes(0);
+    });
+  }));
 
-  it('should verify onYesClick', () => {
-    expect(component.onYesClick).toBeTruthy();
-  });
+  it('should be Defined onYesClick', async(() => {
+    spyOn(component, 'onYesClick').and.callThrough();
+    fixture.whenStable().then(() => {
+      expect(component.onYesClick).toBeDefined();
+      expect(component.onYesClick).toHaveBeenCalledTimes(0);
+    });
+  }));
 });

@@ -1,4 +1,4 @@
-/** Linked Issue: TMGP4-30: Delete Task
+/** Linked Issue: TMGP4-26: Report on Tasks Completed
  *
  *  Author: Chavarria Leo
  *
@@ -13,7 +13,7 @@ import { BrowserDynamicTestingModule, platformBrowserDynamicTesting } from '@ang
 import {RouterTestingModule} from '@angular/router/testing';
 import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { DeleteTaskDialogComponent } from './delete-task-dialog.component';
+import { ReportComponent } from './report.component';
 import {
   MatFormFieldModule,
   MatInputModule,
@@ -25,9 +25,9 @@ import {
   MatSelectModule
 } from '@angular/material';
 
-describe('DeleteTaskDialogComponent', () => {
-  let component: DeleteTaskDialogComponent;
-  let fixture: ComponentFixture<DeleteTaskDialogComponent>;
+describe('ReportComponent', () => {
+  let component: ReportComponent;
+  let fixture: ComponentFixture<ReportComponent>;
 
   beforeEach(async(() => {
     TestBed.resetTestEnvironment();
@@ -48,26 +48,18 @@ describe('DeleteTaskDialogComponent', () => {
         useValue: {}},
         { provide: MAT_DIALOG_DATA, useValue: {}}],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
-      declarations: [ DeleteTaskDialogComponent ]
+      declarations: [ ReportComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DeleteTaskDialogComponent);
+    fixture = TestBed.createComponent(ReportComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('should verify onNoClick', () => {
-    expect(component.onNoClick).toBeTruthy();
-  });
-
-  it('should verify onYesClick', () => {
-    expect(component.onYesClick).toBeTruthy();
   });
 });
