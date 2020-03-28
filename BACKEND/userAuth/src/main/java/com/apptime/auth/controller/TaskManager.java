@@ -22,6 +22,8 @@ import com.apptime.auth.service.TaskManagerService;
 @RestController
 @RequestMapping(value = "/tasks")
 public class TaskManager {
+	private static final String DATE_PATTERN = "yyyy-MM-dd";
+
 	@Autowired
 	TaskManagerService taskService;
 
@@ -83,13 +85,24 @@ public class TaskManager {
 
 	@PostMapping("/due/start")
 	public ResponseEntity<Set<Task>> showAddedSince(@RequestBody FormatedDate start, Principal p) {
-		Set<Task>  tasks = taskService.getTasksStartedLaterThan(start.getDate(), getPrinciple(p).getName());
+		Set<Task>  tasks = null;
+		try {
+			tasks = taskService.getTasksStartedLaterThan(parseDate(start.getDate()), getPrinciple(p).getName());
+		} catch (ParseException e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+
 		if (tasks == null || tasks.isEmpty()) {
-			return new ResponseEntity<>(null,HttpStatus.OK);
+			return new ResponseEntity<>(Collections.emptySet(), HttpStatus.OK);
 
 		} else {
-			return new ResponseEntity<Set<Task>>(removeCategoryOwner(tasks), HttpStatus.OK);
+			return new ResponseEntity<>(removeCategoryOwner(tasks), HttpStatus.OK);
 		}
+	}
+
+	private Date parseDate(String str) throws ParseException {
+		SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_PATTERN);
+		return dateFormat.parse(str);
 	}
 
 	/**

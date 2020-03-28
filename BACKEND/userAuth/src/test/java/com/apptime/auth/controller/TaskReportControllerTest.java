@@ -44,8 +44,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @ExtendWith(MockitoExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class TaskReportControllerTest {
-    private static final String USERNAME = "username";
+public class TaskReportControllerTest extends AbstractControllerTest {
 
     @Autowired
     private TaskRepository taskRepository;
@@ -59,39 +58,13 @@ public class TaskReportControllerTest {
     @Autowired
     private TaskManagerService taskManagerService;
 
-    private MockMvc mockMvc;
-
-    @Autowired
-    private WebApplicationContext context;
-
-    private SecurityContext securityContext;
-
     @BeforeEach
     public void init() {
         reportRepository.deleteAll();
         taskRepository.deleteAll();
 
         MockitoAnnotations.initMocks(this);
-        mockMvc = MockMvcBuilders
-                .webAppContextSetup(context)
-                .build();
-
-        securityContext = mock(SecurityContext.class);
-        SecurityContextHolder.setContext(securityContext);
-    }
-
-    private void mockAuthentication(String username) {
-        Authentication authentication = mock(Authentication.class);
-        when(authentication.getName()).thenReturn(username);
-        mockAuthentication(authentication);
-    }
-
-    private void mockAuthentication() {
-        mockAuthentication(USERNAME);
-    }
-
-    private void mockAuthentication(Authentication authentication) {
-        when(securityContext.getAuthentication()).thenReturn(authentication);
+        initMvc();
     }
 
     @Test
