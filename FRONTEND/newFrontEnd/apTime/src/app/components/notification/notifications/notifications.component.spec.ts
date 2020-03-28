@@ -1,3 +1,9 @@
+/** Linked Issue: TMGP4-38: Notification Task Exceeding Duration
+ *
+ *  Author: Chavarria Leo
+ *
+ *  Unit Test - Frontend
+ */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { NotificationsComponent } from './notifications.component';
