@@ -1,0 +1,69 @@
+<!--
+Author: Asma
+Jira Task:
+Description:
+-->
+
+<section
+  fxLayout="row wrap"
+  fxLayoutAlign="center center"
+  class="create-category"
+>
+  <mat-card>
+    <mat-card-title class="mat-card-title">Create category</mat-card-title>
+    <form
+      [formGroup]="categoryForm"
+      autocomplete="off"
+      novalidate
+      (ngSubmit)="createCategory(categoryForm.value)"
+      fxLayout="column wrap"
+      fxLayoutAlign="center center"
+      fxLayoutGap="10px"
+    >
+      <mat-card-content>
+        <mat-form-field class="mat-form-field">
+          <input
+            matInput
+            type="text"
+            placeholder="category name"
+            formControlName="name"
+            name="name"
+            id="name"
+          />
+          <mat-hint align="end"> less than 80 characters.</mat-hint>
+          <mat-error *ngIf="hasError('name', 'required')"
+            >Name is required</mat-error
+          >
+          <mat-error *ngIf="hasError('name', 'maxlength')"
+            >less than 80 characters</mat-error
+          >
+        </mat-form-field>
+        <br />
+        <mat-checkbox
+          name="isPublic"
+          formControlName="isPublic"
+          id="isPublic"
+          [(ngModel)]="isPublic"
+          >public</mat-checkbox
+        >
+      </mat-card-content>
+      <mat-card-actions align="center">
+        <button
+          mat-raised-button
+          color="primary"
+          [disabled]="!categoryForm.valid"
+        >
+          Create
+        </button>
+        <button
+          type="button"
+          mat-raised-button
+          color="warn"
+          (click)="onCancel()"
+        >
+          Cancel
+        </button>
+      </mat-card-actions>
+    </form>
+  </mat-card>
+</section>

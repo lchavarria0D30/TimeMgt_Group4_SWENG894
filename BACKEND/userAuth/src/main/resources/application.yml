@@ -1,0 +1,33 @@
+server:
+  port: 8001
+security:
+  oauth2:
+    resource:
+      userInfoUri: https://apptime.us-east-1.amazoncognito.com/oauth2/userInfo
+      tokenInfoUri: https://apptime.us-east-1.amazoncognito.com/oauth2/token
+      jwk:
+        key-set-uri: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_TonoYZaSY/.well-known/jwks.json
+    client:
+      clientId: 34osghte5cfsg8iktmilk6gbg0
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: sa
+  h2:
+    console:
+      enabled: true
+    path: /h2
+#spring:
+#  jpa:
+#    database: POSTGRESQL
+#    show-sql: true
+#    hibernate:
+#      ddl-auto: create-drop
+#  datasource:
+#    platform: postgres
+#    url: jdbc:postgresql://localhost:5432/authDb
+#    username: flowable
+#    password: flowable
+#    driverClassName: org.postgresql.Driver
