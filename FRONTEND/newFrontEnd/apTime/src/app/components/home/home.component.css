@@ -27,12 +27,12 @@
 
 .completed-shadow {
     text-shadow: 2px 2px 4px #000;
-    color:#607D8B !important;
+    color:#FF9E80 !important;
     font-size: x-large;
 }
 .paused-shadow {
     text-shadow: 2px 2px 4px #000;
-    color:#FFAB40 !important;
+    color:#FFECB3!important;
     font-size: x-large;
 }
 .active-shadow {
