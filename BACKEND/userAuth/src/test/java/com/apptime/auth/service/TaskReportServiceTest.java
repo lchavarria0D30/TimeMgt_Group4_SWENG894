@@ -117,13 +117,14 @@ public class TaskReportServiceTest {
         Date actualEnd = new Date(current);
         task.setScheduledEnd(scheduledEnd);
         task.setEnd(actualEnd);
+        task.setDuration(Duration.ofMinutes(10));
         taskRepository.save(task);
 
         TaskReport report = service.generateReport(task);
         assertNotNull(report);
         assertEquals(TaskReportType.EARLIER, report.getType());
         assertEquals(gap, report.getDifference().toMillis());
-        assertNull(report.getActualDuration());
+        assertNotNull(report.getActualDuration());
         assertNull(report.getScheduledDuration());
     }
 
