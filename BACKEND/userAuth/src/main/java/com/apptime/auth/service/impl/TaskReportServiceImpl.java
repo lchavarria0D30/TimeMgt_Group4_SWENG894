@@ -82,6 +82,9 @@ public class TaskReportServiceImpl implements TaskReportService {
             }
         }
 
+        report.setActualStartDate(task.getStart());
+        report.setActualEndDate(task.getEnd());
+
         reportRepository.save(report);
 
         notificationService.createNotificationForTaskReport(report);
