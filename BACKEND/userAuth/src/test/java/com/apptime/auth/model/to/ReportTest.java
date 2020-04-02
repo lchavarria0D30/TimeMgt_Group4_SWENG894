@@ -6,10 +6,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.Duration;
+import java.util.Date;
 import java.util.Random;
 import java.util.UUID;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * @author Qi Zhang
@@ -41,8 +44,36 @@ public class ReportTest {
         assertEquals("30 Minutes", report.getDifference());
         assertEquals("1 Hour 15 Minutes", report.getScheduledDuration());
         assertEquals("2 Days 5 Hours 1 Minute", report.getActualDuration());
+        assertNull(report.getActualStartDate());
+        assertNull(report.getActualStartTime());
+        assertNull(report.getActualEndDate());
+        assertNull(report.getActualEndTime());
 
         taskReport.setActualDuration(Duration.ofMinutes(60 * 24 + 60 + 1)); // 1 Day 1 Hour 1 Minute
         assertEquals("1 Day 1 Hour 1 Minute", Report.parse(taskReport).getActualDuration());
+
+        Date actualStartDate = new Date(System.currentTimeMillis() - 1000L * 60 * 60 * 24);
+        taskReport.setActualStartDate(actualStartDate);
+
+        report = Report.parse(taskReport);
+        assertNotNull(report.getActualStartDate());
+        assertNotNull(report.getActualStartTime());
+        assertNull(report.getActualEndDate());
+        assertNull(report.getActualEndTime());
+
+        Date actualEndDate = new Date(System.currentTimeMillis() - 1000L * 60 * 60);
+        taskReport.setActualEndDate(actualEndDate);
+        report = Report.parse(taskReport);
+        assertNotNull(report.getActualStartDate());
+        assertNotNull(report.getActualStartTime());
+        assertNotNull(report.getActualEndDate());
+        assertNotNull(report.getActualEndTime());
+
+        taskReport.setActualStartDate(null);
+        report = Report.parse(taskReport);
+        assertNull(report.getActualStartDate());
+        assertNull(report.getActualStartTime());
+        assertNotNull(report.getActualEndDate());
+        assertNotNull(report.getActualEndTime());
     }
 }

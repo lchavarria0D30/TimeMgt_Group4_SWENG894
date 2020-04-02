@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.time.Duration;
+import java.util.Date;
 import java.util.Objects;
 
 /**
@@ -30,6 +31,10 @@ public class TaskReport {
     private Duration actualDuration;
 
     private int efficiency;
+
+    private Date actualStartDate;
+
+    private Date actualEndDate;
 
     public int getId() {
         return id;
@@ -95,6 +100,22 @@ public class TaskReport {
         this.efficiency = efficiency;
     }
 
+    public Date getActualStartDate() {
+        return actualStartDate;
+    }
+
+    public void setActualStartDate(Date actualStartDate) {
+        this.actualStartDate = actualStartDate;
+    }
+
+    public Date getActualEndDate() {
+        return actualEndDate;
+    }
+
+    public void setActualEndDate(Date actualEndDate) {
+        this.actualEndDate = actualEndDate;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -107,13 +128,16 @@ public class TaskReport {
                 getType() == report.getType() &&
                 Objects.equals(getDifference(), report.getDifference()) &&
                 Objects.equals(getScheduledDuration(), report.getScheduledDuration()) &&
-                Objects.equals(getActualDuration(), report.getActualDuration());
+                Objects.equals(getActualDuration(), report.getActualDuration()) &&
+                Objects.equals(getActualStartDate(), report.getActualStartDate()) &&
+                Objects.equals(getActualEndDate(), report.getActualEndDate());
     }
 
     @Override
     public int hashCode() {
         return Objects
-                .hash(getId(), getTaskId(), getOwner(), getType(), getDifference(), getScheduledDuration(), getActualDuration(), getEfficiency());
+                .hash(getId(), getTaskId(), getOwner(), getType(), getDifference(), getScheduledDuration(),
+                        getActualDuration(), getEfficiency(), getActualStartDate(), getActualEndDate());
     }
 
     @Override
@@ -127,6 +151,8 @@ public class TaskReport {
                 ", scheduledDuration=" + scheduledDuration +
                 ", actualDuration=" + actualDuration +
                 ", efficiency=" + efficiency +
+                ", actualStartDate=" + actualStartDate +
+                ", actualEndDate=" + actualEndDate +
                 '}';
     }
 }
