@@ -99,7 +99,8 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     };
     this._http
       .put(
-        'http://localhost:8001/notification/' + alert.id + '/' + 'notification',
+        'http://localhost:8001/notification/' + alert.id + '/' + 'snooze',
+        {},
         {
           headers
         }
