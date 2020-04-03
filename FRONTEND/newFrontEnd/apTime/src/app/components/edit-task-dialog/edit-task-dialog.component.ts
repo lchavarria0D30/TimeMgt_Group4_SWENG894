@@ -80,7 +80,7 @@ export class EditTaskDialogComponent implements OnInit {
     // this.actualStart = this.dateConversion(this.task.asTime, this.task.asDate);
     // this.actualEnd = this.dateConversion(this.task.aeTime, this.task.aeDate);
 
-    if (this.scheduledEnd < this.scheduledStart) {
+    if (this.scheduledEnd <= this.scheduledStart) {
 
       this.isWrongDate = true;
 

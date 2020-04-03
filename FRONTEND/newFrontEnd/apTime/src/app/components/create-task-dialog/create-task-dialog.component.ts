@@ -72,7 +72,7 @@ export class CreateTaskDialogComponent implements OnInit {
     this.scheduledStart = this.dateConversion(this.data.ssTime, this.data.ssDate);
     this.scheduledEnd = this.dateConversion(this.data.seTime, this.data.seDate);
 
-    if (this.scheduledEnd < this.scheduledStart) {
+    if (this.scheduledEnd <= this.scheduledStart) {
       this.isWrongDate = true;
 
     } else {

@@ -98,6 +98,9 @@ Description: Template for the dashboard.
     </div>
 
     <div fxFlex="50">
+        <mat-toolbar color="accent">
+            <span class="header-text">Tasks</span>
+        </mat-toolbar>
         <div *ngFor="let task of filteredTasks; let i = index" >
             <mat-action-list>
                 <mat-divider></mat-divider>
