@@ -1,3 +1,11 @@
+/**
+ *
+ * Author(s): Asma/Yanisse
+ * Jira Task: N/A
+ * Description: The angular module that imports all the necessary modules from the Angular Material library.
+ *
+ **/
+
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 // import { FlexLayoutModule } from '@angular/flex-layout';
@@ -21,6 +29,7 @@ import {
   MatFormField,
   MatFormFieldModule,
   MatMenuModule,
+  MatListModule,
   MatDividerModule,
   MatDatepickerModule,
   MatProgressSpinnerModule,
@@ -76,6 +85,7 @@ import { Location } from '@angular/common';
     MatDialogModule,
     MatProgressSpinnerModule,
     MatButtonModule,
+    MatListModule,
     MatSortModule,
     MatCheckboxModule,
     MatToolbarModule,

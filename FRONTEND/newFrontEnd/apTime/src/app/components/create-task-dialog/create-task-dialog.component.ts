@@ -1,3 +1,12 @@
+/**
+ *
+ * Author: Yanisse
+ * Jira Task: TMGP4-29
+ * Description: The component code for the create task dialog box. The users inputs all the data associated to the task
+ * to be created.
+ *
+ **/
+
 import {Component, Inject, OnInit} from '@angular/core';
 import {FormControl, Validators} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
@@ -13,6 +22,9 @@ import {DialogData} from '../tasks/tasks.component';
 export class CreateTaskDialogComponent implements OnInit {
   scheduledStart;
   scheduledEnd;
+  token;
+  selectedCategory = '';
+  categories;
   timeRegex = /^(?:(?:1[0-2]|0?[1-9]):[0-5]\d\s*[AaPp][Mm])?$/;
 
   nameFormControl = new FormControl('', [
@@ -60,10 +72,11 @@ export class CreateTaskDialogComponent implements OnInit {
 
     const body = { name: this.data.name,
       description: this.data.description,
-      category: this.data.category,
+      category: this.selectedCategory,
       scheduledstart: this.scheduledStart,
-      scheduledend: this.scheduledEnd,
+      scheduledEnd: this.scheduledEnd,
     };
+
 
     this.http.post('http://localhost:8001/tasks/newtask', body, { headers }).subscribe({
       next: data => console.log(data),
@@ -84,6 +97,7 @@ export class CreateTaskDialogComponent implements OnInit {
       const  minutes = parseInt(parts[2], 10);
       const  tt = parts[3];
       if (tt === 'PM' && hours < 12) { hours += 12; }
+      if (tt == 'AM' && hours == 12) {hours = 0; }
       date.setHours(hours, minutes, 0, 0);
     }
 
@@ -91,7 +105,23 @@ export class CreateTaskDialogComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.data.token);
+    console.log("getCategory");
+    this.getCategory();
+  }
+
+  getCategory(): void {
+    this.token = this.sessionService.getToken();
+
+    const headers = { Authorization: 'Bearer ' + this.token
+    };
+
+    this.http.get('http://localhost:8001/category/mine', { headers }).subscribe({
+      next: data => {
+        this.categories = data
+        console.log(this.categories);
+      },
+      error: error => console.error('There was an error!', error)
+    });
   }
 
 }
