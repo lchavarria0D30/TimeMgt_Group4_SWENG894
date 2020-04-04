@@ -264,12 +264,12 @@ public class TaskManagerServiceTest {
         Task task = new Task();
         Set<Task> tasks = new HashSet<Task>();
         //test empty result
-        when(repository.getTasksStartedLaterThan(start,name)).thenReturn(tasks);
+        when(repository.getTasksStartedLaterThan(start,start,name)).thenReturn(tasks);
         Set<Task> resultSet =  service.getTasksStartedLaterThan(start,name);
         assertEquals(0, resultSet.size());
         tasks.add(task);
         task.setScheduledstart(start);
-        when(repository.getTasksStartedLaterThan(start,name)).thenReturn(tasks);
+        when(repository.getTasksStartedLaterThan(start,start,name)).thenReturn(tasks);
         Task result =  service.getTasksStartedLaterThan(start,name).iterator().next();
         assertEquals(task.getScheduledstart(),result.getScheduledstart() );
 

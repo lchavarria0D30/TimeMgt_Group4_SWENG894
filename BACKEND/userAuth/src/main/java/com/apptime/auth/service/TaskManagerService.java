@@ -1,5 +1,9 @@
 package com.apptime.auth.service;
+		import java.text.DateFormat;
 		import java.text.SimpleDateFormat;
+		import java.time.LocalDateTime;
+		import java.time.ZoneId;
+		import java.time.format.DateTimeFormatter;
 		import java.util.*;
 		import com.apptime.auth.config.TaskStateMachine;
 		import com.apptime.auth.model.Task;
@@ -197,10 +201,14 @@ public class TaskManagerService {
 
 	public Set<Task> getTasksStartedLaterThan(Date start, String name) {
 		String pattern = "yyyy-MM-dd";
+		Calendar c = Calendar.getInstance();
+		c.setTime(start);
+		c.add(Calendar.DATE, 1);
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-		java.sql.Date qdate = new java.sql.Date(start.getTime());
+		Date sDate = new Date(start.getTime());
+		Date eDate = c.getTime();
 		Set<Task> result = new HashSet<Task>();
-		result = taskRepo.getTasksStartedLaterThan(qdate,name);
+		result = taskRepo.getTasksStartedLaterThan(sDate,eDate,name);
 		return result;
 	}
 }
