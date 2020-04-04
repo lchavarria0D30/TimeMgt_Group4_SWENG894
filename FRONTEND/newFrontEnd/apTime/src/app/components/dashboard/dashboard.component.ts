@@ -21,6 +21,7 @@ import {filter} from 'rxjs/operators';
 export class DashboardComponent implements OnInit {
 
   tasks;
+  dateTasks;
   token;
   activeTasks = [];
   pausedTasks = [];
@@ -37,9 +38,7 @@ export class DashboardComponent implements OnInit {
   ngOnInit() {
     this.getTasks();
 
-    setTimeout(() => {
-      this.getDateTasks();
-    });
+    this.getDateTasks();
 
   }
 
@@ -49,47 +48,44 @@ export class DashboardComponent implements OnInit {
 
   getDateTasks(): void {
     console.log('the date: ', this.date.value);
-    const fromDate = new Date(this.date.value);
-    const toDate = new Date(this.date.value);
 
-    fromDate.setHours(0, 0, 0, 0);
+    const headers = { Authorization: 'Bearer ' + this.sessionService.getToken()};
 
-    toDate.setDate(toDate.getDate() + 1);
-    toDate.setHours(0, 0, 0, 0);
-
-    if (this.tasks !== undefined) {
-      this.filteredTasks = this.tasks.filter(
-          function(tasks) {
-            return (new Date(tasks.scheduledstart.substring(0, tasks.scheduledstart.length - 5)) >= fromDate
-                && new Date(tasks.scheduledstart.substring(0, tasks.scheduledstart.length - 5)) < toDate);
-          }
-      );
+    const body = { date: this.date.value.toISOString().substring(0, 10)
+    };
 
 
-      // if (this.filteredTasks == null || this.filteredTasks.length < 1) {
-      //   this.theTask = undefined;
-      // } else {
-      //   this.selectedTask(0);
-      // }
-    }
-    console.log('filtered: ', this.tasks);
-    // const headers = { Authorization: 'Bearer ' + this.sessionService.getToken()};
-    //
-    // const body = { date: newDate
-    // };
-    //
-    //
-    //
-    // this.http.post('http://localhost:8001/tasks/due/start', body, { headers }).subscribe({
-    //   next: data => {
-    //     this.tasks = data;
-    //     console.log(data);
-    //     if (data == null) {
-    //       this.theTask = undefined;
-    //     }
-    //   },
-    //   error: error => console.error('There was an error!', error)
-    // });
+
+    this.http.post('http://localhost:8001/tasks/due/start', body, { headers }).subscribe({
+      next: data => {
+        this.dateTasks = data;
+        console.log(data);
+
+        const fromDate = new Date(this.date.value);
+        const toDate = new Date(this.date.value);
+
+        fromDate.setHours(0, 0, 0, 0);
+
+        toDate.setDate(toDate.getDate() + 1);
+        toDate.setHours(0, 0, 0, 0);
+
+        if (this.dateTasks !== undefined) {
+          this.filteredTasks = this.dateTasks.filter(
+              function (dateTasks) {
+                return (new Date(dateTasks.scheduledstart.substring(0, dateTasks.scheduledstart.length - 5)) >= fromDate
+                    && new Date(dateTasks.scheduledstart.substring(0, dateTasks.scheduledstart.length - 5)) < toDate);
+              }
+          );
+        }
+
+        if (data == null) {
+          this.theTask = undefined;
+        }
+
+        console.log('filtered: ', this.dateTasks);
+      },
+      error: error => console.error('There was an error!', error)
+    });
 
   }
 
