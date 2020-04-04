@@ -2,9 +2,9 @@ package com.apptime.auth.model.to;
 
 import com.apptime.auth.model.TaskReport;
 import com.apptime.auth.model.TaskReportType;
+import com.apptime.auth.util.DurationUtil;
 
 import java.text.SimpleDateFormat;
-import java.time.Duration;
 
 public class Report {
     private static final String DATE_PATTERN = "yyyy-MM-dd";
@@ -155,9 +155,9 @@ public class Report {
         report.setTaskId(taskReport.getTaskId());
         report.setOwner(taskReport.getOwner());
         report.setType(taskReport.getType());
-        report.setDifference(parseDuration(taskReport.getDifference()));
-        report.setScheduledDuration(parseDuration(taskReport.getScheduledDuration()));
-        report.setActualDuration(parseDuration(taskReport.getActualDuration()));
+        report.setDifference(DurationUtil.toString(taskReport.getDifference()));
+        report.setScheduledDuration(DurationUtil.toString(taskReport.getScheduledDuration()));
+        report.setActualDuration(DurationUtil.toString(taskReport.getActualDuration()));
         report.setEfficiency(taskReport.getEfficiency());
 
         final SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_PATTERN);
@@ -172,51 +172,5 @@ public class Report {
         }
 
         return report;
-    }
-
-    private static String parseDuration(Duration duration) {
-        if (duration == null) {
-            return null;
-        }
-        StringBuilder sb = new StringBuilder();
-        if (duration.toDays() > 0) {
-            long days = duration.toDays();
-            sb.append(days).append(" ");
-            if (days > 1) {
-                sb.append("Days");
-            } else {
-                sb.append("Day");
-            }
-            duration = duration.minusDays(days);
-        }
-
-        if (duration.toHours() > 0) {
-            if (sb.length() > 0) {
-                sb.append(" ");
-            }
-            long hours = duration.toHours();
-            sb.append(hours).append(" ");
-            if (hours > 1) {
-                sb.append("Hours");
-            } else {
-                sb.append("Hour");
-            }
-            duration = duration.minusHours(hours);
-        }
-
-        if (duration.toMinutes() > 0) {
-            if (sb.length() > 0) {
-                sb.append(" ");
-            }
-            long minutes = duration.toMinutes();
-            sb.append(minutes).append(" ");
-            if (minutes > 1) {
-                sb.append("Minutes");
-            } else {
-                sb.append("Minute");
-            }
-        }
-
-        return sb.toString();
     }
 }
