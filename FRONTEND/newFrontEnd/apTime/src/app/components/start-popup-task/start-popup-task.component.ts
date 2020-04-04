@@ -66,11 +66,12 @@ export class StartPopupTaskComponent implements OnInit {
 
     const body = { name: this.taskName,
       description: 'PopUp Task',
-      category: this.selectedCategory,
+      categories: [{id: this.selectedCategory}],
       scheduledstart: this.today,
       scheduledEnd: scheduledEnd
     };
 
+    console.log('Request PopUp Body: ', body);
 
     this.http.post('http://localhost:8001/tasks/newtask', body, { headers }).subscribe({
       next: data => {
@@ -93,6 +94,13 @@ export class StartPopupTaskComponent implements OnInit {
       next: data => {
         this.categories = data
         console.log(this.categories);
+      },
+      error: error => console.error('There was an error!', error)
+    });
+
+    this.http.get('http://localhost:8001/category/public', { headers }).subscribe({
+      next: data => {
+        this.categories = this.categories.concat(data);
       },
       error: error => console.error('There was an error!', error)
     });

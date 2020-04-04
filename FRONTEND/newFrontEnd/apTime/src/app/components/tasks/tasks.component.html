@@ -12,11 +12,18 @@ Description: Template for the view all tasks view.
 		<mat-card>
 			<mat-card-header>
 
+
 				<div fxFlex="50">
+
 					<mat-card-subtitle class="running-color" *ngIf="task.state == 'ACTIVE' "><b>Running</b></mat-card-subtitle>
 					<mat-card-subtitle class="paused-color" *ngIf="task.state == 'PAUSED' "><b>Paused</b></mat-card-subtitle>
 					<mat-card-title>{{task.name}}</mat-card-title>
+					<mat-card-subtitle *ngFor="let category of task.categories;" class="label-color">
+						{{category.name}}
+					</mat-card-subtitle>
 					<mat-card-subtitle>{{task.description}}</mat-card-subtitle>
+
+
 				</div>
 
 				<div fxFlex="50" *ngIf="task.state == 'COMPLETED' ">
@@ -121,12 +128,12 @@ Description: Template for the view all tasks view.
  </button>
 <mat-menu #menu="matMenu">
 	<button mat-menu-item (click)="openStartPopUpDialog()">
-		<mat-icon>dialpad</mat-icon>
-		<span>Start Now Task</span>
+		<mat-icon>assignment_late</mat-icon>
+		<span>PopUp Task</span>
 	</button>
 	<button mat-menu-item (click)="openDialog()">
-		<mat-icon>notifications_off</mat-icon>
-		<span>New Task</span>
+		<mat-icon>schedule</mat-icon>
+		<span>Schedule a Task</span>
 	</button>
 </mat-menu>
 
