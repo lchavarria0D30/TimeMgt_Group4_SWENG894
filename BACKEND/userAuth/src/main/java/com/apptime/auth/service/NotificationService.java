@@ -20,12 +20,12 @@ public interface NotificationService {
     String CONTENT_PATTERN_FOR_EXCEEDED_TASK = "The task (%s) is overdue. It should be done at %s.";
 
     String CONTENT_PATTERN_FOR_TASK_REPORT_ON_TIME = "The task (%s) is done on time.";
-    String CONTENT_PATTERN_FOR_TASK_REPORT_EARLIER = "The task (%s) is done %s minute(s) before the scheduled end time.";
-    String CONTENT_PATTERN_FOR_TASK_REPORT_LATER = "The task (%s) is done %s minute(s) after the scheduled end time.";
+    String CONTENT_PATTERN_FOR_TASK_REPORT_EARLIER = "The task (%s) is done %s before the scheduled end time.";
+    String CONTENT_PATTERN_FOR_TASK_REPORT_LATER = "The task (%s) is done %s after the scheduled end time.";
 
     long SNOOZE_TIME_IN_MIL_SEC = (long) 1000 * 60 * 5;
     long REMIND_TIME_BEFORE_START_IN_MIL_SEC = (long) 1000 * 60 * 10;
-    long REMIND_TIME_AFTER_ESTEMITED_END_IN_MIL_SEC = (long) 1000 * 60 * 5;
+    long REMIND_TIME_AFTER_ESTIMATED_END_IN_MIL_SEC = (long) 1000 * 60 * 5;
 
     List<Notification> retrieveUndeliveredNotifications(String owner);
     boolean snoozeNotification(int id, String owner);
