@@ -17,6 +17,7 @@ import { DeleteTaskDialogComponent } from '../delete-task-dialog/delete-task-dia
 import { EditTaskDialogComponent } from '../edit-task-dialog/edit-task-dialog.component';
 import { StartTaskDialogComponent } from '../start-task-dialog/start-task-dialog.component';
 import { ConfirmTaskDialogComponent } from '../confirm-task-dialog/confirm-task-dialog.component';
+import { StartPopupTaskComponent } from '../start-popup-task/start-popup-task.component';
 
 export interface DialogData {
   name: string;
@@ -128,6 +129,21 @@ export class TasksComponent implements OnInit {
     });
   }
 
+  openStartPopUpDialog(i: number, name: string): void {
+    const dialogRef = this.dialog.open(
+        StartPopupTaskComponent, {
+          data: {
+            id: i,
+            name
+          }
+        });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The start popup task dialog was closed');
+      this.openStartDialog(result.id, result.name);
+    });
+  }
+
   openStartDialog(i: number, name: string): void {
     const dialogRef = this.dialog.open(
         StartTaskDialogComponent, {
@@ -142,6 +158,8 @@ export class TasksComponent implements OnInit {
       this.getTasks();
     });
   }
+
+
 
 
   getTasks(): void {

@@ -115,7 +115,19 @@ Description: Template for the view all tasks view.
 </div>
 
 <div>
- <button mat-fab color="primary" aria-label="New task" (click)="openDialog()" class="custom-button">
+ <button mat-fab color="primary" aria-label="New task"  class="custom-button"
+ [matMenuTriggerFor]="menu" aria-label="Task menu">
     <mat-icon class="header-text">add</mat-icon>
  </button>
+<mat-menu #menu="matMenu">
+	<button mat-menu-item (click)="openStartPopUpDialog()">
+		<mat-icon>dialpad</mat-icon>
+		<span>Start Now Task</span>
+	</button>
+	<button mat-menu-item (click)="openDialog()">
+		<mat-icon>notifications_off</mat-icon>
+		<span>New Task</span>
+	</button>
+</mat-menu>
+
 </div>
