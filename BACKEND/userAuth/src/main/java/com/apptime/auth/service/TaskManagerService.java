@@ -205,10 +205,10 @@ public class TaskManagerService {
 		c.setTime(start);
 		c.add(Calendar.DATE, 1);
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-		Date sDate = new Date(start.getTime());
+		//Date sDate = new Date(start.getTime());
 		Date eDate = c.getTime();
 		Set<Task> result = new HashSet<Task>();
-		result = taskRepo.getTasksStartedLaterThan(sDate,eDate,name);
+		result = taskRepo.getTasksStartedLaterThan(start,eDate,name);
 		return result;
 	}
 }

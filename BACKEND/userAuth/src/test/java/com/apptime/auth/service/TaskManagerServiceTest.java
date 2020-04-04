@@ -14,10 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 import static com.apptime.auth.model.TaskState.ACTIVE;
 import static com.apptime.auth.model.TaskState.COMPLETED;
@@ -263,15 +260,20 @@ public class TaskManagerServiceTest {
         String name = "userName";
         Task task = new Task();
         Set<Task> tasks = new HashSet<Task>();
-        //test empty result
-        when(repository.getTasksStartedLaterThan(start,start,name)).thenReturn(tasks);
+        Calendar c = Calendar.getInstance();
+        c.setTime(start);
+        c.add(Calendar.DATE, 1);
+        Date end = c.getTime();
+                //test empty result
+        when(repository.getTasksStartedLaterThan(start,end,name)).thenReturn(tasks);
         Set<Task> resultSet =  service.getTasksStartedLaterThan(start,name);
         assertEquals(0, resultSet.size());
         tasks.add(task);
         task.setScheduledstart(start);
         when(repository.getTasksStartedLaterThan(start,start,name)).thenReturn(tasks);
-        Task result =  service.getTasksStartedLaterThan(start,name).iterator().next();
-        assertEquals(task.getScheduledstart(),result.getScheduledstart() );
+        Set<Task> result =  service.getTasksStartedLaterThan(start,name);
+        assertEquals(1,result.size());
+        assertEquals(task.getScheduledstart(),result.iterator().next().getScheduledstart());
 
 
     }
