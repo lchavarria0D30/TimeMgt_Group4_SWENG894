@@ -6,6 +6,7 @@ import com.apptime.auth.model.TaskReport;
 import com.apptime.auth.repository.NotificationRepository;
 import com.apptime.auth.repository.TaskRepository;
 import com.apptime.auth.service.NotificationService;
+import com.apptime.auth.util.DurationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -93,7 +94,7 @@ public class NotificationServiceImpl implements NotificationService {
         if (task.getScheduledEnd() != null) {
             // create notification for exceeded task
             String contentForExceededTask = String.format(CONTENT_PATTERN_FOR_EXCEEDED_TASK, task.getName(), task.getScheduledEnd());
-            Date date = new Date(task.getScheduledEnd().getTime() + REMIND_TIME_AFTER_ESTEMITED_END_IN_MIL_SEC);
+            Date date = new Date(task.getScheduledEnd().getTime() + REMIND_TIME_AFTER_ESTIMATED_END_IN_MIL_SEC);
             Notification notificationForExceededTask = new Notification(task.getUserName(), TYPE_FOR_EXCEEDED_TASK, key, contentForExceededTask, date);
             notificationRepository.save(notificationForExceededTask);
         }
@@ -137,11 +138,11 @@ public class NotificationServiceImpl implements NotificationService {
         if (ON_TIME == report.getType()) {
             content = String.format(CONTENT_PATTERN_FOR_TASK_REPORT_ON_TIME, task.getName());
         } else if (EARLIER == report.getType()) {
-            content = String.format(CONTENT_PATTERN_FOR_TASK_REPORT_EARLIER, task.getName(), report.getDifference()
-                    .toMinutes());
+            content = String.format(CONTENT_PATTERN_FOR_TASK_REPORT_EARLIER, task.getName(),
+                    DurationUtil.toString(report.getDifference()));
         } else if (LATER == report.getType()) {
-            content = String
-                    .format(CONTENT_PATTERN_FOR_TASK_REPORT_LATER, task.getName(), report.getDifference().toMinutes());
+            content = String.format(CONTENT_PATTERN_FOR_TASK_REPORT_LATER, task.getName(),
+                    DurationUtil.toString(report.getDifference()));
         } else {
             content = String.format(CONTENT_PATTERN_FOR_TASK_REPORT_ON_TIME, task.getName());
         }
