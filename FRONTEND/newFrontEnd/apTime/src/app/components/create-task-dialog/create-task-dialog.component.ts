@@ -24,10 +24,11 @@ export class CreateTaskDialogComponent implements OnInit {
   scheduledEnd;
   token;
   selectedCategory = '';
-  categories;
+  categories = [];
   minDate;
   minEndDate;
-  timeRegex = /^(?:(?:1[0-2]|0?[1-9]):[0-5]\d\s[AaPp][Mm])?$/;
+  timeRegex = /^(?:(?:1[0-2]|0?[1-9]):[0-5]\d\s[AP][M])?$/;
+  isWrongDate = false;
 
   nameFormControl = new FormControl('', [
     Validators.required
@@ -62,35 +63,42 @@ export class CreateTaskDialogComponent implements OnInit {
   }
 
   onNoClick(): void {
+    console.log(this.selectedCategory);
+    // console.log(this.categories[this.selectedCategory]);
     this.dialogRef.close();
   }
 
   onYesClick(): void {
 
+    console.log('before conversion: ', this.scheduledStart);
     this.scheduledStart = this.dateConversion(this.data.ssTime, this.data.ssDate);
+    console.log('after conversion: ', this.scheduledStart);
     this.scheduledEnd = this.dateConversion(this.data.seTime, this.data.seDate);
 
-    console.log(this.scheduledStart);
-    console.log(this.scheduledEnd);
-    console.log('Before POST');
+    if (this.scheduledEnd <= this.scheduledStart) {
+      this.isWrongDate = true;
 
-    const headers = { Authorization: 'Bearer ' + this.sessionService.getToken()};
+    } else {
+      this.isWrongDate = false;
 
-    const body = { name: this.data.name,
-      description: this.data.description,
-      category: this.selectedCategory,
-      scheduledstart: this.scheduledStart,
-      scheduledEnd: this.scheduledEnd,
-    };
+      const headers = { Authorization: 'Bearer ' + this.sessionService.getToken()};
 
-
-    this.http.post('http://localhost:8001/tasks/newtask', body, { headers }).subscribe({
-      next: data => console.log(data),
-      error: error => console.error('There was an error!', error)
-    });
+      const body = { name: this.data.name,
+        description: this.data.description,
+        categories: [{id: this.selectedCategory}],
+        scheduledstart: this.scheduledStart,
+        scheduledEnd: this.scheduledEnd,
+      };
 
 
-    this.dialogRef.close();
+      this.http.post('http://localhost:8001/tasks/newtask', body, { headers }).subscribe({
+        next: data => console.log(data),
+        error: error => console.error('There was an error!', error)
+      });
+
+      this.dialogRef.close();
+    }
+
   }
 
   dateConversion(time: string, date: Date): Date {
@@ -111,7 +119,7 @@ export class CreateTaskDialogComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log("getCategory");
+
     this.getCategory();
   }
 
@@ -123,8 +131,14 @@ export class CreateTaskDialogComponent implements OnInit {
 
     this.http.get('http://localhost:8001/category/mine', { headers }).subscribe({
       next: data => {
-        this.categories = data
-        console.log(this.categories);
+        this.categories = this.categories.concat(data);
+      },
+      error: error => console.error('There was an error!', error)
+    });
+
+    this.http.get('http://localhost:8001/category/public', { headers }).subscribe({
+      next: data => {
+        this.categories = this.categories.concat(data);
       },
       error: error => console.error('There was an error!', error)
     });

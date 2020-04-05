@@ -27,7 +27,7 @@ Description: Template for the edit task dialog box. Includes the forms where use
             <mat-form-field>
                 <mat-label>Category</mat-label>
                 <mat-select [(ngModel)]="task.category" name="taskCat">
-                    <mat-option *ngFor="let category of categories" [value]="category.name">
+                    <mat-option *ngFor="let category of categories" [value]="category.id">
                         {{category.name}}
                     </mat-option>
                 </mat-select>
@@ -83,7 +83,7 @@ Description: Template for the edit task dialog box. Includes the forms where use
             <div fxFlex="" fxLayoutGap="15px">
                 <mat-form-field>
                     <mat-label>End Time</mat-label>
-                    <input matInput [(ngModel)]="task.seTime" name="taskseTime" [formControl]="eTimeFormControl">
+                    <input matInput [(ngModel)]="task.seTime" name="taskseTime" [formControl]="eTimeFormControl" [disabled]="true">
 
                     <mat-error *ngIf="eTimeFormControl.hasError('required')"> End Time is <strong>required</strong>
                     </mat-error>
@@ -92,60 +92,12 @@ Description: Template for the edit task dialog box. Includes the forms where use
                 </mat-form-field>
             </div>
         </div>
-<!--        <button mat-button (click)="onActualsClick()" *ngIf="!showActuals"> Edit actuals <mat-icon class="example-icon" aria-hidden="false" aria-label="Edit actual times icon">edit</mat-icon></button>-->
-
-<!--        <div *ngIf="showActuals">-->
-<!--            <mat-divider></mat-divider>-->
-<!--            <p style="color:purple; !important">Actual Times</p>-->
-<!--            <div fxLayout="row"  fxLayoutGap="15px">-->
-<!--                <div fxFlex="">-->
-<!--                    <mat-form-field>-->
-<!--                        <mat-label>Start date</mat-label>-->
-<!--                        <input matInput [matDatepicker]="picker3" [(ngModel)]="task.asDate" name="taskasDate"-->
-<!--                               [formControl]="sDateFormControl" >-->
-<!--                        <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>-->
-<!--                        <mat-datepicker #picker3></mat-datepicker>-->
-<!--                        <mat-error *ngIf="sDateFormControl.hasError('required')">-->
-<!--                            Start Date is <strong>required</strong>-->
-<!--                        </mat-error>-->
-<!--                    </mat-form-field>-->
-<!--                </div>-->
-<!--                <div fxFlex="" >-->
-<!--                    <mat-form-field>-->
-<!--                        <mat-label>Start Time</mat-label>-->
-<!--                        <input matInput [(ngModel)]="task.asTime" name="taskasTime" [formControl]="sTimeFormControl">-->
-<!--                        <mat-error *ngIf="sTimeFormControl.hasError('required')">-->
-<!--                            Start Time is <strong>required</strong>-->
-<!--                        </mat-error>-->
-<!--                        <mat-error *ngIf="sTimeFormControl.hasError('pattern')"> Start Time must follow <strong>HH:MM PM|AM</strong> format-->
-<!--                        </mat-error>-->
-<!--                    </mat-form-field>-->
-<!--                </div>-->
-<!--            </div>-->
-
-<!--            <div fxLayout="row"  fxLayoutGap="15px">-->
-<!--                <div fxFlex="" >-->
-<!--                    <mat-form-field>-->
-<!--                        <mat-label>End date</mat-label>-->
-<!--                        <input matInput [matDatepicker]="picker4" [(ngModel)]="task.aeDate" name="taskaeDate" [formControl]="eDateFormControl">-->
-<!--                        <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>-->
-<!--                        <mat-datepicker #picker4></mat-datepicker>-->
-<!--                        <mat-error *ngIf="eDateFormControl.hasError('required')">-->
-<!--                            End Date is <strong>required</strong>-->
-<!--                        </mat-error>-->
-<!--                    </mat-form-field>-->
-<!--                </div>-->
-<!--                <div fxFlex="">-->
-<!--                    <mat-form-field>-->
-<!--                        <mat-label>End Time</mat-label>-->
-<!--                        <input matInput [(ngModel)]="task.aeTime" name="taskaeTime">-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
     </form>
 </div>
 <div mat-dialog-actions align="end" class="header-text">
-    <button mat-raised-button color="primary" [mat-dialog-close]="data"  (click)="onYesClick()" cdkFocusInitial
+    <mat-error *ngIf="isWrongDate"> End date and time should be later than start date and time.
+    </mat-error>
+    <button mat-raised-button color="primary" (click)="onYesClick()" cdkFocusInitial
             [disabled]="!eTimeFormControl.valid || !sTimeFormControl.valid || !eDateFormControl.valid ||
             !sDateFormControl.valid || !nameFormControl.valid">Save</button>
 </div>

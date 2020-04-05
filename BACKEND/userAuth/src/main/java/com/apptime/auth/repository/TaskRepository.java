@@ -23,7 +23,6 @@ public interface TaskRepository extends JpaRepository<Task, Integer>{
 	Task findByUserNameAndState(String userName, TaskState state);
 
 	Task deleteById(long id);
-
-	@Query("select u from Task u where u.scheduledstart >= :start and u.userName = :name")
-    Set<Task> getTasksStartedLaterThan( Date start,String name);
+	@Query(value = "select u from Task u where u.scheduledstart BETWEEN :start AND :end and u.userName = :name")
+    Set<Task> getTasksStartedLaterThan( Date start, Date end, String name);
 }

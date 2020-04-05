@@ -67,17 +67,23 @@ public class TaskReportServiceImpl implements TaskReportService {
         report.setType(type);
         report.setDifference(gapDuration);
 
+        report.setActualDuration(task.getDuration());
+
         if (task.getDuration() != null && task.getScheduledstart() != null) {
             long scheduledDurationInMilSec = task.getScheduledEnd().getTime() - task.getScheduledstart().getTime();
             Duration scheduledDuration = Duration.ofMillis(scheduledDurationInMilSec);
             report.setScheduledDuration(scheduledDuration);
-            report.setActualDuration(task.getDuration());
 
             if (scheduledDurationInMilSec != 0) {
                 int efficiency = (int) ((task.getDuration().toMillis() * 100) / scheduledDurationInMilSec);
                 report.setEfficiency(efficiency);
+            } else {
+                report.setEfficiency(-1);
             }
         }
+
+        report.setActualStartDate(task.getStart());
+        report.setActualEndDate(task.getEnd());
 
         reportRepository.save(report);
 

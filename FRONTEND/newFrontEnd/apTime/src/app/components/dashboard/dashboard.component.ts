@@ -21,78 +21,91 @@ import {filter} from 'rxjs/operators';
 export class DashboardComponent implements OnInit {
 
   tasks;
+  dateTasks;
   token;
+  activeTasks = [];
+  pausedTasks = [];
+  toDoTasks = [];
+  completedTasks = [];
   theTask;
-  filteredTasks;
+  filteredTasks = [];
 
   date = new FormControl(new Date());
 
   constructor(private http: HttpClient,
-              private sessionService: SessionService) { }
+              private sessionService: SessionService ) { }
 
   ngOnInit() {
     this.getTasks();
+
     this.getDateTasks();
+
   }
 
-  selectedTask(i: number): void {
-    this.theTask = this.filteredTasks[i];
-  }
+  // selectedTask(i: number): void {
+  //   this.theTask = this.filteredTasks[i];
+  // }
 
   getDateTasks(): void {
+    console.log('the date: ', this.date.value);
 
-    const fromDate = new Date(this.date.value);
-    const toDate = new Date(this.date.value);
+    const headers = { Authorization: 'Bearer ' + this.sessionService.getToken()};
 
-    fromDate.setHours(0, 0, 0, 0);
+    const body = { date: this.date.value.toISOString().substring(0, 10)
+    };
 
-    toDate.setDate(toDate.getDate() + 1);
-    toDate.setHours(0, 0, 0, 0);
+    console.log('Request Body: ', body);
 
-    // console.log(fromDate.toISOString());
-    // console.log(toDate.toISOString());
 
-    // console.log('Date changed:');
-    // console.log(this.date.value.toISOString().substring(0, 10));
-    // console.log();
-    // const newDate = this.date.value.toISOString().substring(0, 10);
+    this.http.post('http://localhost:8001/tasks/due/start', body, { headers }).subscribe({
+      next: data => {
+        this.dateTasks = data;
+        console.log(this.dateTasks);
 
-    if (this.tasks !== undefined) {
-      this.filteredTasks = this.tasks.filter(
-          function(tasks) {
-            return (new Date(tasks.scheduledstart.substring(0, tasks.scheduledstart.length - 5)) >= fromDate
-                && new Date(tasks.scheduledstart.substring(0, tasks.scheduledstart.length - 5)) < toDate);
+        const fromDate = new Date(this.date.value);
+        const toDate = new Date(this.date.value);
+
+        fromDate.setHours(0, 0, 0, 0);
+
+        toDate.setDate(toDate.getDate() + 1);
+        toDate.setHours(0, 0, 0, 0);
+
+        if (this.dateTasks !== undefined) {
+          this.filteredTasks = this.dateTasks.filter(
+              function (dateTasks) {
+                  const date = new Date(dateTasks.scheduledstart);
+                  if (isNaN(date.getTime())) {
+                    return (new Date(dateTasks.scheduledstart.substring(0, dateTasks.scheduledstart.length - 5)) >= fromDate
+                        && new Date(dateTasks.scheduledstart.substring(0, dateTasks.scheduledstart.length - 5)) < toDate);
+                  } else {
+                    return (new Date(dateTasks.scheduledstart) >= fromDate
+                        && new Date(dateTasks.scheduledstart) < toDate);
+                  }
+              }
+          );
+        }
+
+        if (data == null) {
+          this.theTask = undefined;
+        }
+
+
+        this.filteredTasks.sort((a, b) => {
+          const date = new Date(a.scheduledstart);
+          if (isNaN(date.getTime())) {
+            return <any>new Date(a.scheduledstart.substring(0, a.scheduledstart.length - 5)) -
+                <any>new Date(b.scheduledstart.substring(0, b.scheduledstart.length - 5));
+          } else {
+            return <any>new Date(a.scheduledstart) -
+                <any>new Date(b.scheduledstart);
           }
-      );
+        });
 
-      // console.log(this.filteredTasks);
-
-      if (this.filteredTasks == null || this.filteredTasks.length < 1) {
-              this.theTask = undefined;
-      } else {
-        this.selectedTask(0);
-      }
-    }
-    // const headers = { Authorization: 'Bearer ' + this.sessionService.getToken()};
-    //
-    // const body = { date: newDate
-    // };
-    //
-    //
-    //
-    // this.http.post('http://localhost:8001/tasks/due/start', body, { headers }).subscribe({
-    //   next: data => {
-    //     this.tasks = data;
-    //     console.log(data);
-    //     if (data == null) {
-    //       this.theTask = undefined;
-    //     }
-    //   },
-    //   error: error => console.error('There was an error!', error)
-    // });
+      },
+      error: error => console.error('There was an error!', error)
+    });
 
   }
-
 
   getTasks(): void {
     this.token = this.sessionService.getToken();
@@ -102,12 +115,38 @@ export class DashboardComponent implements OnInit {
 
     this.http.get('http://localhost:8001/tasks/', { headers }).subscribe({
       next: data => {
-        this.tasks = data;
-        console.log('the tasks: ', this.tasks);
+        this.tasks = data
+        if (this.tasks !== undefined) {
+
+          this.activeTasks = this.tasks.filter(
+              function (tasks) {
+                return tasks.state === 'ACTIVE';
+              }
+          )
+
+          this.pausedTasks = this.tasks.filter(
+              function (tasks) {
+                return tasks.state === 'PAUSED';
+              }
+          )
+
+          this.toDoTasks = this.tasks.filter(
+              function (tasks) {
+                return tasks.state === 'CREATED';
+              }
+          )
+
+          this.completedTasks = this.tasks.filter(
+              function (tasks) {
+                return tasks.state === 'COMPLETED';
+              }
+          );
+        }
       },
       error: error => console.error('There was an error!', error)
     });
 
+    // console.log(this.tasks);
   }
 
 }

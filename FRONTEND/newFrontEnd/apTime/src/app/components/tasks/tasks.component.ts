@@ -17,6 +17,7 @@ import { DeleteTaskDialogComponent } from '../delete-task-dialog/delete-task-dia
 import { EditTaskDialogComponent } from '../edit-task-dialog/edit-task-dialog.component';
 import { StartTaskDialogComponent } from '../start-task-dialog/start-task-dialog.component';
 import { ConfirmTaskDialogComponent } from '../confirm-task-dialog/confirm-task-dialog.component';
+import { StartPopupTaskComponent } from '../start-popup-task/start-popup-task.component';
 
 export interface DialogData {
   name: string;
@@ -128,6 +129,21 @@ export class TasksComponent implements OnInit {
     });
   }
 
+  openStartPopUpDialog(i: number, name: string): void {
+    const dialogRef = this.dialog.open(
+        StartPopupTaskComponent, {
+          data: {
+            id: i,
+            name
+          }
+        });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The start popup task dialog was closed');
+      this.openStartDialog(result.id, result.name);
+    });
+  }
+
   openStartDialog(i: number, name: string): void {
     const dialogRef = this.dialog.open(
         StartTaskDialogComponent, {
@@ -144,6 +160,8 @@ export class TasksComponent implements OnInit {
   }
 
 
+
+
   getTasks(): void {
       this.token = this.sessionService.getToken();
 
@@ -152,8 +170,24 @@ export class TasksComponent implements OnInit {
 
       this.http.get('http://localhost:8001/tasks/', { headers }).subscribe({
       next: data => {
-        this.tasks = data
+
         console.log(this.tasks);
+        this.tasks = data
+
+        this.tasks.sort((a, b) => {
+          const date = new Date(a.scheduledstart);
+          if (isNaN(date.getTime())) {
+            return <any>new Date(a.scheduledstart.substring(0, a.scheduledstart.length - 5)) -
+                <any>new Date(b.scheduledstart.substring(0, b.scheduledstart.length - 5));
+          } else {
+            return <any>new Date(a.scheduledstart) -
+                <any>new Date(b.scheduledstart);
+          }
+        });
+
+        console.log('sorted: ', this.tasks);
+
+
 
       },
       error: error => console.error('There was an error!', error)
