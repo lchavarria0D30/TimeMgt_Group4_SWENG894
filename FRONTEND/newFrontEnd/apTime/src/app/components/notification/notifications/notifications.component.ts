@@ -1,136 +1,116 @@
-import { Component, OnInit, OnDestroy, Input } from '@angular/core';
-import { Router, NavigationStart } from '@angular/router';
-import { Subscription } from 'rxjs';
-import { NotificationType, Notification } from '../notification_model';
-import { NotificationsServiceService } from '../notifications-service.service';
-import { Auth } from 'aws-amplify';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
+import { MatDatepickerInputEvent } from '@angular/material/datepicker';
+import { MatTableModule } from '@angular/material/table';
+import { Router } from '@angular/router';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { SessionService } from 'src/app/services/session.service';
+import { FormControl } from '@angular/forms';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+export class Report {
+  id: number;
+  taskId: number;
+  owner: string;
+  type: string;
+  difference: Date;
+  scheduledDuration: Date;
+  actualDuration: Date;
+  efficiency: number;
+}
 
 @Component({
-  selector: 'app-notifications',
-  templateUrl: './notifications.component.html',
-  styleUrls: ['./notifications.component.css']
+  selector: 'app-report',
+  templateUrl: './report.component.html',
+  styleUrls: ['./report.component.css']
 })
-export class NotificationsComponent implements OnInit, OnDestroy {
-  @Input() id = 'default-alert';
-  @Input() fade = true;
-  notes: Notification[] = [];
-  noteSubscription: Subscription;
-  routeSubscription: Subscription;
+export class ReportComponent implements OnInit {
+  reportSrc;
+  displayReport = false;
+  start: Date = new Date();
+  end: Date = new Date();
+  displayedColumns: string[] = [
+    'id',
+    'taskId',
+    'owner',
+    'type',
+    'difference',
+    'scheduledDuration',
+    'actualDuration',
+    'efficiency'
+  ];
+  dataSource: Report[];
   constructor(
     private route: Router,
-    private noteService: NotificationsServiceService,
     private _http: HttpClient,
     private sessionService: SessionService
   ) {}
 
   ngOnInit() {
-    // subscribe to new alert notifications
-    console.log('in notification component init --');
-    this.noteService.onNotify(data => {
-      data.subscribe(alert => {
-        console.log('notification component subscribing for notification --');
-        // clear alerts when an empty alert is received
-        if (!alert.message) {
-          // filter out alerts without 'keepAfterRouteChange' flag
-          this.notes = this.notes.filter(x => x.keepAfterRouteChange);
-          // remove 'keepAfterRouteChange' flag on the rest
-          this.notes.forEach(x => delete x.keepAfterRouteChange);
-          return;
-        }
-        // add alert to array
-        this.notes.push(alert);
-        // auto close alert if required
-        /*     if (alert.autoClose) {
-                setTimeout(() => this.removeAlert(alert), 3000);
-            } 
-            */
-      });
-    });
-  }
-
-  ngOnDestroy() {
-    // unsubscribe on destroy
-    //this.noteSubscription.unsubscribe();
-    this.routeSubscription.unsubscribe();
-  }
-  removeNote(alert: Notification) {
-    if (this.fade) {
-      // fade out alert
-      this.notes.find(x => x === alert).fade = true;
-
-      // remove alert after faded out
-      setTimeout(() => {
-        this.notes = this.notes.filter(x => x !== alert);
-      }, 2500);
-    } else {
-      // remove alert
-      this.notes = this.notes.filter(x => x !== alert);
-    }
-  }
-
-  cancel(alert: Notification) {
-    if (alert) {
-      console.log(alert.id);
-      const headers = {
-        Authorization: 'Bearer ' + this.sessionService.getToken(),
-        'Content-Type': 'application/json'
-      };
-      this._http
-        .delete('http://localhost:8001/notification/' + alert.id, {
-          headers
-        })
-        .subscribe({
-          next: data => {
-            console.log(data);
-            this.notes = this.notes.filter(x => x.id !== alert.id);
-          },
-          error: error => console.error('There was an error!', error)
-        });
-    }
-  }
-
-  snooze(alert: Notification) {
-    console.log(alert.id);
-    const headers = {
+    /*     const headers = {
       Authorization: 'Bearer ' + this.sessionService.getToken(),
       'Content-Type': 'application/json'
     };
     this._http
-      .put(
-        'http://localhost:8001/notification/' + alert.id + '/' + 'snooze',
-        {},
+      .get<Report[]>('http://localhost:8001/report/', {
+        headers
+      })
+      .subscribe({
+        next: data => {
+          this.dataSource = data;
+          console.log(this.reportSrc);
+        },
+        error: (error: Response) => console.error('There was an error!', error)
+      }); */
+  }
+
+  /* {
+    params: new HttpParams()
+      .set('courseId', courseId.toString())
+      .set('filter', filter)
+      .set('sortOrder', sortOrder)
+      .set('pageNumber', pageNumber.toString())
+      .set('pageSize', pageSize.toString())
+  }
+  */
+  getReport(start, end) {
+    const headers = {
+      Authorization: 'Bearer ' + this.sessionService.getToken(),
+      'Content-Type': 'application/json'
+    };
+
+    //localhost:8001/
+    http: this._http
+      .get<Report[]>(
+        'http://localhost:8001/report?startDate=' +
+          start +
+          '&' +
+          'endDate=' +
+          end,
         {
           headers
         }
       )
       .subscribe({
         next: data => {
-          console.log(data);
-          this.notes = this.notes.filter(x => x.id !== alert.id);
+          this.dataSource = data;
+          //console.log(this.reportSrc);
+          this.displayReport = true;
         },
-        error: error => console.error('There was an error!', error)
+        error: (error: Response) => console.error('There was an error!', error)
       });
   }
 
-  cssClass(alert: Notification) {
-    if (!alert) {
-      return;
+  addStart(type: string, event: MatDatepickerInputEvent<Date>) {
+    this.start = event.value;
+    console.log(' add event is called. .....' + this.start);
+  }
+
+  addEnd(type: string, event: MatDatepickerInputEvent<Date>) {
+    if (this.start <= this.end) {
+      this.end = event.value;
+      this.getReport(this.start, this.end);
+      console.log(
+        ' start is  ' + this.start + '. .....' + '  end  is ' + this.end
+      );
     }
-
-    const classes = ['alert', 'alert-dismissable'];
-
-    const alertTypeClass = {
-      [NotificationType.Reminder]: 'reminder',
-      [NotificationType.LateNotification]: 'lateNote'
-    };
-    classes.push(alertTypeClass[alert.type]);
-
-    if (alert.fade) {
-      classes.push('fade');
-    }
-
-    return classes.join(' ');
   }
 }
