@@ -94,7 +94,7 @@ export class EditTaskDialogComponent implements OnInit {
         id: this.task.id,
         name: this.task.name,
         description: this.task.description,
-        category: this.task.category,
+        categories: [{id: this.task.category}],
         scheduledstart: this.scheduledStart,
         scheduledEnd: this.scheduledEnd
         // actualstart: this.actualStart,
@@ -154,6 +154,9 @@ export class EditTaskDialogComponent implements OnInit {
       const ssTime = ssDate.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
       this.task.ssTime = ssTime;
       this.task.ssDate = ssDate;
+      if (this.task.categories[0] !== undefined) {
+        this.task.category = this.task.categories[0].id;
+      }
 
       date = this.task.scheduledEnd.substring(0, this.task.scheduledEnd.length - 5);
       const seDate = new Date(date);
@@ -177,6 +180,13 @@ export class EditTaskDialogComponent implements OnInit {
       next: data => {
         this.categories = data;
         console.log(this.categories);
+      },
+      error: error => console.error('There was an error!', error)
+    });
+
+    this.http.get('http://localhost:8001/category/public', { headers }).subscribe({
+      next: data => {
+        this.categories = this.categories.concat(data);
       },
       error: error => console.error('There was an error!', error)
     });

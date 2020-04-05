@@ -30,8 +30,8 @@ Description: Template for the create task dialog box.
 
         <mat-form-field>
             <mat-label>Category</mat-label>
-            <mat-select [(ngModel)]="selectedCategory">
-                <mat-option *ngFor="let category of categories" [value]="category.name">
+            <mat-select [(ngModel)]="selectedCategory" >
+                <mat-option *ngFor="let category of categories" [value]="category.id">
                     {{category.name}}
                 </mat-option>
             </mat-select>

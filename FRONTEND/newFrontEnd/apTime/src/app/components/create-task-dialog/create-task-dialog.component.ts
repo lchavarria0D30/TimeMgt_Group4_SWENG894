@@ -63,6 +63,8 @@ export class CreateTaskDialogComponent implements OnInit {
   }
 
   onNoClick(): void {
+    console.log(this.selectedCategory);
+    // console.log(this.categories[this.selectedCategory]);
     this.dialogRef.close();
   }
 
@@ -77,15 +79,12 @@ export class CreateTaskDialogComponent implements OnInit {
 
     } else {
       this.isWrongDate = false;
-      console.log(this.scheduledStart);
-      console.log(this.scheduledEnd);
-      console.log('Before POST');
 
       const headers = { Authorization: 'Bearer ' + this.sessionService.getToken()};
 
       const body = { name: this.data.name,
         description: this.data.description,
-        category: this.selectedCategory,
+        categories: [{id: this.selectedCategory}],
         scheduledstart: this.scheduledStart,
         scheduledEnd: this.scheduledEnd,
       };
@@ -119,7 +118,7 @@ export class CreateTaskDialogComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log("getCategory");
+
     this.getCategory();
   }
 
@@ -132,7 +131,13 @@ export class CreateTaskDialogComponent implements OnInit {
     this.http.get('http://localhost:8001/category/mine', { headers }).subscribe({
       next: data => {
         this.categories = data
-        console.log(this.categories);
+      },
+      error: error => console.error('There was an error!', error)
+    });
+
+    this.http.get('http://localhost:8001/category/public', { headers }).subscribe({
+      next: data => {
+        this.categories = this.categories.concat(data);
       },
       error: error => console.error('There was an error!', error)
     });

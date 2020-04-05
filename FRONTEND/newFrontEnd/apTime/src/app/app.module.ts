@@ -40,6 +40,7 @@ import { ReportComponent } from './components/report/report.component';
 import { StartTaskDialogComponent } from './components/start-task-dialog/start-task-dialog.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { ConfirmTaskDialogComponent } from './components/confirm-task-dialog/confirm-task-dialog.component';
+import { StartPopupTaskComponent } from './components/start-popup-task/start-popup-task.component';
 
 
 @NgModule({
@@ -57,7 +58,8 @@ import { ConfirmTaskDialogComponent } from './components/confirm-task-dialog/con
     ReportComponent,
     StartTaskDialogComponent,
     DashboardComponent,
-    ConfirmTaskDialogComponent
+    ConfirmTaskDialogComponent,
+    StartPopupTaskComponent
   ],
 
   imports: [
@@ -79,7 +81,8 @@ import { ConfirmTaskDialogComponent } from './components/confirm-task-dialog/con
     DeleteTaskDialogComponent,
     EditTaskDialogComponent,
     StartTaskDialogComponent,
-    ConfirmTaskDialogComponent
+    ConfirmTaskDialogComponent,
+    StartPopupTaskComponent
   ]
 })
 export class AppModule {}
