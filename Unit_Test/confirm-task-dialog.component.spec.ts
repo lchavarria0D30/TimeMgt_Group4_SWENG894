@@ -25,6 +25,7 @@ import {
   MatSelectModule
 } from '@angular/material';
 import {By} from "@angular/platform-browser";
+import {element} from "protractor";
 
 describe('ConfirmTaskDialogComponent', () => {
   let component: ConfirmTaskDialogComponent;
@@ -54,6 +55,7 @@ describe('ConfirmTaskDialogComponent', () => {
       declarations: [ConfirmTaskDialogComponent]
     })
         .compileComponents();
+
   }));
 
   beforeEach(() => {
@@ -98,13 +100,13 @@ describe('ConfirmTaskDialogComponent', () => {
     expect(title.innerHTML).toContain('Task ""');
   });
 
-  /**it('should set userResponse when No button is clicked', () => {
-    // expect(component.isDone).toBeUndefined();
-    const btn = fixture.debugElement.nativeElement.querySelector('#onNoClick');
-    // btn.click();
-    expect(component.onDoneClick).toBe('No');
+  it('should ', () => {
+    const fixture = TestBed.createComponent(ConfirmTaskDialogComponent);
+    fixture.detectChanges();
+    const compiled = fixture.debugElement.nativeElement;
+    expect(compiled.querySelector('h1').textContent).toContain('Task ""');
   });
-*/
+
   it('should be Defined completeTask', async(() => {
     spyOn(component, 'completeTask').and.callThrough();
     fixture.whenStable().then(() => {
@@ -113,4 +115,34 @@ describe('ConfirmTaskDialogComponent', () => {
     });
   }));
 
-});
+  it('testing completeTask(number) ', () => {
+    const testComp = fixture.debugElement.injector.get(ConfirmTaskDialogComponent);
+    fixture.detectChanges();
+    expect(testComp.completeTask(15)).toEqual(component.completeTask(15));
+  });
+
+  it('testing pauseTask(number) ', () => {
+    const testComp = fixture.debugElement.injector.get(ConfirmTaskDialogComponent);
+    fixture.detectChanges();
+    expect(testComp.pauseTask(15)).toEqual(component.pauseTask(15));
+  });
+/**
+  it('testing line coverage onPauseClick() ', async(() => {
+    const never = null;
+    const pauseFun = spyOn(component.onPauseClick(), 'pauseTask');
+    component.onPauseClick();
+    fixture.detectChanges();
+
+    expect(pauseFun).toHaveBeenCalled();
+    expect(pauseFun).toHaveBeenCalledWith(close());
+  }));
+
+
+  it('should enable Pause Button', () => {
+    fixture.detectChanges();
+    const button = fixture.debugElement.query(By.css('button'));
+    expect(button.nativeElement.disabled).toBeFalsy();
+    });
+ */
+  });
+
