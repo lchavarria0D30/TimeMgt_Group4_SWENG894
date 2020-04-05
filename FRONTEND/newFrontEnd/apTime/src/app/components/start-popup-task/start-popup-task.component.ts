@@ -22,7 +22,7 @@ export class StartPopupTaskComponent implements OnInit {
   today = new Date();
   hours;
   minutes;
-  categories;
+  categories = [];
   selectedCategory;
 
   hoursRegex = /^([0-9]*)$/;
@@ -92,7 +92,7 @@ export class StartPopupTaskComponent implements OnInit {
 
     this.http.get('http://localhost:8001/category/mine', { headers }).subscribe({
       next: data => {
-        this.categories = data
+        this.categories = this.categories.concat(data)
         console.log(this.categories);
       },
       error: error => console.error('There was an error!', error)

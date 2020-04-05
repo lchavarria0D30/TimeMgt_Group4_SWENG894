@@ -53,8 +53,14 @@ export class HomeComponent implements OnInit {
     if (this.tasks !== undefined) {
       this.filteredTasks = this.tasks.filter(
           function(tasks) {
-            return (new Date(tasks.scheduledstart.substring(0, tasks.scheduledstart.length - 5)) >= fromDate
-                && new Date(tasks.scheduledstart.substring(0, tasks.scheduledstart.length - 5)) < toDate);
+            const date = new Date(tasks.scheduledstart);
+            if (isNaN(date.getTime())) {
+              return (new Date(tasks.scheduledstart.substring(0, tasks.scheduledstart.length - 5)) >= fromDate
+                  && new Date(tasks.scheduledstart.substring(0, tasks.scheduledstart.length - 5)) < toDate);
+            } else {
+              return (new Date(tasks.scheduledstart) >= fromDate
+                  && new Date(tasks.scheduledstart) < toDate);
+            }
           }
       );
 

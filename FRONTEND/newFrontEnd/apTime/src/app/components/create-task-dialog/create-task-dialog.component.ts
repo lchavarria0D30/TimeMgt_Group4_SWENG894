@@ -24,7 +24,7 @@ export class CreateTaskDialogComponent implements OnInit {
   scheduledEnd;
   token;
   selectedCategory = '';
-  categories;
+  categories = [];
   minDate;
   minEndDate;
   timeRegex = /^(?:(?:1[0-2]|0?[1-9]):[0-5]\d\s[AP][M])?$/;
@@ -70,8 +70,9 @@ export class CreateTaskDialogComponent implements OnInit {
 
   onYesClick(): void {
 
-
+    console.log('before conversion: ', this.scheduledStart);
     this.scheduledStart = this.dateConversion(this.data.ssTime, this.data.ssDate);
+    console.log('after conversion: ', this.scheduledStart);
     this.scheduledEnd = this.dateConversion(this.data.seTime, this.data.seDate);
 
     if (this.scheduledEnd <= this.scheduledStart) {
@@ -130,7 +131,7 @@ export class CreateTaskDialogComponent implements OnInit {
 
     this.http.get('http://localhost:8001/category/mine', { headers }).subscribe({
       next: data => {
-        this.categories = data
+        this.categories = this.categories.concat(data);
       },
       error: error => console.error('There was an error!', error)
     });

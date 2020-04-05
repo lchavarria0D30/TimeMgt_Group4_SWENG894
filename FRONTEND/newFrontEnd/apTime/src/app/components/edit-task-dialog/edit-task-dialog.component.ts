@@ -30,7 +30,7 @@ export class EditTaskDialogComponent implements OnInit {
   actualStart;
   actualEnd;
   selectedCategory = '';
-  categories;
+  categories = [];
   minDate;
   minEndDate;
   timeRegex = /^(?:(?:1[0-2]|0?[1-9]):[0-5]\d\s[AP][M])?$/;
@@ -144,22 +144,36 @@ export class EditTaskDialogComponent implements OnInit {
     this.showActuals = false;
     this.getCategory();
 
+
     this.id = this.data.id;
 
     this.task = this.data.task;
+    this.task.category = this.task.categories[0].id;
+    console.log('the category: ', this.task.categories[0].id)
 
     setTimeout(() => {
-      let date = this.task.scheduledstart.substring(0, this.task.scheduledstart.length - 5);
-      const ssDate = new Date(date);
+      let date = this.task.scheduledstart;
+      let ssDate = new Date(date);
+
+      if (isNaN(ssDate.getTime())) {
+        ssDate = new Date(date.substring(0, this.task.scheduledstart.length - 5));
+      }
       const ssTime = ssDate.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
+      console.log('the start date before re-format: ', isNaN(ssDate.getTime()));
+
       this.task.ssTime = ssTime;
       this.task.ssDate = ssDate;
-      if (this.task.categories[0] !== undefined) {
-        this.task.category = this.task.categories[0].id;
+      // if (this.task.categories[0] !== undefined) {
+      //   this.task.category = this.task.categories[0].id;
+      // }
+
+      date = this.task.scheduledEnd;
+      let seDate = new Date(date);
+
+      if (isNaN(seDate.getTime())) {
+        seDate = new Date(date.substring(0, this.task.scheduledEnd.length - 5));
       }
 
-      date = this.task.scheduledEnd.substring(0, this.task.scheduledEnd.length - 5);
-      const seDate = new Date(date);
       const seTime = seDate.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
       this.task.seTime = seTime;
       this.task.seDate = seDate;
@@ -178,7 +192,7 @@ export class EditTaskDialogComponent implements OnInit {
 
     this.http.get('http://localhost:8001/category/mine', { headers }).subscribe({
       next: data => {
-        this.categories = data;
+        this.categories = this.categories.concat(data);
         console.log(this.categories);
       },
       error: error => console.error('There was an error!', error)
