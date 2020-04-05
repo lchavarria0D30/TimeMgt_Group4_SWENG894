@@ -40,7 +40,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSliderModule } from '@angular/material/slider';
 import { Location } from '@angular/common';
 
-
 @NgModule({
   imports: [
     MatTabsModule,
