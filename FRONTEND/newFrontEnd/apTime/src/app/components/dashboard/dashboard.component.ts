@@ -54,12 +54,13 @@ export class DashboardComponent implements OnInit {
     const body = { date: this.date.value.toISOString().substring(0, 10)
     };
 
+    console.log('Request Body: ', body);
 
 
     this.http.post('http://localhost:8001/tasks/due/start', body, { headers }).subscribe({
       next: data => {
         this.dateTasks = data;
-        console.log(data);
+        console.log(this.dateTasks);
 
         const fromDate = new Date(this.date.value);
         const toDate = new Date(this.date.value);
@@ -72,8 +73,14 @@ export class DashboardComponent implements OnInit {
         if (this.dateTasks !== undefined) {
           this.filteredTasks = this.dateTasks.filter(
               function (dateTasks) {
-                return (new Date(dateTasks.scheduledstart.substring(0, dateTasks.scheduledstart.length - 5)) >= fromDate
-                    && new Date(dateTasks.scheduledstart.substring(0, dateTasks.scheduledstart.length - 5)) < toDate);
+                  const date = new Date(dateTasks.scheduledstart);
+                  if (isNaN(date.getTime())) {
+                    return (new Date(dateTasks.scheduledstart.substring(0, dateTasks.scheduledstart.length - 5)) >= fromDate
+                        && new Date(dateTasks.scheduledstart.substring(0, dateTasks.scheduledstart.length - 5)) < toDate);
+                  } else {
+                    return (new Date(dateTasks.scheduledstart) >= fromDate
+                        && new Date(dateTasks.scheduledstart) < toDate);
+                  }
               }
           );
         }
@@ -82,7 +89,18 @@ export class DashboardComponent implements OnInit {
           this.theTask = undefined;
         }
 
-        console.log('filtered: ', this.dateTasks);
+
+        this.filteredTasks.sort((a, b) => {
+          const date = new Date(a.scheduledstart);
+          if (isNaN(date.getTime())) {
+            return <any>new Date(a.scheduledstart.substring(0, a.scheduledstart.length - 5)) -
+                <any>new Date(b.scheduledstart.substring(0, b.scheduledstart.length - 5));
+          } else {
+            return <any>new Date(a.scheduledstart) -
+                <any>new Date(b.scheduledstart);
+          }
+        });
+
       },
       error: error => console.error('There was an error!', error)
     });

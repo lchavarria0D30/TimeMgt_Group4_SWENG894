@@ -175,8 +175,14 @@ export class TasksComponent implements OnInit {
         this.tasks = data
 
         this.tasks.sort((a, b) => {
-          return <any> new Date(a.scheduledstart.substring(0, a.scheduledstart.length - 5)) -
-          <any> new Date(b.scheduledstart.substring(0, b.scheduledstart.length - 5));
+          const date = new Date(a.scheduledstart);
+          if (isNaN(date.getTime())) {
+            return <any>new Date(a.scheduledstart.substring(0, a.scheduledstart.length - 5)) -
+                <any>new Date(b.scheduledstart.substring(0, b.scheduledstart.length - 5));
+          } else {
+            return <any>new Date(a.scheduledstart) -
+                <any>new Date(b.scheduledstart);
+          }
         });
 
         console.log('sorted: ', this.tasks);
