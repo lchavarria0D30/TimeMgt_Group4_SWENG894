@@ -24,6 +24,8 @@ import {
   MatRadioModule,
   MatSelectModule
 } from '@angular/material';
+import {ConfirmTaskDialogComponent} from "../confirm-task-dialog/confirm-task-dialog.component";
+import {By} from "@angular/platform-browser";
 
 describe('DeleteTaskDialogComponent', () => {
   let component: DeleteTaskDialogComponent;
@@ -70,4 +72,28 @@ describe('DeleteTaskDialogComponent', () => {
   it('should verify onYesClick', () => {
     expect(component.onYesClick).toBeTruthy();
   });
+
+  it('should set on No Click', () => {
+    const fixture = TestBed.createComponent(DeleteTaskDialogComponent);
+    const alert = 'Cancel Message';
+    fixture.detectChanges();
+
+    const h1 = fixture.debugElement.query(By.css('button'));
+    h1.triggerEventHandler('click', {});
+    fixture.detectChanges();
+
+    expect(fixture.debugElement.query(By.css('button')).nativeElement.innerText).toEqual('No');
+  });
+/**
+  it('should set on Yes Click', () => {
+    const fixture = TestBed.createComponent(DeleteTaskDialogComponent);
+    fixture.detectChanges();
+
+    const h1 = fixture.debugElement.query(By.css('button'));
+    h1.triggerEventHandler('click', {});
+    fixture.detectChanges();
+
+    expect(fixture.debugElement.query(By.css('button')).nativeElement.innerText).toEqual('Yes');
+  });
+ */
 });
