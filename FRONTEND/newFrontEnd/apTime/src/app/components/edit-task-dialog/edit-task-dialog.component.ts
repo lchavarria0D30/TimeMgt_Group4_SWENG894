@@ -148,8 +148,10 @@ export class EditTaskDialogComponent implements OnInit {
     this.id = this.data.id;
 
     this.task = this.data.task;
-    this.task.category = this.task.categories[0].id;
-    console.log('the category: ', this.task.categories[0].id)
+    if (this.task.categories.length > 0) {
+      this.task.category = this.task.categories[0].id;
+    }
+    // console.log('the category: ', this.task.categories.length)
 
     setTimeout(() => {
       let date = this.task.scheduledstart;
