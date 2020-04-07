@@ -29,13 +29,19 @@ export class DashboardComponent implements OnInit {
   completedTasks = [];
   theTask;
   filteredTasks = [];
+  date;
 
-  date = new FormControl(new Date());
 
   constructor(private http: HttpClient,
               private sessionService: SessionService ) { }
 
   ngOnInit() {
+    const tempDate = new Date();
+
+    tempDate.setHours(0, 0, 0, 0);
+
+    this.date = new FormControl(tempDate);
+
     this.getTasks();
 
     this.getDateTasks();
@@ -47,7 +53,7 @@ export class DashboardComponent implements OnInit {
   // }
 
   getDateTasks(): void {
-    console.log('the date: ', this.date.value);
+    console.log('the date: ', this.date);
 
     const headers = { Authorization: 'Bearer ' + this.sessionService.getToken()};
 
