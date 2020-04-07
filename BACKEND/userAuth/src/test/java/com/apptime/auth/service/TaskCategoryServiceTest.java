@@ -1,5 +1,6 @@
 package com.apptime.auth.service;
 
+import com.apptime.auth.model.Task;
 import com.apptime.auth.model.TaskCategory;
 import com.apptime.auth.repository.TaskCategoryRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * @author Qi Zhang
@@ -146,5 +148,80 @@ public class TaskCategoryServiceTest {
             assertTrue(categoryToOwner.containsKey(category.getName()));
             assertEquals(category.getOwner(), categoryToOwner.get(category.getName()));
         }
+    }
+
+    @Test
+    public void testGetAllAccessibleCategories() {
+        String username1 = UUID.randomUUID().toString();
+        String privateCategoryName1 = UUID.randomUUID().toString();
+        TaskCategory privateCategory1 = new TaskCategory(privateCategoryName1, username1, false);
+        repository.save(privateCategory1);
+
+        String publicCategoryName1 = UUID.randomUUID().toString();
+        TaskCategory publicCategory1 = new TaskCategory(publicCategoryName1, username1, true);
+        repository.save(publicCategory1);
+
+        String username2 = UUID.randomUUID().toString();
+        String privateCategoryName2 = UUID.randomUUID().toString();
+        TaskCategory privateCategory2 = new TaskCategory(privateCategoryName2, username2, false);
+        repository.save(privateCategory2);
+
+        String publicCategoryName2 = UUID.randomUUID().toString();
+        TaskCategory publicCategory2 = new TaskCategory(publicCategoryName2, username2, true);
+        repository.save(publicCategory2);
+
+        Collection<TaskCategory> categoriesForUsername1 = service.getAllAccessibleCategories(username1);
+        assertNotNull(categoriesForUsername1);
+        assertEquals(3, categoriesForUsername1.size());
+        categoriesForUsername1.forEach(category -> {
+            if (category.isPublic()) {
+                if (username1.equals(category.getOwner())) {
+                    assertEquals(publicCategoryName1, category.getName());
+                } else if (username2.equals(category.getOwner())) {
+                    assertEquals(publicCategoryName2, category.getName());
+                } else {
+                    fail();
+                }
+            } else {
+                assertEquals(username1, category.getOwner());
+                assertEquals(privateCategoryName1, category.getName());
+            }
+        });
+
+        Collection<TaskCategory> categoriesForUsername2 = service.getAllAccessibleCategories(username2);
+        assertNotNull(categoriesForUsername2);
+        assertEquals(3, categoriesForUsername2.size());
+        categoriesForUsername2.forEach(category -> {
+            if (category.isPublic()) {
+                if (username1.equals(category.getOwner())) {
+                    assertEquals(publicCategoryName1, category.getName());
+                } else if (username2.equals(category.getOwner())) {
+                    assertEquals(publicCategoryName2, category.getName());
+                } else {
+                    fail();
+                }
+            } else {
+                assertEquals(username2, category.getOwner());
+                assertEquals(privateCategoryName2, category.getName());
+            }
+        });
+
+        String username3 = UUID.randomUUID().toString();
+        Collection<TaskCategory> categoriesForUsername3 = service.getAllAccessibleCategories(username3);
+        assertNotNull(categoriesForUsername3);
+        assertEquals(2, categoriesForUsername3.size());
+        categoriesForUsername3.forEach(category -> {
+            if (category.isPublic()) {
+                if (username1.equals(category.getOwner())) {
+                    assertEquals(publicCategoryName1, category.getName());
+                } else if (username2.equals(category.getOwner())) {
+                    assertEquals(publicCategoryName2, category.getName());
+                } else {
+                    fail();
+                }
+            } else {
+                fail();
+            }
+        });
     }
 }
