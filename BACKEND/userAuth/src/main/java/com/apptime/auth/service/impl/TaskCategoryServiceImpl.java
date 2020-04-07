@@ -53,4 +53,12 @@ public class TaskCategoryServiceImpl implements TaskCategoryService {
     public Collection<TaskCategory> getAllPublicCategories() {
         return taskCategoryRepository.findByIsPublic(true);
     }
+
+    @Override
+    public Collection<TaskCategory> getAllAccessibleCategories(String owner) {
+        if (owner == null) {
+            return Collections.emptyList();
+        }
+        return taskCategoryRepository.findAllAccessibleCategories(owner);
+    }
 }
