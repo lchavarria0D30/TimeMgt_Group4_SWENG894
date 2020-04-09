@@ -13,4 +13,5 @@ public interface TaskCategoryService {
     TaskCategory createCategory(String name, String owner, boolean isPublic);
     Collection<TaskCategory> getCategoriesByOwner(String owner);
     Collection<TaskCategory> getAllPublicCategories();
+    Collection<TaskCategory> getAllAccessibleCategories(String owner);
 }
