@@ -75,6 +75,16 @@ public class TaskCategoryController extends AbstractionAuthenticationController 
         return new ResponseEntity<>(Category.parse(categoryService.getAllPublicCategories()), HttpStatus.OK);
     }
 
+    @GetMapping
+    public ResponseEntity<Collection<Category>> getAllAccessibleCategories(Authentication authentication) {
+        String username = getUsername(authentication);
+        if (username == null) {
+            // wrong username
+            return buildErrorResponse(HttpStatus.UNAUTHORIZED);
+        }
+        return new ResponseEntity<>(Category.parse(categoryService.getAllAccessibleCategories(username)), HttpStatus.OK);
+    }
+
     @PostMapping(value = "/public")
     public ResponseEntity<Category> createPublicCategory(@RequestBody Category category, Authentication authentication) {
         authentication = getAuthentication(authentication);

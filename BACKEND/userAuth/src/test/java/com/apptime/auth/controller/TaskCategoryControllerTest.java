@@ -110,6 +110,86 @@ public class TaskCategoryControllerTest extends AbstractControllerTest {
 
     @Test
     @SuppressWarnings("unchecked")
+    public void testGetAllAccessibleCategories() throws Exception {
+        mockAuthentication();
+
+        String username1 = UUID.randomUUID().toString();
+        String privateCategoryName1 = UUID.randomUUID().toString();
+        categoryRepository.save(new TaskCategory(privateCategoryName1, username1, false));
+
+        ResultActions actions = mockMvc.perform(MockMvcRequestBuilders.get("/category")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+        MvcResult result = actions.andReturn();
+        String content = result.getResponse().getContentAsString();
+        ObjectMapper mapper = new ObjectMapper();
+        List<Map<String, Object>> list = mapper.readValue(content, List.class);
+        assertTrue(list.isEmpty());
+
+        String publicCategoryName1 = UUID.randomUUID().toString();
+        categoryRepository.save(new TaskCategory(publicCategoryName1, username1, true));
+
+        actions = mockMvc.perform(MockMvcRequestBuilders.get("/category")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+        result = actions.andReturn();
+        content = result.getResponse().getContentAsString();
+        mapper = new ObjectMapper();
+        list = mapper.readValue(content, List.class);
+        assertFalse(list.isEmpty());
+        assertEquals(1, list.size());
+        Map<String, Object> category = list.iterator().next();
+        assertEquals(publicCategoryName1, category.get("name"));
+        assertTrue((Boolean) category.get("public"));
+
+        // create own private
+        String privateCategoryName2 = UUID.randomUUID().toString();
+        categoryRepository.save(new TaskCategory(privateCategoryName2, USERNAME, false));
+        actions = mockMvc.perform(MockMvcRequestBuilders.get("/category")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+        result = actions.andReturn();
+        content = result.getResponse().getContentAsString();
+        mapper = new ObjectMapper();
+        list = mapper.readValue(content, List.class);
+        assertFalse(list.isEmpty());
+        assertEquals(2, list.size());
+        for (Map<String, Object> map : list) {
+            boolean isPublic = (Boolean) map.get("public");
+            String name = (String) map.get("name");
+            if (isPublic) {
+                assertEquals(publicCategoryName1, name);
+            } else {
+                assertEquals(privateCategoryName2, name);
+            }
+        }
+
+        // create own public
+        String publicCategoryName2 = UUID.randomUUID().toString();
+        categoryRepository.save(new TaskCategory(publicCategoryName2, USERNAME, true));
+        actions = mockMvc.perform(MockMvcRequestBuilders.get("/category")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+        result = actions.andReturn();
+        content = result.getResponse().getContentAsString();
+        System.err.println(content);
+        mapper = new ObjectMapper();
+        list = mapper.readValue(content, List.class);
+        assertFalse(list.isEmpty());
+        assertEquals(3, list.size());
+        for (Map<String, Object> map : list) {
+            boolean isPublic = (Boolean) map.get("public");
+            String name = (String) map.get("name");
+            if (isPublic) {
+                assertTrue(publicCategoryName1.equals(name) || publicCategoryName2.equals(name));
+            } else {
+                assertEquals(privateCategoryName2, name);
+            }
+        }
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
     public void testCreatePublicCategory() throws Exception {
         Authentication authentication = new Authentication() {
             @Override

@@ -75,4 +75,14 @@ public class TaskCategory {
     public int hashCode() {
         return Objects.hash(getId(), getOwner(), getName(), isPublic());
     }
+
+    @Override
+    public String toString() {
+        return "TaskCategory{" +
+                "id=" + id +
+                ", owner='" + owner + '\'' +
+                ", name='" + name + '\'' +
+                ", isPublic=" + isPublic +
+                '}';
+    }
 }
