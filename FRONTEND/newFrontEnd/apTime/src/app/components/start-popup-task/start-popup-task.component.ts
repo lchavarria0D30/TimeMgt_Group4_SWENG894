@@ -85,20 +85,13 @@ export class StartPopupTaskComponent implements OnInit {
   }
 
   getCategory(): void {
+
     this.token = this.sessionService.getToken();
 
     const headers = { Authorization: 'Bearer ' + this.token
     };
 
-    this.http.get('http://localhost:8001/category/mine', { headers }).subscribe({
-      next: data => {
-        this.categories = this.categories.concat(data)
-        console.log(this.categories);
-      },
-      error: error => console.error('There was an error!', error)
-    });
-
-    this.http.get('http://localhost:8001/category/public', { headers }).subscribe({
+    this.http.get('http://localhost:8001/category/', { headers }).subscribe({
       next: data => {
         this.categories = this.categories.concat(data);
       },
