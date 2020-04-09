@@ -1,11 +1,4 @@
-/**
- *
- * Author: Yanisse
- * Jira Task: TMGP4-29
- * Description: The component code for the create task dialog box. The users inputs all the data associated to the task
- * to be created.
- *
- **/
+
 
 import {Component, Inject, OnInit} from '@angular/core';
 import {FormControl, Validators} from '@angular/forms';

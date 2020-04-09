@@ -59,10 +59,6 @@ describe('DashboardComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should selectedTask', () => {
-    expect(component.selectedTask).toBeTruthy();
-  });
-
   it('should getDateTasks', () => {
     expect(component.getDateTasks).toBeTruthy();
   });

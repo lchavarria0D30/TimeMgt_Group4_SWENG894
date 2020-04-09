@@ -14,28 +14,34 @@ import {RouterTestingModule} from '@angular/router/testing';
 import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TasksComponent } from './tasks.component';
+import {MatDialog} from '@angular/material/dialog';
+
 import {
   MatFormFieldModule,
   MatInputModule,
   MatDialogModule,
   MatDialogRef,
+  MatMenuModule,
   MAT_DIALOG_DATA,
-  MatButtonModule,
-  MatRadioModule,
   MatSelectModule
 } from '@angular/material';
+import {EMPTY} from 'rxjs';
+import {ConstructorDepErrorKind} from "@angular/compiler-cli/src/ngtsc/annotations/src/util";
+
 
 
 describe('TasksComponent', () => {
   let component: TasksComponent;
   let fixture: ComponentFixture<TasksComponent>;
 
+
   beforeEach(async(() => {
     TestBed.resetTestEnvironment();
     TestBed.initTestEnvironment(BrowserDynamicTestingModule,
         platformBrowserDynamicTesting());
     TestBed.configureTestingModule({
-      imports: [ HttpClientModule, BrowserAnimationsModule,
+
+      imports: [HttpClientModule, BrowserAnimationsModule,
         RouterTestingModule.withRoutes([]),
         MatIconModule,
         MatSelectModule,
@@ -43,15 +49,16 @@ describe('TasksComponent', () => {
         MatFormFieldModule,
         MatInputModule,
         MatDialogModule,
+        MatMenuModule
       ],
       providers: [AmplifyService, HttpClient, {
-        provide: MatDialogRef,
-        useValue: {}},
-        { provide: MAT_DIALOG_DATA, useValue: {}}],
+        provide: MatDialogRef, MatDialog, useValue: {}
+      },
+        {provide: MAT_DIALOG_DATA, useValue: []}],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
-      declarations: [ TasksComponent ]
+      declarations: [TasksComponent],
     })
-    .compileComponents();
+        .compileComponents();
   }));
 
   beforeEach(() => {
@@ -64,16 +71,49 @@ describe('TasksComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should', async(() => {
-    spyOn(component, 'openDialog');
-    let button = fixture.debugElement.nativeElement.querySelector('button');
-    button.click();
+  it('should openDialog New Test', () => {
+    expect(component.openDialog).toBeTruthy();
+  });
 
-    fixture.whenStable().then(() => {
-      expect(component.openDialog).toHaveBeenCalled();
-    });
+  it('should openDialog New Test', () => {
+    const openDialogSpy = spyOn(component.dialog, 'open')
+        .and
+        .returnValue({afterClosed: () => EMPTY} as any);
+    component.openDialog();
+    expect(openDialogSpy).toHaveBeenCalled();
+  });
 
-  }));
+  it('should openDeleteDialog New Test', () => {
+    const openDialogSpy = spyOn(component.dialog, 'open')
+        .and
+        .returnValue({afterClosed: () => EMPTY} as any);
+    component.openDeleteDialog(1, 'TestTask');
+    expect(openDialogSpy).toHaveBeenCalled();
+  });
+
+  it('should openConfirmDialog New Test', () => {
+    const openDialogSpy = spyOn(component.dialog, 'open')
+        .and
+        .returnValue({afterClosed: () => EMPTY} as any);
+    component.openConfirmDialog(1, 'TestTrue', true, );
+    expect(openDialogSpy).toHaveBeenCalled();
+  });
+
+  it('should openStartDialog New Test', () => {
+    const openDialogSpy = spyOn(component.dialog, 'open')
+        .and
+        .returnValue({afterClosed: () => EMPTY} as any);
+    component.openStartDialog(1, 'TestTask');
+    expect(openDialogSpy).toHaveBeenCalled();
+  });
+
+  it('should openStartPopUpDialog New Test', () => {
+    const openDialogSpy = spyOn(component.dialog, 'open')
+        .and
+        .returnValue({afterClosed: () => EMPTY} as any);
+    component.openStartPopUpDialog(1, 'TestTask');
+    expect(openDialogSpy).toHaveBeenCalled();
+  });
 
   it('should be Defined openDialog', async(() => {
     spyOn(component, 'openDialog').and.callThrough();
@@ -82,4 +122,6 @@ describe('TasksComponent', () => {
       expect(component.openDialog).toHaveBeenCalledTimes(0);
     });
   }));
+
+
 });

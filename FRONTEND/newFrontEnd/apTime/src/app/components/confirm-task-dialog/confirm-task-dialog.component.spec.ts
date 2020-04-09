@@ -14,6 +14,7 @@ import {RouterTestingModule} from '@angular/router/testing';
 import {CUSTOM_ELEMENTS_SCHEMA, DebugElement} from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ConfirmTaskDialogComponent } from './confirm-task-dialog.component';
+import {MatDialog} from '@angular/material/dialog';
 import {
   MatFormFieldModule,
   MatInputModule,
@@ -26,6 +27,7 @@ import {
 } from '@angular/material';
 import {By} from "@angular/platform-browser";
 import {element} from "protractor";
+import {EMPTY} from "rxjs";
 
 describe('ConfirmTaskDialogComponent', () => {
   let component: ConfirmTaskDialogComponent;
@@ -47,7 +49,7 @@ describe('ConfirmTaskDialogComponent', () => {
         MatDialogModule,
       ],
       providers: [AmplifyService, HttpClient, {
-        provide: MatDialogRef,
+        provide: MatDialogRef, MatDialog,
         useValue: {}
       },
         {provide: MAT_DIALOG_DATA, useValue: {}}],
@@ -126,23 +128,6 @@ describe('ConfirmTaskDialogComponent', () => {
     fixture.detectChanges();
     expect(testComp.pauseTask(15)).toEqual(component.pauseTask(15));
   });
-/**
-  it('testing line coverage onPauseClick() ', async(() => {
-    const never = null;
-    const pauseFun = spyOn(component.onPauseClick(), 'pauseTask');
-    component.onPauseClick();
-    fixture.detectChanges();
 
-    expect(pauseFun).toHaveBeenCalled();
-    expect(pauseFun).toHaveBeenCalledWith(close());
-  }));
-
-
-  it('should enable Pause Button', () => {
-    fixture.detectChanges();
-    const button = fixture.debugElement.query(By.css('button'));
-    expect(button.nativeElement.disabled).toBeFalsy();
-    });
- */
   });
 

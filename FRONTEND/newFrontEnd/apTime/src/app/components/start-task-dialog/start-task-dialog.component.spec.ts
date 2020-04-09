@@ -4,14 +4,14 @@
  *
  *  Unit Test - Frontend
  */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, fakeAsync, TestBed} from '@angular/core/testing';
 import { MatIconModule} from '@angular/material/icon';
 import {CustomMaterialModule} from '../../modules/material.module';
 import {HttpClient, HttpClientModule} from '@angular/common/http';
 import {AmplifyService} from 'aws-amplify-angular';
 import { BrowserDynamicTestingModule, platformBrowserDynamicTesting } from '@angular/platform-browser-dynamic/testing';
 import {RouterTestingModule} from '@angular/router/testing';
-import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
+import {CUSTOM_ELEMENTS_SCHEMA, Input} from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { StartTaskDialogComponent } from './start-task-dialog.component';
 import {
@@ -24,11 +24,24 @@ import {
   MatRadioModule,
   MatSelectModule
 } from '@angular/material';
-import {NotificationsServiceService} from "../notification";
+import {NotificationsServiceService} from '../notification';
+import {EMPTY} from 'rxjs';
+import {NotificationsComponent} from '../notification/notifications/notifications.component';
+import any = jasmine.any;
+
+class MockStartComponent {
+  public dialogRef = any;
+
+  onNoClick(): void {
+    this.dialogRef.call(null);
+  }
+}
 
 describe('StartTaskDialogComponent', () => {
   let component: StartTaskDialogComponent;
   let fixture: ComponentFixture<StartTaskDialogComponent>;
+  let start: MockStartComponent;
+
 
   beforeEach(async(() => {
     TestBed.resetTestEnvironment();
@@ -72,11 +85,17 @@ describe('StartTaskDialogComponent', () => {
     });
   }));
 
-  it('should be Defined onYesClick', async(() => {
+  it('should be Defined onYesClick', fakeAsync(() => {
     spyOn(component, 'onYesClick').and.callThrough();
     fixture.whenStable().then(() => {
       expect(component.onYesClick).toBeDefined();
       expect(component.onYesClick).toHaveBeenCalledTimes(0);
     });
   }));
+
+  it('Test onYesClick', () => {
+    const mockStart = new MockStartComponent();
+    const spy = spyOnAllFunctions(component.dialogRef).and.returnValue(null);
+    expect(spy).toBeTruthy();
+  });
 });

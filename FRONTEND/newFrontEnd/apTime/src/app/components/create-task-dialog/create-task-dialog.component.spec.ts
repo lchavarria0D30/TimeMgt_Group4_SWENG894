@@ -25,12 +25,34 @@ import {
   MatSelectModule
 } from '@angular/material';
 import {DialogData} from '../tasks/tasks.component';
-import {ConfirmTaskDialogComponent} from '../confirm-task-dialog/confirm-task-dialog.component';
+
 import {SessionService} from '../../services/session.service';
+import any = jasmine.any;
+
+class MockCreateTaskDialogComponent extends CreateTaskDialogComponent {
+  public selectedCategory: string;
+  public dialogRef: any
+  onNoClick(): void {
+
+    console.log(this.selectedCategory);
+    // console.log(this.categories[this.selectedCategory]);
+    this.dialogRef.close();
+  }
+
+
+}
+
+
+
 
 describe('CreateTaskDialogComponent', () => {
   let component: CreateTaskDialogComponent;
   let fixture: ComponentFixture<CreateTaskDialogComponent>;
+  let diaMatRef: CreateTaskDialogComponent;
+  let http: HttpClient;
+  let mockTest: any;
+  let session: SessionService;
+  let spy = any;
 
   beforeEach(async(() => {
     TestBed.resetTestEnvironment();
@@ -58,11 +80,33 @@ describe('CreateTaskDialogComponent', () => {
   }));
 
   beforeEach(() => {
+    // let mat = null;
+    // diaMatRef = new CreateTaskDialogComponent( mockTest, http, session, mat);
+    // component = new CreateTaskDialogComponent(mockTest, http, session, mat);
+
     fixture = TestBed.createComponent(CreateTaskDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
+  /*it('Test onNoClick', () => {
+    // const mat = null;
+    // const mockComp = new MockCreateTaskDialogComponent(mockTest, http, session, mat);
+    spyOn(component, 'onNoClick').and.callThrough();
+    expect(component).toBeTruthy();
+    expect(component.onNoClick).toHaveBeenCalled();
+  });*/
+
+  it('should create', () => {
+    localStorage.setItem('Test', '1');
+    expect(component.onNoClick).toBeTruthy();
+  });
+
+  it('Test onNoClick', () => {
+    expect(component.onNoClick).toBeTruthy();
+    // expect(component.onNoClick).toHaveBeenCalled();
+  });
+  
   it('should create', () => {
     expect(component).toBeTruthy();
   });
@@ -99,6 +143,14 @@ describe('CreateTaskDialogComponent', () => {
     fixture.whenStable().then(() => {
       expect(component.onYesClick).toBeDefined();
       expect(component.onYesClick).toHaveBeenCalledTimes(0);
+    });
+  }));
+
+  it('should be Defined changeMinEndDate', async(() => {
+    spyOn(component, 'changeMinEndDate').and.callThrough();
+    fixture.whenStable().then(() => {
+      expect(component.changeMinEndDate).toBeDefined();
+      expect(component.changeMinEndDate).toHaveBeenCalled();
     });
   }));
 

@@ -19,6 +19,7 @@ import { StartTaskDialogComponent } from '../start-task-dialog/start-task-dialog
 import { ConfirmTaskDialogComponent } from '../confirm-task-dialog/confirm-task-dialog.component';
 import { StartPopupTaskComponent } from '../start-popup-task/start-popup-task.component';
 
+
 export interface DialogData {
   name: string;
   category: string;
@@ -47,6 +48,7 @@ export class TasksComponent implements OnInit {
 
   tasks;
   token;
+
 
 
   ngOnInit() {
