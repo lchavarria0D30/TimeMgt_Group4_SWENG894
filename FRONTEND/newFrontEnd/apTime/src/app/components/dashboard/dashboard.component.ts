@@ -11,6 +11,10 @@ import { SessionService } from '../../services/session.service';
 import {HttpClient} from '@angular/common/http';
 import {FormControl} from '@angular/forms';
 import {filter} from 'rxjs/operators';
+import {CreateTaskDialogComponent} from "../create-task-dialog/create-task-dialog.component";
+import {MatDialog} from "@angular/material/dialog";
+import {StartPopupTaskComponent} from "../start-popup-task/start-popup-task.component";
+import {StartTaskDialogComponent} from "../start-task-dialog/start-task-dialog.component";
 
 
 @Component({
@@ -32,7 +36,8 @@ export class DashboardComponent implements OnInit {
   date;
 
 
-  constructor(private http: HttpClient,
+  constructor(public dialog: MatDialog,
+              private http: HttpClient,
               private sessionService: SessionService ) { }
 
   ngOnInit() {
@@ -48,9 +53,51 @@ export class DashboardComponent implements OnInit {
 
   }
 
-  // selectedTask(i: number): void {
-  //   this.theTask = this.filteredTasks[i];
-  // }
+  openDialog(): void {
+    const dialogRef = this.dialog.open(
+        CreateTaskDialogComponent, {
+          data: {
+            token: this.token
+          }
+        });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The create dialog was closed');
+      this.getTasks();
+      this.getDateTasks();
+    });
+  }
+
+  openStartPopUpDialog(i: number, name: string): void {
+    const dialogRef = this.dialog.open(
+        StartPopupTaskComponent, {
+          data: {
+            id: i,
+            name
+          }
+        });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The start popup task dialog was closed');
+      this.openStartDialog(result.id, result.name);
+    });
+  }
+
+  openStartDialog(i: number, name: string): void {
+    const dialogRef = this.dialog.open(
+        StartTaskDialogComponent, {
+          data: {
+            id: i,
+            name
+          }
+        });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The start task dialog was closed');
+      this.getTasks();
+      this.getDateTasks();
+    });
+  }
 
   getDateTasks(): void {
     console.log('the date: ', this.date);
