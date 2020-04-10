@@ -38,7 +38,13 @@ export class TaskCategoryComponent implements OnInit {
   headers = {
     Authorization: 'Bearer'
   };
-  token: string = '';
+  token = '';
+
+  categories;
+
+  publicCats = [];
+  privateCats = [];
+
   constructor(
     private location: Location,
     private catSevice: CategoryService,
@@ -64,6 +70,9 @@ export class TaskCategoryComponent implements OnInit {
       isPublic: new FormControl(false, [])
 
     });
+
+    this.getCategories();
+
   }
 
   public hasError = (controlName: string, errorName: string) => {
@@ -80,6 +89,23 @@ export class TaskCategoryComponent implements OnInit {
     }
   }
 
+  private getCategories() {
+    this.catSevice.getCategories(this.sessionService.getToken()).subscribe({
+      next: data => {
+        this.categories = data;
+        this.publicCats = this.categories.filter(
+            cats => cats.public === true
+        );
+        this.privateCats = this.categories.filter(
+            cats => cats.public === false
+        );
+      },
+      error: error => {
+        console.error('There was an error!', error);
+      }
+    });
+  }
+
   private createCategoryOb = categoryFormValue => {
     this.cat = {
       name: categoryFormValue.name,
@@ -88,8 +114,8 @@ export class TaskCategoryComponent implements OnInit {
     console.log(this.cat.isPublic);
 
     this.createCat();
-  };
-  //create Category
+  }
+  // create Category
   public createCat = function() {
     const headers = {
       Authorization: 'Bearer ' + this.sessionService.getToken(),
