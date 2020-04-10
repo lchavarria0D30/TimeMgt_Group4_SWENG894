@@ -29,19 +29,13 @@ import {EMPTY} from 'rxjs';
 import {NotificationsComponent} from '../notification/notifications/notifications.component';
 import any = jasmine.any;
 
-class MockStartComponent {
-  public dialogRef = any;
-
-  onNoClick(): void {
-    this.dialogRef.call(null);
-  }
-}
-
 describe('StartTaskDialogComponent', () => {
   let component: StartTaskDialogComponent;
   let fixture: ComponentFixture<StartTaskDialogComponent>;
-  let start: MockStartComponent;
 
+  const dialogMock = {
+    close: () =>{ }
+  };
 
   beforeEach(async(() => {
     TestBed.resetTestEnvironment();
@@ -59,7 +53,7 @@ describe('StartTaskDialogComponent', () => {
       ],
       providers: [AmplifyService, HttpClient, {
         provide: MatDialogRef,
-        useValue: {}},
+        useValue: dialogMock},
         { provide: MAT_DIALOG_DATA, useValue: {}}],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       declarations: [ StartTaskDialogComponent ]
@@ -73,11 +67,11 @@ describe('StartTaskDialogComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should be Defined onNoClick', async(() => {
+  it('should define and call -  onNoClick', async(() => {
     spyOn(component, 'onNoClick').and.callThrough();
     fixture.whenStable().then(() => {
       expect(component.onNoClick).toBeDefined();
@@ -85,17 +79,88 @@ describe('StartTaskDialogComponent', () => {
     });
   }));
 
-  it('should be Defined onYesClick', fakeAsync(() => {
-    spyOn(component, 'onYesClick').and.callThrough();
+  it('Test onNoClick DialogRef - Close', () => {
+    let spy = spyOn(component.dialogRef, 'close').and.callThrough();
+    component.onNoClick();
+    expect(spy).toHaveBeenCalled();
+    // add expects to test that onNoClick does what it is supposed to
+  });
+
+  it('should call onYesClick', async(() => {
+    let spy = spyOn(component, 'onYesClick').and.callThrough();
+    component.onYesClick();
     fixture.whenStable().then(() => {
-      expect(component.onYesClick).toBeDefined();
-      expect(component.onYesClick).toHaveBeenCalledTimes(0);
+      expect(spy).toBeDefined();
+      expect(spy).toHaveBeenCalled();
     });
   }));
 
-  it('Test onYesClick', () => {
-    const mockStart = new MockStartComponent();
-    const spy = spyOnAllFunctions(component.dialogRef).and.returnValue(null);
-    expect(spy).toBeTruthy();
-  });
-});
+  it('should call onCompleteClick', async(() => {
+    let num = 1;
+    let spy = spyOn(component, 'onCompleteClick').and.callThrough();
+    component.onCompleteClick(num);
+    fixture.whenStable().then(() => {
+      expect(spy).toBeDefined();
+      expect(spy).toHaveBeenCalled();
+    });
+  }));
+
+  it('should call onSuspendClick', async(() => {
+    let num = 1;
+    let spy = spyOn(component, 'onSuspendClick').and.callThrough();
+    component.onSuspendClick(num);
+    fixture.whenStable().then(() => {
+      expect(spy).toBeDefined();
+      expect(spy).toHaveBeenCalled();
+    });
+  }));
+
+  it('should call startTask', async(() => {
+    let num = 1;
+    let spy = spyOn(component, 'startTask').and.callThrough();
+    component.startTask(num);
+    fixture.whenStable().then(() => {
+      expect(spy).toBeDefined();
+      expect(spy).toHaveBeenCalled();
+    });
+  }));
+
+  it('should call suspendTask', async(() => {
+    let num = 1;
+    let spy = spyOn(component, 'suspendTask').and.callThrough();
+    component.suspendTask(num);
+    fixture.whenStable().then(() => {
+      expect(spy).toBeDefined();
+      expect(spy).toHaveBeenCalled();
+    });
+  }));
+
+  it('should call completeTask', async(() => {
+    let num = 1;
+    let spy = spyOn(component, 'completeTask').and.callThrough();
+    component.completeTask(num);
+    fixture.whenStable().then(() => {
+      expect(spy).toBeDefined();
+      expect(spy).toHaveBeenCalled();
+    });
+  }));
+    /*  it('should close dialog when onNoClick called', async(() => {
+        spyOn(component, 'onNoClick').and.callThrough();
+        fixture.whenStable().then(() => {
+          console.log('should close dialog when onNoClick called');
+          console.log('component.dialogRef', component.dialogRef);
+          component.onNoClick();
+          expect(component.onNoClick).toBeDefined();
+          expect(component.onNoClick).toHaveBeenCalledTimes(1);
+        });
+      }));*/
+
+      it('should be Defined onYesClick', fakeAsync(() => {
+        spyOn(component, 'onYesClick').and.callThrough();
+        fixture.whenStable().then(() => {
+          expect(component.onYesClick).toBeDefined();
+          expect(component.onYesClick).toHaveBeenCalledTimes(0);
+        });
+      }));
+
+    });

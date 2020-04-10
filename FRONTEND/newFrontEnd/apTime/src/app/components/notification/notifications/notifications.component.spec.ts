@@ -33,45 +33,13 @@ import {Router} from '@angular/router';
 import any = jasmine.any;
 import {EMPTY} from "rxjs";
 
-
-class MockNotificationsComponent extends NotificationsComponent {
-  public notes: any;
-  public dialogRef: any;
-  public filter: any;
-  @Input() fade: boolean;
-
-  removeNote(notes) {
-
-    if (this.fade) {
-      // fade out alert
-      this.notes.find(x => x === alert).fade = true;
-
-      // remove alert after faded out
-      setTimeout(() => {
-        this.notes = this.notes.filter(x => x !== alert);
-      }, 2500);
-    } else {
-      // remove alert
-      this.notes = this.notes.filter(x => x !== alert);
-    }
-  }
-}
-
 describe('NotificationsComponent', () => {
   let component: NotificationsComponent;
   let fixture: ComponentFixture<NotificationsComponent>;
   let de: DebugElement;
-  let cancelButton: DebugElement;
-  let cancelMessage: NotificationsComponent;
-  let route: Router;
-  let note: NotificationsServiceService;
-  let http: HttpClient;
-  let session: SessionService;
-  let mock: MockNotificationsComponent;
+
 
   beforeEach(async(() => {
-    mock = new MockNotificationsComponent(route, note, http, session);
-    cancelMessage = new NotificationsComponent( route, note, http, session);
     TestBed.resetTestEnvironment();
     TestBed.initTestEnvironment(BrowserDynamicTestingModule,
         platformBrowserDynamicTesting());
@@ -100,7 +68,6 @@ describe('NotificationsComponent', () => {
     component = fixture.componentInstance;
     fixture.detectChanges();
 
-    cancelButton = fixture.debugElement.query(By.css('mat-raised-button'));
   });
 
   it('should create', () => {
@@ -112,21 +79,43 @@ describe('NotificationsComponent', () => {
     expect(component.ngOnInit).toBeTruthy();
   });
 
-  it('Test Mock Remove Note', () => {
-        const NoteTest = any;
-        spyOn(mock, 'removeNote').and.returnValue(undefined);
-        expect(mock.removeNote(NoteTest)).toBeTruthy();
+  it('should be defined and called - cancel', async(() => {
+    const note: Notification = new Notification();
+    let spy = spyOn(component, 'cancel').and.callThrough();
+    component.cancel(note);
+    fixture.whenStable().then(() => {
+      expect(spy).toBeDefined();
+      expect(spy).toHaveBeenCalled();
+    });
+  }));
 
-  });
+  it('should be defined and called - snooze', async(() => {
+    const note: Notification = new Notification();
+    let spy = spyOn(component, 'snooze').and.callThrough();
+    component.snooze(note);
+    fixture.whenStable().then(() => {
+      expect(spy).toBeDefined();
+      expect(spy).toHaveBeenCalled();
+    });
+  }));
 
-  /*it('Test removeNote', () => {
-    const spy = spyOn(component.notes, 'find')
-        .and
-        .returnValue({afterClosed: () => EMPTY} as any);
-    // component.removeNote();
-    expect(spy).toHaveBeenCalled();
-  });
-  */
+  it('should be defined and called - cssClass', async(() => {
+    const note: Notification = new Notification();
+    let spy = spyOn(component, 'cssClass').and.callThrough();
+    component.cssClass(note);
+    fixture.whenStable().then(() => {
+      expect(spy).toBeDefined();
+      expect(spy).toHaveBeenCalled();
+    });
+  }));
 
+  it('should be defined and called - ngOnInit', async(() => {
+    let spy = spyOn(component, 'ngOnInit').and.callThrough();
+    component.ngOnInit();
+    fixture.whenStable().then(() => {
+      expect(spy).toBeDefined();
+      expect(spy).toHaveBeenCalled();
+    });
+  }));
 
 });
