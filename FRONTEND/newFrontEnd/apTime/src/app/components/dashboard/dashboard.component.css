@@ -1,11 +1,19 @@
 .fill-remaining-space {
     flex: 1 1 auto;
 }
+
+.custom-button{
+    right: 20px;
+    bottom: 10px;
+    left: auto;
+    position:fixed !important;
+}
+
 .label-color {
     color:#673AB7 !important;
 }
 
-.mat-icon {
+.mat-icon-not-found {
     transform: scale(4);
 }
 

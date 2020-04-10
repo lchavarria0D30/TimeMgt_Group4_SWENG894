@@ -40,7 +40,7 @@ Description: Template for the dashboard.
 
     <div *ngIf="filteredTasks.length < 1" fxLayout="column" fxLayoutAlign="space-around center">
         <p></p>
-        <mat-icon inline="true">sentiment_very_dissatisfied</mat-icon>
+        <mat-icon inline="true" class="mat-icon-not-found">sentiment_very_dissatisfied</mat-icon>
         <p></p>
         <p>There are no tasks for this date...</p>
     </div>
@@ -277,5 +277,20 @@ Description: Template for the dashboard.
         </div>
         <p></p>
     </div>
+
+    <button mat-fab color="primary" aria-label="New task"  class="custom-button"
+            [matMenuTriggerFor]="menu" aria-label="Task menu">
+        <mat-icon class="header-text">add</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)="openStartPopUpDialog()">
+            <mat-icon>assignment_late</mat-icon>
+            <span>PopUp Task</span>
+        </button>
+        <button mat-menu-item (click)="openDialog()">
+            <mat-icon>schedule</mat-icon>
+            <span>Schedule a Task</span>
+        </button>
+    </mat-menu>
 
 </div>
