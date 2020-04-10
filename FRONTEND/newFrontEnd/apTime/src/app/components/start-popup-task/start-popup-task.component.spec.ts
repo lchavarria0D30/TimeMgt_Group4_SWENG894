@@ -72,19 +72,19 @@ describe('StartPopupTaskComponent', () => {
 
   it('should call the service for getCategory - No Error', () => {
     expect(component.onNoClick).toBeTruthy();
-    const categoryMineRequest = httpMock.expectOne('http://localhost:8001/category/mine');
+    const categoryMineRequest = httpMock.expectOne('http://localhost:8001/category/');
     categoryMineRequest.flush([]);
-    const categoryPublicRequest = httpMock.expectOne('http://localhost:8001/category/public');
+   /* const categoryPublicRequest = httpMock.expectOne('http://localhost:8001/category/public');
     categoryPublicRequest.flush([]);
-    httpMock.verify();
+    httpMock.verify();*/
   });
 
   it('should call the service for getCategory - Error ', () => {
     expect(component.onNoClick).toBeTruthy();
-    const categoryMineRequest = httpMock.expectOne('http://localhost:8001/category/mine');
+    const categoryMineRequest = httpMock.expectOne('http://localhost:8001/category/');
     categoryMineRequest.error(new ErrorEvent('Generated testing error'));
-    const categoryPublicRequest = httpMock.expectOne('http://localhost:8001/category/public');
-    categoryPublicRequest.flush([]);
+/*    const categoryPublicRequest = httpMock.expectOne('http://localhost:8001/category/public');
+    categoryPublicRequest.flush([]);*/
     httpMock.verify();
   });
 

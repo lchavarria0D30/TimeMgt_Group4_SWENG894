@@ -122,19 +122,13 @@ export class CreateTaskDialogComponent implements OnInit {
     const headers = { Authorization: 'Bearer ' + this.token
     };
 
-    this.http.get('http://localhost:8001/category/mine', { headers }).subscribe({
+    this.http.get('http://localhost:8001/category/', { headers }).subscribe({
       next: data => {
         this.categories = this.categories.concat(data);
       },
       error: error => console.error('There was an error!', error)
     });
 
-    this.http.get('http://localhost:8001/category/public', { headers }).subscribe({
-      next: data => {
-        this.categories = this.categories.concat(data);
-      },
-      error: error => console.error('There was an error!', error)
-    });
   }
 
   changeMinEndDate() {

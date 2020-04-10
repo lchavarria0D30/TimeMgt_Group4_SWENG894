@@ -16,6 +16,7 @@ import {
   MAT_DIALOG_DATA,
   MatButtonModule,
   MatRadioModule,
+  MatMenuModule,
   MatSelectModule
 } from '@angular/material';
 import { DashboardComponent } from './dashboard.component';
@@ -38,6 +39,7 @@ describe('DashboardComponent', () => {
         MatFormFieldModule,
         MatInputModule,
         MatDialogModule,
+        MatMenuModule
       ],
       providers: [AmplifyService, HttpClient, {
         provide: MatDialogRef,
@@ -46,7 +48,7 @@ describe('DashboardComponent', () => {
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       declarations: [ DashboardComponent ]
     })
-    .compileComponents();
+        .compileComponents();
   }));
 
   beforeEach(() => {
@@ -59,6 +61,10 @@ describe('DashboardComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  // it('should selectedTask', () => {
+  //   expect(component.selectedTask).toBeTruthy();
+  // });
+
   it('should getDateTasks', () => {
     expect(component.getDateTasks).toBeTruthy();
   });
@@ -70,8 +76,8 @@ describe('DashboardComponent', () => {
   it('should be Defined getTasks', async(() => {
     spyOn(component, 'getTasks').and.callThrough();
     fixture.whenStable().then(() => {
-    expect(component.getTasks).toBeDefined();
-    expect(component.getTasks).toHaveBeenCalledTimes(0);
+      expect(component.getTasks).toBeDefined();
+      expect(component.getTasks).toHaveBeenCalledTimes(0);
     });
   }));
 

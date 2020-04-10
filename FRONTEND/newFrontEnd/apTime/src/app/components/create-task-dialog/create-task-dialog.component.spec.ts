@@ -74,19 +74,19 @@ describe('CreateTaskDialogComponent', () => {
 
   it('should create', () => {
     expect(component.onNoClick).toBeTruthy();
-    const categoryMineRequest = httpMock.expectOne('http://localhost:8001/category/mine');
+    const categoryMineRequest = httpMock.expectOne('http://localhost:8001/category/');
     categoryMineRequest.flush([]);
-    const categoryPublicRequest = httpMock.expectOne('http://localhost:8001/category/public');
-    categoryPublicRequest.flush([]);
+    /*const categoryPublicRequest = httpMock.expectOne('http://localhost:8001/category/public');
+    categoryPublicRequest.flush([]);*/
     httpMock.verify();
   });
 
   it('should have error for failed category requests', () => {
     expect(component.onNoClick).toBeTruthy();
-    const categoryMineRequest = httpMock.expectOne('http://localhost:8001/category/mine');
+    const categoryMineRequest = httpMock.expectOne('http://localhost:8001/category/');
     categoryMineRequest.error(new ErrorEvent('Generated testing error'));
-    const categoryPublicRequest = httpMock.expectOne('http://localhost:8001/category/public');
-    categoryPublicRequest.flush([]);
+    /*const categoryPublicRequest = httpMock.expectOne('http://localhost:8001/category/public');
+    categoryPublicRequest.flush([]);*/
     httpMock.verify();
   });
 
@@ -113,7 +113,7 @@ describe('CreateTaskDialogComponent', () => {
   it('should dateConversion', () => {
     let date = new Date();
     let time = '12:00PM';
-    component.dateConversion.call(time, date);
+    component.dateConversion(time, date);
     expect(component.dateConversion).toBeTruthy();
   });
 
@@ -122,15 +122,6 @@ describe('CreateTaskDialogComponent', () => {
     fixture.whenStable().then(() => {
       expect(component.onNoClick).toBeDefined();
       expect(component.onNoClick).toHaveBeenCalledTimes(0);
-    });
-  }));
-
-  it('should be Defined onYesClick', async(() => {
-    let spy = spyOn(component, 'onYesClick').and.callThrough();
-    component.onYesClick();
-    fixture.whenStable().then(() => {
-      // expect(spy).toBeDefined();
-      expect(spy).toHaveBeenCalled();
     });
   }));
 
@@ -154,8 +145,14 @@ describe('CreateTaskDialogComponent', () => {
     });
   }));
 
+  /*it('should be Defined onYesClick', async(() => {
+    let spy = spyOn(component, 'onYesClick').and.callThrough();
+    component.onYesClick();
+    fixture.whenStable().then(() => {
+      // expect(spy).toBeDefined();
+      expect(spy).toHaveBeenCalled();
+    });
+  }));*/
+
 });
-
-
-
 
