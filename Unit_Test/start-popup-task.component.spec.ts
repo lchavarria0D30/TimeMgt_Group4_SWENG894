@@ -1,18 +1,18 @@
-/** Linked Issue: TMGP4-29: Create Task
- *
- *  Author: Chavarria Leo
- *
- *  Unit Test - Frontend
- */
-import {async, ComponentFixture, getTestBed, TestBed} from '@angular/core/testing';
+import {async, ComponentFixture, fakeAsync, getTestBed, TestBed} from '@angular/core/testing';
 import { MatIconModule} from '@angular/material/icon';
-import { CreateTaskDialogComponent } from './create-task-dialog.component';
 import {CustomMaterialModule} from '../../modules/material.module';
 import {AmplifyService} from 'aws-amplify-angular';
 import { BrowserDynamicTestingModule, platformBrowserDynamicTesting } from '@angular/platform-browser-dynamic/testing';
 import {RouterTestingModule} from '@angular/router/testing';
 import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
+import { CreateTaskDialogComponent } from '../create-task-dialog/create-task-dialog.component';
+import { DeleteTaskDialogComponent } from '../delete-task-dialog/delete-task-dialog.component';
+import { EditTaskDialogComponent } from '../edit-task-dialog/edit-task-dialog.component';
+import { StartTaskDialogComponent } from '../start-task-dialog/start-task-dialog.component';
+import { ConfirmTaskDialogComponent } from '../confirm-task-dialog/confirm-task-dialog.component';
+import { StartPopupTaskComponent } from './start-popup-task.component';
 import {
   MatFormFieldModule,
   MatInputModule,
@@ -21,20 +21,13 @@ import {
   MAT_DIALOG_DATA,
   MatSelectModule
 } from '@angular/material';
-import {SessionService} from '../../services/session.service';
-import any = jasmine.any;
-import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
 
 
 
-describe('CreateTaskDialogComponent', () => {
-  let component: CreateTaskDialogComponent;
-  let fixture: ComponentFixture<CreateTaskDialogComponent>;
-  let diaMatRef: CreateTaskDialogComponent;
+describe('StartPopupTaskComponent', () => {
+  let component: StartPopupTaskComponent;
+  let fixture: ComponentFixture<StartPopupTaskComponent>;
   let httpMock: HttpTestingController;
-  let mockTest: any;
-  let session: SessionService;
-  let spy = any;
 
   const dialogMock = {
     close: () =>{ }
@@ -57,22 +50,27 @@ describe('CreateTaskDialogComponent', () => {
       ],
       providers: [AmplifyService, {
         provide: MatDialogRef,
-        useValue: dialogMock,},
+        useValue: dialogMock},
         { provide: MAT_DIALOG_DATA, useValue: {}}],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
-      declarations: [ CreateTaskDialogComponent, ]
+      declarations: [ StartPopupTaskComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CreateTaskDialogComponent);
+    fixture = TestBed.createComponent(StartPopupTaskComponent);
     component = fixture.componentInstance;
     httpMock = getTestBed().get(HttpTestingController);
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create Component', () => {
+    expect(component).toBeTruthy();
+  });
+
+
+  it('should call the service for getCategory - No Error', () => {
     expect(component.onNoClick).toBeTruthy();
     const categoryMineRequest = httpMock.expectOne('http://localhost:8001/category/mine');
     categoryMineRequest.flush([]);
@@ -81,7 +79,7 @@ describe('CreateTaskDialogComponent', () => {
     httpMock.verify();
   });
 
-  it('should have error for failed category requests', () => {
+  it('should call the service for getCategory - Error ', () => {
     expect(component.onNoClick).toBeTruthy();
     const categoryMineRequest = httpMock.expectOne('http://localhost:8001/category/mine');
     categoryMineRequest.error(new ErrorEvent('Generated testing error'));
@@ -96,62 +94,25 @@ describe('CreateTaskDialogComponent', () => {
     expect(spy).toHaveBeenCalled();
     // add expects to test that onNoClick does what it is supposed to
   });
-  
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
 
-  it('should onNoclick', () => {
-    component.onNoClick();
-    expect(component.onNoClick).toBeTruthy();
-  });
-
-  it('should onYesClick', () => {
-    expect(component.onYesClick).toBeTruthy();
-  });
-
-  it('should dateConversion', () => {
-    let date = new Date();
-    let time = '12:00PM';
-    component.dateConversion.call(time, date);
-    expect(component.dateConversion).toBeTruthy();
-  });
-
-  it('should be Defined onNoClick', async(() => {
-    spyOn(component, 'onNoClick').and.callThrough();
-    fixture.whenStable().then(() => {
-      expect(component.onNoClick).toBeDefined();
-      expect(component.onNoClick).toHaveBeenCalledTimes(0);
-    });
-  }));
-
-  it('should be Defined onYesClick', async(() => {
+  it('should call onYesClick', async(() => {
     let spy = spyOn(component, 'onYesClick').and.callThrough();
     component.onYesClick();
-    fixture.whenStable().then(() => {
-      // expect(spy).toBeDefined();
-      expect(spy).toHaveBeenCalled();
-    });
-  }));
-
-  it('should be Defined and Should be Called - changeMinEndDate', async(() => {
-    let spy = spyOn(component, 'changeMinEndDate').and.callThrough();
-    component.changeMinEndDate();
-    fixture.whenStable().then(() => {
-    expect(spy).toBeDefined();
-    expect(spy).toHaveBeenCalled();
-    });
-  }));
-
-  it('should be Defined and Should be Called - dateConversion', async(() => {
-    let date = new Date();
-    let time = '12:00PM';
-    let spy = spyOn(component, 'dateConversion').and.callThrough();
-    component.dateConversion(time, date);
     fixture.whenStable().then(() => {
       expect(spy).toBeDefined();
       expect(spy).toHaveBeenCalled();
     });
   }));
-
 });
+
+
+
+// Future Unit Test Implementation
+/*it('should call onYesClick: DialogRef - Close', () => {
+    let spy = spyOn(component.dialogRef, 'close').and.returnValue( );
+    component.onYesClick();
+    expect(spy).toHaveBeenCalled();
+    // add expects to test that onNoClick does what it is supposed to
+  });*/
+
+
