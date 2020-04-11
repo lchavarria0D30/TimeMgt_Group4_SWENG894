@@ -34,30 +34,6 @@ describe('EditTaskDialogComponent', () => {
   let component: EditTaskDialogComponent;
   let fixture: ComponentFixture<EditTaskDialogComponent>;
 
-  const data: DialogData = {
-    id : 1,
-    task : {
-      id: 1,
-      scheduledstart: '',
-      scheduledEnd: '',
-      categories: [{id: 1, name: 'name'}],
-    },
-    name: 'test',
-    category: undefined,
-    description: undefined,
-    ssDate: undefined,
-    ssTime: undefined,
-    seDate: undefined,
-    seTime: undefined,
-    asDate: undefined,
-    asTime: undefined,
-    aeDate: undefined,
-    aeTime: undefined,
-    number: undefined,
-    token: undefined,
-    isDone: undefined
-  }
-
   beforeEach(async(() => {
     TestBed.resetTestEnvironment();
     TestBed.initTestEnvironment(BrowserDynamicTestingModule,
@@ -77,11 +53,11 @@ describe('EditTaskDialogComponent', () => {
       providers: [AmplifyService, HttpClient, {
         provide: MatDialogRef,
         useValue: {}},
-        { provide: MAT_DIALOG_DATA, useValue: data}],
+        { provide: MAT_DIALOG_DATA, useValue: {}}],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       declarations: [ EditTaskDialogComponent ]
     })
-    .compileComponents();
+        .compileComponents();
   }));
 
   beforeEach(() => {
