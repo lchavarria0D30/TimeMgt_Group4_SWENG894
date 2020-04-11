@@ -9,6 +9,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Category } from '../components/task-category/Category';
+import {Auth} from "aws-amplify";
 
 @Injectable({
   providedIn: 'root'
@@ -18,5 +19,13 @@ export class CategoryService {
 
   public create(url, category: Category) {
     return this.http.put(url, category);
+  }
+
+  public getCategories(token: string) {
+
+    const headers = { Authorization: 'Bearer ' + token
+    };
+
+    return this.http.get('http://localhost:8001/category/', { headers });
   }
 }

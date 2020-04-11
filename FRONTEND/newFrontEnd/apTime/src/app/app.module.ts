@@ -6,7 +6,7 @@
  *
  **/
 
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule, Title } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -73,7 +73,7 @@ import { StartPopupTaskComponent } from './components/start-popup-task/start-pop
     CustomMaterialModule,
     NotificationModule
   ],
-  providers: [AmplifyService, CustomMaterialModule],
+  providers: [AmplifyService, CustomMaterialModule, Title],
   bootstrap: [AppComponent],
 
   entryComponents: [
