@@ -8,6 +8,7 @@ import { BrowserDynamicTestingModule, platformBrowserDynamicTesting } from '@ang
 import {RouterTestingModule} from '@angular/router/testing';
 import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 import {
   MatFormFieldModule,
   MatInputModule,
@@ -21,6 +22,7 @@ import {
 } from '@angular/material';
 import { DashboardComponent } from './dashboard.component';
 import {FormControl} from "@angular/forms";
+import {EMPTY} from "rxjs";
 
 describe('DashboardComponent', () => {
   let component: DashboardComponent;
@@ -48,7 +50,7 @@ describe('DashboardComponent', () => {
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       declarations: [ DashboardComponent ]
     })
-    .compileComponents();
+        .compileComponents();
   }));
 
   beforeEach(() => {
@@ -57,28 +59,61 @@ describe('DashboardComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create component', () => {
     expect(component).toBeTruthy();
   });
 
-  // it('should selectedTask', () => {
-  //   expect(component.selectedTask).toBeTruthy();
-  // });
-
-  it('should getDateTasks', () => {
-    expect(component.getDateTasks).toBeTruthy();
+  it('should call afterclosed for openDialog', () => {
+    const openSpy = spyOn(component.dialog, 'open')
+        .and
+        .returnValue({afterClosed: () => EMPTY} as any);
+    component.openDialog();
+    expect(openSpy).toHaveBeenCalled();
   });
 
-  it('should getTasks', () => {
-    expect(component.getTasks).toBeTruthy();
+  it('should call afterclosed for openStartDialog', () => {
+    const openStartSpy = spyOn(component.dialog, 'open')
+        .and
+        .returnValue({afterClosed: () => EMPTY} as any);
+    component.openStartDialog(1, 'TestTask');
+    expect(openStartSpy).toHaveBeenCalled();
   });
 
-  it('should be Defined getTasks', async(() => {
-    spyOn(component, 'getTasks').and.callThrough();
+  it('should call afterclosed for openStartPopUpDialog', () => {
+    const openStartPopSpy = spyOn(component.dialog, 'open')
+        .and
+        .returnValue({afterClosed: () => EMPTY} as any);
+    component.openStartPopUpDialog(1, 'TestTask');
+    expect(openStartPopSpy).toHaveBeenCalled();
+  });
+
+  it('should be defined and called - getTasks', async(() => {
+    let spy = spyOn(component, 'getTasks').and.callThrough();
+    component.getTasks();
     fixture.whenStable().then(() => {
-    expect(component.getTasks).toBeDefined();
-    expect(component.getTasks).toHaveBeenCalledTimes(0);
+      expect(spy).toBeDefined();
+      expect(spy).toHaveBeenCalled();
     });
   }));
 
+  it('should be defined and called - getDateTasks', async(() => {
+    let spy = spyOn(component, 'getDateTasks').and.callThrough();
+    component.getDateTasks();
+    fixture.whenStable().then(() => {
+      expect(spy).toBeDefined();
+      expect(spy).toHaveBeenCalled();
+    });
+  }));
 });
+
+
+/*
+it('should be defined and called - openStartDialog', async(() => {    let spy = spyOn(component, 'getDateTasks').and.callThrough();
+  let num = 1;
+  let name = "Test Task";
+  component.openStartDialog(num, name);
+  fixture.whenStable().then(() => {
+    expect(spy).toBeDefined();
+    expect(spy).toHaveBeenCalled();
+  });
+}));*/
