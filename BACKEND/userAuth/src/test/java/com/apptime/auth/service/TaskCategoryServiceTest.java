@@ -11,6 +11,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -153,20 +154,20 @@ public class TaskCategoryServiceTest {
     @Test
     public void testGetAllAccessibleCategories() {
         String username1 = UUID.randomUUID().toString();
-        String privateCategoryName1 = UUID.randomUUID().toString();
+        String privateCategoryName1 = "d_name";
         TaskCategory privateCategory1 = new TaskCategory(privateCategoryName1, username1, false);
         repository.save(privateCategory1);
 
-        String publicCategoryName1 = UUID.randomUUID().toString();
+        String publicCategoryName1 = "c_name";
         TaskCategory publicCategory1 = new TaskCategory(publicCategoryName1, username1, true);
         repository.save(publicCategory1);
 
         String username2 = UUID.randomUUID().toString();
-        String privateCategoryName2 = UUID.randomUUID().toString();
+        String privateCategoryName2 = "a_name";
         TaskCategory privateCategory2 = new TaskCategory(privateCategoryName2, username2, false);
         repository.save(privateCategory2);
 
-        String publicCategoryName2 = UUID.randomUUID().toString();
+        String publicCategoryName2 = "b_name";
         TaskCategory publicCategory2 = new TaskCategory(publicCategoryName2, username2, true);
         repository.save(publicCategory2);
 
@@ -187,6 +188,10 @@ public class TaskCategoryServiceTest {
                 assertEquals(privateCategoryName1, category.getName());
             }
         });
+        Iterator<TaskCategory> iterator = categoriesForUsername1.iterator();
+        assertEquals(publicCategoryName2, iterator.next().getName());
+        assertEquals(publicCategoryName1, iterator.next().getName());
+        assertEquals(privateCategoryName1, iterator.next().getName());
 
         Collection<TaskCategory> categoriesForUsername2 = service.getAllAccessibleCategories(username2);
         assertNotNull(categoriesForUsername2);
@@ -206,6 +211,11 @@ public class TaskCategoryServiceTest {
             }
         });
 
+        iterator = categoriesForUsername2.iterator();
+        assertEquals(privateCategoryName2, iterator.next().getName());
+        assertEquals(publicCategoryName2, iterator.next().getName());
+        assertEquals(publicCategoryName1, iterator.next().getName());
+
         String username3 = UUID.randomUUID().toString();
         Collection<TaskCategory> categoriesForUsername3 = service.getAllAccessibleCategories(username3);
         assertNotNull(categoriesForUsername3);
@@ -223,5 +233,9 @@ public class TaskCategoryServiceTest {
                 fail();
             }
         });
+
+        iterator = categoriesForUsername3.iterator();
+        assertEquals(publicCategoryName2, iterator.next().getName());
+        assertEquals(publicCategoryName1, iterator.next().getName());
     }
 }
