@@ -41,6 +41,7 @@ export class TaskCategoryComponent implements OnInit {
   token = '';
 
   categories;
+  tabIndex = 0;
 
   publicCats = [];
   privateCats = [];
@@ -132,14 +133,16 @@ export class TaskCategoryComponent implements OnInit {
         .subscribe({
           next: data => {
             console.log(data);
-            this.openSnackBar('Category Created', 'redirecting to home');
-            this.router.navigate(['/']);
+            this.openSnackBar('Category Created', 'redirecting to categories');
+            this.getCategories();
+            this.tabIndex = 0;
+            // this.router.navigate(['/']);
             // this.location.go('/');
           },
           error: error => {
             console.error('There was an error!', error);
             this.openSnackBar(
-              'Error occured while  creating category',
+              'Error occured while creating category',
               'Try again!'
             );
           }
@@ -154,8 +157,10 @@ export class TaskCategoryComponent implements OnInit {
         .subscribe({
           next: data => {
             console.log(data);
-            this.openSnackBar('Category Created', 'redirecting to home');
-            this.router.navigate(['/']);
+            this.openSnackBar('Category Created', 'redirecting to categories');
+            this.getCategories();
+            this.tabIndex = 0;
+            // this.router.navigate(['/']);
             // this.location.go('/');
           },
           error: error => console.error('There was an error!', error)

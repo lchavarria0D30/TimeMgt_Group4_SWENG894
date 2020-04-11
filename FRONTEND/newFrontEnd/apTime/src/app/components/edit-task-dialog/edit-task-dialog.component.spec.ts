@@ -57,7 +57,7 @@ describe('EditTaskDialogComponent', () => {
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       declarations: [ EditTaskDialogComponent ]
     })
-        .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
