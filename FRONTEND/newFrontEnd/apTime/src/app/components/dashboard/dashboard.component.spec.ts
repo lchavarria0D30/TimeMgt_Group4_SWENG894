@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, getTestBed, TestBed} from '@angular/core/testing';
 import { MatDatepicker } from '@angular/material/datepicker';
 import { MatIconModule} from '@angular/material/icon';
 import {CustomMaterialModule} from '../../modules/material.module';
@@ -8,7 +8,6 @@ import { BrowserDynamicTestingModule, platformBrowserDynamicTesting } from '@ang
 import {RouterTestingModule} from '@angular/router/testing';
 import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
 import {
   MatFormFieldModule,
   MatInputModule,
@@ -21,19 +20,21 @@ import {
   MatSelectModule
 } from '@angular/material';
 import { DashboardComponent } from './dashboard.component';
-import {FormControl} from "@angular/forms";
-import {EMPTY} from "rxjs";
+import {FormControl} from '@angular/forms';
+import {EMPTY} from 'rxjs';
+import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
 
 describe('DashboardComponent', () => {
   let component: DashboardComponent;
   let fixture: ComponentFixture<DashboardComponent>;
+  let httpMock: HttpTestingController;
 
   beforeEach(async(() => {
     TestBed.resetTestEnvironment();
     TestBed.initTestEnvironment(BrowserDynamicTestingModule,
         platformBrowserDynamicTesting());
     TestBed.configureTestingModule({
-      imports: [ HttpClientModule, BrowserAnimationsModule,
+      imports: [ HttpClientTestingModule, BrowserAnimationsModule,
         RouterTestingModule.withRoutes([]),
         MatIconModule,
         MatSelectModule,
@@ -43,7 +44,7 @@ describe('DashboardComponent', () => {
         MatDialogModule,
         MatMenuModule
       ],
-      providers: [AmplifyService, HttpClient, {
+      providers: [AmplifyService, {
         provide: MatDialogRef,
         useValue: {}},
         { provide: MAT_DIALOG_DATA, useValue: {}}],
@@ -57,6 +58,7 @@ describe('DashboardComponent', () => {
     fixture = TestBed.createComponent(DashboardComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+    httpMock = getTestBed().get(HttpTestingController);
   });
 
   it('should create component', () => {
