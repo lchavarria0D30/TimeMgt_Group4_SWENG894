@@ -81,19 +81,6 @@ describe('DeleteTaskDialogComponent', () => {
     const h1 = fixture.debugElement.query(By.css('button'));
     h1.triggerEventHandler('click', {});
     fixture.detectChanges();
-
     expect(fixture.debugElement.query(By.css('button')).nativeElement.innerText).toEqual('No');
   });
-/**
-  it('should set on Yes Click', () => {
-    const fixture = TestBed.createComponent(DeleteTaskDialogComponent);
-    fixture.detectChanges();
-
-    const h1 = fixture.debugElement.query(By.css('button'));
-    h1.triggerEventHandler('click', {});
-    fixture.detectChanges();
-
-    expect(fixture.debugElement.query(By.css('button')).nativeElement.innerText).toEqual('Yes');
-  });
- */
 });
