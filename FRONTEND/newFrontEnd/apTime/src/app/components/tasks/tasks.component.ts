@@ -171,7 +171,7 @@ export class TasksComponent implements OnInit {
       this.http.get('http://localhost:8001/tasks/', { headers }).subscribe({
       next: data => {
 
-        console.log(this.tasks);
+        // console.log(this.tasks);
         this.tasks = data
 
         this.tasks.sort((a, b) => {
@@ -185,7 +185,7 @@ export class TasksComponent implements OnInit {
           }
         });
 
-        console.log('sorted: ', this.tasks);
+        // console.log('sorted: ', this.tasks);
 
 
 
