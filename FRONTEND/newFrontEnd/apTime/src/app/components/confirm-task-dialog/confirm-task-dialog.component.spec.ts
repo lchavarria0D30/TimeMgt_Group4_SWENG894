@@ -126,23 +126,5 @@ describe('ConfirmTaskDialogComponent', () => {
     fixture.detectChanges();
     expect(testComp.pauseTask(15)).toEqual(component.pauseTask(15));
   });
-/**
-  it('testing line coverage onPauseClick() ', async(() => {
-    const never = null;
-    const pauseFun = spyOn(component.onPauseClick(), 'pauseTask');
-    component.onPauseClick();
-    fixture.detectChanges();
-
-    expect(pauseFun).toHaveBeenCalled();
-    expect(pauseFun).toHaveBeenCalledWith(close());
-  }));
-
-
-  it('should enable Pause Button', () => {
-    fixture.detectChanges();
-    const button = fixture.debugElement.query(By.css('button'));
-    expect(button.nativeElement.disabled).toBeFalsy();
-    });
- */
-  });
+});
 

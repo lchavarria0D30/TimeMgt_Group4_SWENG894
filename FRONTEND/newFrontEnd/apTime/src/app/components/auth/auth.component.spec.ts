@@ -5,7 +5,6 @@
  *  Unit Test - Frontend
  */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { AuthComponent } from './auth.component';
 import {AmplifyService} from "aws-amplify-angular";
 import {HttpClient} from "@angular/common/http";
@@ -44,7 +43,14 @@ describe('AuthComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create the Component', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should be defined and should be called - ngOnInit ', () => {
+    const spy = spyOn(component, 'ngOnInit');
+    component.ngOnInit();
+    expect(spy).toBeDefined()
+    expect(spy).toHaveBeenCalled();
   });
 });

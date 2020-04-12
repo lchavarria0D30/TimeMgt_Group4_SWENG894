@@ -5,7 +5,7 @@
  *
  *  Unit Test - Frontend
  */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
 import { MatIconModule} from "@angular/material/icon";
 import { TaskCategoryComponent } from './task-category.component';
 import {CustomMaterialModule} from "../../modules/material.module";
@@ -77,11 +77,15 @@ describe('TaskCategoryComponent', () => {
     expect(component.canCreateTask).toBeFalsy();
   });
 
-  it('should be Defined openSnackBar', async(() => {
-    spyOn(component, 'openSnackBar').and.callThrough();
+  it('should be Defined and call - openSnackBar', fakeAsync(() => {
+    let message = 'OpenSnackTest';
+    let action = 'Start';
+    let spy = spyOn(component, 'openSnackBar').and.callThrough();
+    component.openSnackBar(message, action);
+    tick(10000);
     fixture.whenStable().then(() => {
       expect(component.openSnackBar).toBeDefined();
-      expect(component.openSnackBar).toHaveBeenCalledTimes(0);
+      expect(component.openSnackBar).toHaveBeenCalled();
     });
   }));
 });

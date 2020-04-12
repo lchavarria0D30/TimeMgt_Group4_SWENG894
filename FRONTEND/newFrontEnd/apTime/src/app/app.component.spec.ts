@@ -50,10 +50,10 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have as title 'There is a caption'`, () => {
+  it('should have a title Time Helper', () => {
      // const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.debugElement.componentInstance;
-    expect(app.title).toEqual('apTime got new look');
+    expect(app.title).toEqual('Time Helper');
   });
 
   it('should render title', async () => {
