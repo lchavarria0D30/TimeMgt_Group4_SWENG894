@@ -35,6 +35,7 @@ interface IQuote {
 })
 export class AppComponent implements OnInit {
   title = 'Time Helper';
+  currentLoc = '';
 
   quote: Observable<string>;
 
