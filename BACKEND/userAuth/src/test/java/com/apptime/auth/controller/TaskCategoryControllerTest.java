@@ -46,7 +46,9 @@ public class TaskCategoryControllerTest extends AbstractControllerTest {
     @BeforeEach
     public void init() {
         MockitoAnnotations.initMocks(this);
-        categoryRepository.deleteAll();
+
+        cleanup();
+
         initMvc();
     }
 
@@ -172,7 +174,6 @@ public class TaskCategoryControllerTest extends AbstractControllerTest {
                 .accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
         result = actions.andReturn();
         content = result.getResponse().getContentAsString();
-        System.err.println(content);
         mapper = new ObjectMapper();
         list = mapper.readValue(content, List.class);
         assertFalse(list.isEmpty());

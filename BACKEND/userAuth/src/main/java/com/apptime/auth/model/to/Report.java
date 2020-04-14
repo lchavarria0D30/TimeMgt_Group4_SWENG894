@@ -1,5 +1,6 @@
 package com.apptime.auth.model.to;
 
+import com.apptime.auth.model.Task;
 import com.apptime.auth.model.TaskReport;
 import com.apptime.auth.model.TaskReportType;
 import com.apptime.auth.util.DurationUtil;
@@ -14,6 +15,8 @@ public class Report {
     private int id;
 
     private long taskId;
+
+    private String taskName;
 
     private String owner;
 
@@ -49,6 +52,14 @@ public class Report {
 
     public void setTaskId(long taskId) {
         this.taskId = taskId;
+    }
+
+    public String getTaskName() {
+        return taskName;
+    }
+
+    public void setTaskName(String taskName) {
+        this.taskName = taskName;
     }
 
     public String getOwner() {
@@ -136,6 +147,7 @@ public class Report {
         return "Report{" +
                 "id=" + id +
                 ", taskId=" + taskId +
+                ", taskName=" + taskName +
                 ", owner='" + owner + '\'' +
                 ", type=" + type +
                 ", difference='" + difference + '\'' +
@@ -149,10 +161,14 @@ public class Report {
                 '}';
     }
 
-    public static Report parse(TaskReport taskReport) {
+    public static Report parse(TaskReport taskReport, Task task) {
+        if (taskReport == null || task == null || taskReport.getOwner() == null || !taskReport.getOwner().equals(task.getUserName())) {
+            return null;
+        }
         Report report = new Report();
         report.setId(taskReport.getId());
         report.setTaskId(taskReport.getTaskId());
+        report.setTaskName(task.getName());
         report.setOwner(taskReport.getOwner());
         report.setType(taskReport.getType());
         report.setDifference(DurationUtil.toString(taskReport.getDifference()));

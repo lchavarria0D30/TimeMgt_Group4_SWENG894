@@ -6,6 +6,7 @@ import com.apptime.auth.model.Task;
 import com.apptime.auth.model.TaskState;
 import com.apptime.auth.repository.TaskReportRepository;
 import com.apptime.auth.repository.TaskRepository;
+import com.apptime.auth.service.TaskManagerService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,18 +17,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.hamcrest.Matchers.*;
 
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
@@ -38,10 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 /**
  * @author Qi Zhang
@@ -55,14 +45,16 @@ public class TaskManagerTest extends AbstractControllerTest {
     private TaskRepository taskRepository;
 
     @Autowired
+    private TaskManagerService taskManagerService;
+
+    @Autowired
     private TaskReportRepository reportRepository;
 
     @BeforeEach
     public void init() {
         MockitoAnnotations.initMocks(this);
 
-        reportRepository.deleteAll();
-        taskRepository.deleteAll();
+        cleanup();
 
         initMvc();
         mockAuthentication();
@@ -263,7 +255,7 @@ public class TaskManagerTest extends AbstractControllerTest {
         assertNotNull(id);
         assertEquals(task.getId(), id.longValue());
 
-        Task taskInDb = taskRepository.findById(id);
+        Task taskInDb = taskManagerService.getTask(id);
         assertNotNull(taskInDb);
         assertEquals(request.getName(), taskInDb.getName());
         assertEquals(USERNAME, taskInDb.getUserName());
@@ -301,7 +293,7 @@ public class TaskManagerTest extends AbstractControllerTest {
         assertEquals(USERNAME, map.get("userName"));
         Long id = ((Number) map.get("id")).longValue();
         assertNotNull(id);
-        Task taskInDb = taskRepository.findById(id);
+        Task taskInDb = taskManagerService.getTask(id);
         assertNotNull(taskInDb);
         assertEquals(name, taskInDb.getName());
         assertEquals(USERNAME, taskInDb.getUserName());
@@ -327,7 +319,7 @@ public class TaskManagerTest extends AbstractControllerTest {
         assertNotNull(id);
         assertEquals(task.getId(), id.longValue());
 
-        assertNull(taskRepository.findById(id));
+        assertFalse(taskRepository.findById(id).isPresent());
 
         // add one task with different user
         Task taskWithDifferentUser = new Task();
@@ -353,7 +345,7 @@ public class TaskManagerTest extends AbstractControllerTest {
         assertNotNull(value);
         assertEquals(TaskState.ACTIVE.toString(), value);
 
-        Task taskInDb = taskRepository.findById(task.getId());
+        Task taskInDb = taskManagerService.getTask(task.getId());
         assertNotNull(taskInDb);
         assertEquals(TaskState.ACTIVE, taskInDb.getState());
         assertNotNull(taskInDb.getStart());
@@ -398,7 +390,7 @@ public class TaskManagerTest extends AbstractControllerTest {
         assertNotNull(value);
         assertEquals(TaskState.PAUSED.toString(), value);
 
-        Task taskInDb = taskRepository.findById(task.getId());
+        Task taskInDb = taskManagerService.getTask(task.getId());
         assertNotNull(taskInDb);
         assertEquals(TaskState.PAUSED, taskInDb.getState());
         assertNotNull(taskInDb.getStart());
@@ -438,7 +430,7 @@ public class TaskManagerTest extends AbstractControllerTest {
         assertNotNull(value);
         assertEquals(TaskState.COMPLETED.toString(), value);
 
-        Task taskInDb = taskRepository.findById(task.getId());
+        Task taskInDb = taskManagerService.getTask(task.getId());
         assertNotNull(taskInDb);
         assertEquals(TaskState.COMPLETED, taskInDb.getState());
         assertNotNull(taskInDb.getStart());
