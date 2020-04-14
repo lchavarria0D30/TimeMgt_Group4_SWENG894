@@ -1,5 +1,6 @@
 package com.apptime.auth.service;
 
+import com.apptime.auth.BaseTest;
 import com.apptime.auth.model.Notification;
 import com.apptime.auth.model.Task;
 import com.apptime.auth.repository.NotificationRepository;
@@ -33,7 +34,7 @@ import static org.junit.Assert.assertTrue;
  * Use Case: TMGP4-40, TMGP4-38
  */
 @SpringBootTest
-public class NotificationServiceTest {
+public class NotificationServiceTest extends BaseTest {
     @Autowired
     private NotificationService service;
 
@@ -42,7 +43,7 @@ public class NotificationServiceTest {
 
     @BeforeEach
     public void init() {
-        repository.deleteAll();
+        cleanup();
     }
 
     @Test

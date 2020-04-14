@@ -1,5 +1,6 @@
 package com.apptime.auth.service.impl;
 
+import com.apptime.auth.helper.SummaryHelper;
 import com.apptime.auth.model.Task;
 import com.apptime.auth.model.TaskReport;
 import com.apptime.auth.model.TaskReportType;
@@ -32,6 +33,9 @@ public class TaskReportServiceImpl implements TaskReportService {
 
     @Autowired
     private NotificationService notificationService;
+
+    @Autowired
+    private SummaryHelper summaryHelper;
 
     @Override
     @Transactional
@@ -89,6 +93,7 @@ public class TaskReportServiceImpl implements TaskReportService {
 
         notificationService.createNotificationForTaskReport(report);
 
+        calculateAverageDuration(task);
         return report;
     }
 
@@ -145,7 +150,18 @@ public class TaskReportServiceImpl implements TaskReportService {
         return reportRepository.findByTaskId(id);
     }
 
+    private void calculateAverageDuration(Task task) {
+        if (task == null || task.getUserName() == null || task.getCategories() == null || task.getCategories().isEmpty()) {
+            return;
+        }
+        summaryHelper.start(task.getUserName(), task.getCategories());
+    }
+
     public void setReportRepository(TaskReportRepository reportRepository) {
         this.reportRepository = reportRepository;
+    }
+
+    public void setSummaryHelper(SummaryHelper summaryHelper) {
+        this.summaryHelper = summaryHelper;
     }
 }
