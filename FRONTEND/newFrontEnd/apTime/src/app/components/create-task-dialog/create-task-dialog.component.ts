@@ -132,6 +132,11 @@ export class CreateTaskDialogComponent implements OnInit {
     this.http.get('http://localhost:8001/category/', { headers }).subscribe({
       next: data => {
         this.categories = this.categories.concat(data);
+        this.categories.sort((a, b) => {
+          if (a.name > b.name) { return 1; }
+          if (a.name < b.name) { return -1; }
+          return 0;
+        });
       },
       error: error => console.error('There was an error!', error)
     });

@@ -15,6 +15,9 @@ import {CreateTaskDialogComponent} from "../create-task-dialog/create-task-dialo
 import {MatDialog} from "@angular/material/dialog";
 import {StartPopupTaskComponent} from "../start-popup-task/start-popup-task.component";
 import {StartTaskDialogComponent} from "../start-task-dialog/start-task-dialog.component";
+import {ConfirmTaskDialogComponent} from "../confirm-task-dialog/confirm-task-dialog.component";
+import {EditTaskDialogComponent} from "../edit-task-dialog/edit-task-dialog.component";
+import {DeleteTaskDialogComponent} from "../delete-task-dialog/delete-task-dialog.component";
 
 
 @Component({
@@ -99,21 +102,70 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  openConfirmDialog(i: number, name: string, isDone: boolean): void {
+
+    const dialogRef = this.dialog.open(
+        ConfirmTaskDialogComponent, {
+          // width: '250px',
+          data: {
+            id: i,
+            name,
+            isDone: isDone
+          }
+        });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The confirm dialog was closed');
+      this.getTasks();
+      this.getDateTasks();
+    });
+  }
+
+  openEditDialog(i: number, index: number): void {
+
+    const dialogRef = this.dialog.open(
+        EditTaskDialogComponent, {
+          data: {
+            task:  this.filteredTasks[index],
+            token: this.token
+          }
+        });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The edit dialog was closed');
+      this.getTasks();
+      this.getDateTasks();
+    });
+  }
+
+  openDeleteDialog(i: number, name: string): void {
+
+    const dialogRef = this.dialog.open(
+        DeleteTaskDialogComponent, {
+          data: {
+            id: i,
+            name
+          }
+        });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The delete dialog was closed');
+      this.getTasks();
+      this.getDateTasks();
+    });
+  }
+
   getDateTasks(): void {
-    console.log('the date: ', this.date);
 
     const headers = { Authorization: 'Bearer ' + this.sessionService.getToken()};
 
     const body = { date: this.date.value.toISOString().substring(0, 10)
     };
 
-    console.log('Request Body: ', body);
-
 
     this.http.post('http://localhost:8001/tasks/due/start', body, { headers }).subscribe({
       next: data => {
         this.dateTasks = data;
-        console.log(this.dateTasks);
 
         const fromDate = new Date(this.date.value);
         const toDate = new Date(this.date.value);
@@ -199,7 +251,6 @@ export class DashboardComponent implements OnInit {
       error: error => console.error('There was an error!', error)
     });
 
-    // console.log(this.tasks);
   }
 
 }

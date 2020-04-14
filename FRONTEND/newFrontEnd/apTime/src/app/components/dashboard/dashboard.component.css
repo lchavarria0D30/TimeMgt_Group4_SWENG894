@@ -72,3 +72,17 @@
     margin-right:auto;
     vertical-align:middle;
 }
+
+.cards-background {
+    background: #673AB7 !important;
+}
+
+.running-color {
+    background-color: #EEEEEE;
+    color:#81C784 !important;
+}
+
+.paused-color {
+    background-color: #EEEEEE;
+    color:#FFAB40 !important;
+}

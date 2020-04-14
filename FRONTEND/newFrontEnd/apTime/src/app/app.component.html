@@ -12,7 +12,7 @@ Description: Template for the main application component.
       </button>
       <mat-menu #menu="matMenu">
 
-        <button mat-menu-item routerLink="/"><mat-icon>home</mat-icon>Home</button>
+        <button mat-menu-item routerLink="/" *ngIf="user==null"><mat-icon>home</mat-icon>Home</button>
         <button mat-menu-item routerLink="/dashboard" *ngIf="user!=null"><mat-icon>dashboard</mat-icon>Dashboard</button>
         <button mat-menu-item routerLink="/tasks" *ngIf="user!=null"><mat-icon>assignment</mat-icon>Tasks</button>
         <button mat-menu-item routerLink="/category" *ngIf="user!=null"><mat-icon>category</mat-icon>Categories</button>
