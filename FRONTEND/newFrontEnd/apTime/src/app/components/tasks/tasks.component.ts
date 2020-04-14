@@ -129,12 +129,10 @@ export class TasksComponent implements OnInit {
     });
   }
 
-  openStartPopUpDialog(i: number, name: string): void {
+  openStartPopUpDialog(): void {
     const dialogRef = this.dialog.open(
         StartPopupTaskComponent, {
           data: {
-            id: i,
-            name
           }
         });
 
