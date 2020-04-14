@@ -5,45 +5,8 @@
     color:#673AB7 !important;
 }
 
-.mat-icon {
-    transform: scale(4);
-}
-
-.active-task-background {
-    background-color: #C8E6C9;
-}
-
-.paused-task-background{
-    background-color: #FFF9C4;
-}
-
-.created-task-background{
-    background-color: #B2EBF2;
-}
-
-.completed-task-background {
-    background-color: #F5F5F5;
-}
-
-.completed-shadow {
-    text-shadow: 2px 2px 4px #000;
-    color:#FF9E80 !important;
-    font-size: x-large;
-}
-.paused-shadow {
-    text-shadow: 2px 2px 4px #000;
-    color:#FFECB3!important;
-    font-size: x-large;
-}
-.active-shadow {
-    text-shadow: 2px 2px 4px #000;
-    color:#81C784 !important;
-    font-size: x-large;
-}
-.todo-shadow {
-    text-shadow: 2px 2px 4px #000;
-    color:#81D4FA !important;
-    font-size: x-large;
+.text-button {
+    color: white !important;
 }
 
 .sec-toolbar{
@@ -64,3 +27,53 @@
     margin-right:auto;
     vertical-align:middle;
 }
+.main-img {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    border-radius: 50%;
+}
+
+.space {
+    background: #FFAB40;
+}
+
+
+
+.space-toolbar {
+    background: #673AB7;
+    color: white;
+}
+.mat-icon-size {
+    color: #FFAB40;
+    padding-top: 22px;
+    transform: scale(4);
+}
+
+
+.circle {
+    width: 140px;
+    height: 140px;
+    /*text-shadow: 1px 1px 2px #000;*/
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    text-align: center;
+    background: whitesmoke;
+    -moz-border-radius: 70px;
+    -webkit-border-radius: 70px;
+    border-radius: 70px;
+}
+
+.footer-small-letters {
+    font-size: x-small;
+}
+
+.header-text {
+    text-align: center;
+    text-shadow: 1px 1px 2px #000;
+    color:#673AB7 !important;
+}
+.sec-header-text {
+    text-align: center;
+    /*text-shadow: 1px 1px 2px #000;*/
+    color:#673AB7 !important;
+}
+
+
