@@ -97,7 +97,7 @@ export class TasksComponent implements OnInit {
           data: {
             id: i,
             name,
-            isDone: isDone
+            isDone
           }
         });
 
@@ -170,16 +170,16 @@ export class TasksComponent implements OnInit {
       next: data => {
 
         // console.log(this.tasks);
-        this.tasks = data
+        this.tasks = data;
 
         this.tasks.sort((a, b) => {
           const date = new Date(a.scheduledstart);
           if (isNaN(date.getTime())) {
-            return <any>new Date(a.scheduledstart.substring(0, a.scheduledstart.length - 5)) -
-                <any>new Date(b.scheduledstart.substring(0, b.scheduledstart.length - 5));
+            return new Date(a.scheduledstart.substring(0, a.scheduledstart.length - 5)) as any -
+            new Date(b.scheduledstart.substring(0, b.scheduledstart.length - 5)) as any;
           } else {
-            return <any>new Date(a.scheduledstart) -
-                <any>new Date(b.scheduledstart);
+            return new Date(a.scheduledstart) as any -
+                new Date(b.scheduledstart) as any;
           }
         });
 
