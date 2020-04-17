@@ -1,21 +1,25 @@
 package com.apptime.auth.service;
-		import java.text.DateFormat;
-		import java.text.SimpleDateFormat;
-		import java.time.LocalDateTime;
-		import java.time.ZoneId;
-		import java.time.format.DateTimeFormatter;
-		import java.util.*;
-		import com.apptime.auth.config.TaskStateMachine;
-		import com.apptime.auth.model.Task;
-		import com.apptime.auth.model.TaskCategory;
-		import com.apptime.auth.model.TaskState;
-		import com.apptime.auth.repository.TaskCategoryRepository;
-		import com.apptime.auth.repository.TaskReportRepository;
-		import com.apptime.auth.repository.TaskRepository;
-		import org.springframework.beans.factory.annotation.Autowired;
-		import org.springframework.stereotype.Service;
-		import org.springframework.web.bind.annotation.RequestBody;
-		import javax.transaction.Transactional;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import com.apptime.auth.config.TaskStateMachine;
+import com.apptime.auth.model.Prediction;
+import com.apptime.auth.model.Task;
+import com.apptime.auth.model.TaskCategory;
+import com.apptime.auth.model.TaskState;
+import com.apptime.auth.model.Prediction;
+import com.apptime.auth.repository.TaskCategoryRepository;
+import com.apptime.auth.repository.TaskReportRepository;
+import com.apptime.auth.repository.TaskRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.*;
+import org.springframework.http.HttpHeaders;
+import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.client.RestTemplate;
+
+import javax.transaction.Transactional;
 
 /**
  * @author Bashiir Mohamed
@@ -25,6 +29,7 @@ package com.apptime.auth.service;
 public class TaskManagerService {
 	@Autowired
 	TaskRepository taskRepo;
+
 
 	@Autowired
 	private TaskReportRepository reportRepository;
@@ -205,6 +210,14 @@ public class TaskManagerService {
 		Date eDate = c.getTime();
 		Set<Task> result = new HashSet<Task>();
 		result = taskRepo.getTasksStartedLaterThan(start,eDate,name);
+		return result;
+	}
+	public Prediction getPrediction(int duration, int catergoryID)  {
+		final String predictionEngineUrl = "http://localhost:5000/prediction/api/v1.0/task?plannedDuration=";
+		final String prams = ""+duration+"&"+"Category="+catergoryID;
+		Prediction result= null;
+		RestTemplate restTemplate = new RestTemplate();
+		result = restTemplate.getForObject(predictionEngineUrl+prams,Prediction.class);
 		return result;
 	}
 }
