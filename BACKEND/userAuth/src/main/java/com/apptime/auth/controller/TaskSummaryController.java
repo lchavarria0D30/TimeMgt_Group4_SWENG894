@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -41,23 +42,42 @@ public class TaskSummaryController extends AbstractionAuthenticationController {
     private TaskCategoryService categoryService;
 
     @GetMapping("/mine")
-    public ResponseEntity<Collection<Summary>> getUserSummaries(Authentication authentication) {
+    public ResponseEntity<Collection<Summaries>> getUserSummaries(Authentication authentication) {
         String username = getUsername(authentication);
         if (username == null) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
-        List<UserTaskSummary> summaries = taskSummaryService.getUserTaskSummaries(username);
-        if (summaries == null || summaries.isEmpty()) {
+        List<UserTaskSummary> userTaskSummaries = taskSummaryService.getUserTaskSummaries(username);
+        if (userTaskSummaries == null || userTaskSummaries.isEmpty()) {
             return new ResponseEntity<>(Collections.emptyList(), HttpStatus.OK);
         }
-        List<Integer> categoryIds = summaries.stream().map(UserTaskSummary::getCategoryId).collect(Collectors.toList());
+        List<Integer> categoryIds = userTaskSummaries.stream().map(UserTaskSummary::getCategoryId).collect(Collectors.toList());
         Collection<TaskCategory> categories = categoryService.getCategories(categoryIds);
+
         Map<Integer, TaskCategory> categoryMap = new HashMap<>();
+        List<TaskCategory> publicCategories = new ArrayList<>();
         for (TaskCategory category : categories) {
             categoryMap.put(category.getId(), category);
+            if (category.isPublic()) {
+                publicCategories.add(category);
+            }
         }
-        List<Summary> summaryList = summaries.stream().map(summary -> Summary.parse(summary, categoryMap.get(summary.getCategoryId()))).collect(Collectors.toList());
-        return new ResponseEntity<>(summaryList, HttpStatus.OK);
+
+        List<AllUserTaskSummary> allUserTaskSummaries = taskSummaryService.getAllUserTaskSummariesByCategories(publicCategories);
+        Map<Integer, AllUserTaskSummary> allUserTaskSummaryMap = new HashMap<>();
+        for (AllUserTaskSummary allUserTaskSummary : allUserTaskSummaries) {
+            allUserTaskSummaryMap.put(allUserTaskSummary.getCategoryId(), allUserTaskSummary);
+        }
+
+        List<Summaries> summariesList = new ArrayList<>();
+        for (UserTaskSummary userTaskSummary : userTaskSummaries) {
+            TaskCategory category = categoryMap.get(userTaskSummary.getCategoryId());
+            AllUserTaskSummary allUserTaskSummary = allUserTaskSummaryMap.get(userTaskSummary.getCategoryId());
+            Summaries summaries = new Summaries(Category.parse(category), Summary.parse(userTaskSummary, category), Summary.parse(allUserTaskSummary, category));
+            summariesList.add(summaries);
+        }
+
+        return new ResponseEntity<>(summariesList, HttpStatus.OK);
     }
 
     @GetMapping(value = "/category/{categoryId}")

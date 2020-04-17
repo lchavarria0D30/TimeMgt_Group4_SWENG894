@@ -75,7 +75,7 @@ public class TaskManager {
 	@GetMapping(value = "/task/{id}")
 	public ResponseEntity<Task> getTask(@PathVariable("id") int taskId, Principal p) {
 		Task task = taskService.getTask(taskId);
-		if (task.getUserName().equals(getPrinciple(p).getName())) {
+		if (task != null && task.getUserName().equals(getPrinciple(p).getName())) {
 			return new ResponseEntity<Task>(removeCategoryOwner(task), HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);

@@ -66,6 +66,25 @@ public class TaskSummaryServiceTest {
     }
 
     @Test
+    public void testGetAllUserTaskSummariesByCategories() {
+        assertTrue(service.getAllUserTaskSummariesByCategories(null).isEmpty());
+        verify(allUserTaskSummaryRepository, never()).findByCategoryIds(any());
+
+        assertTrue(service.getAllUserTaskSummariesByCategories(new ArrayList<>()).isEmpty());
+        verify(allUserTaskSummaryRepository, never()).findByCategoryIds(any());
+
+        TaskCategory category = mock(TaskCategory.class);
+        AllUserTaskSummary allUserTaskSummary = mock(AllUserTaskSummary.class);
+        when(allUserTaskSummaryRepository.findByCategoryIds(any())).thenReturn(Collections.singletonList(allUserTaskSummary));
+
+        List<AllUserTaskSummary> summaries = service.getAllUserTaskSummariesByCategories(Collections.singletonList(category));
+        verify(allUserTaskSummaryRepository, times(1)).findByCategoryIds(any());
+        assertFalse(summaries.isEmpty());
+        assertEquals(1, summaries.size());
+        assertEquals(allUserTaskSummary, summaries.iterator().next());
+    }
+
+    @Test
     public void testGetUserTaskSummaryByCategory() {
         Optional<UserTaskSummary> optional = service.getUserTaskSummaryByCategory(null, null);
         assertFalse(optional.isPresent());
