@@ -8,7 +8,7 @@ Description: Template for the edit task dialog box. Includes the forms where use
         <h1 mat-dialog-title>Edit Task "{{task.name}}"</h1>
         <span class="example-spacer"></span>
         <button mat-button  (click)="onNoClick()">
-            <mat-icon class="example-icon" aria-hidden="false" aria-label="Example user verified icon">close</mat-icon>
+            <mat-icon class="text-button" aria-hidden="false" aria-label="Close">close</mat-icon>
         </button>
     </mat-toolbar-row>
 </mat-toolbar>
@@ -99,5 +99,5 @@ Description: Template for the edit task dialog box. Includes the forms where use
     </mat-error>
     <button mat-raised-button color="primary" (click)="onYesClick()" cdkFocusInitial
             [disabled]="!eTimeFormControl.valid || !sTimeFormControl.valid || !eDateFormControl.valid ||
-            !sDateFormControl.valid || !nameFormControl.valid">Save</button>
+            !sDateFormControl.valid || !nameFormControl.valid"> <span class="text-button">Save </span></button>
 </div>

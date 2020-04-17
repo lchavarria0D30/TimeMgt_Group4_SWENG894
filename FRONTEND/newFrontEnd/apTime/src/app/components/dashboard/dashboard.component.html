@@ -28,7 +28,6 @@ Description: Template for the dashboard.
 <div fxLayout="row" fxLayoutAlign="center center" >
     <p>Tasks scheduled for: &nbsp;&nbsp;</p>
     <mat-form-field>
-        <!--        <mat-label>Choose a date</mat-label>-->
         <input matInput [matDatepicker]="picker" [formControl]="date" (dateChange)="getDateTasks()">
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
@@ -44,14 +43,13 @@ Description: Template for the dashboard.
         <p></p>
         <p>There are no tasks for this date...</p>
     </div>
-    <!--     <div *ngFor="let number of [0,1,2,3,4,5,6,7,8,9]; let i = index"> -->
-    <div *ngFor="let theTask of filteredTasks">
-        <!--    <div *ngFor="let task of tasks; let i = index" >-->
-        <!--            <div *ngFor="let number of [0]; let i = index">-->
+    <div *ngFor="let theTask of filteredTasks; let i = index">
         <mat-card >
             <mat-card-header>
 
                 <div fxFlex="50">
+                    <mat-card-subtitle class="running-color" *ngIf="theTask.state == 'ACTIVE' "><b>Running</b></mat-card-subtitle>
+                    <mat-card-subtitle class="paused-color" *ngIf="theTask.state == 'PAUSED' "><b>Paused</b></mat-card-subtitle>
                     <mat-card-title>{{theTask.name}}</mat-card-title>
                     <mat-card-subtitle *ngFor="let category of theTask.categories;" class="label-color">
                         <b>{{category.name}}</b>
@@ -59,11 +57,37 @@ Description: Template for the dashboard.
                     <mat-card-subtitle>{{theTask.description}}</mat-card-subtitle>
                 </div>
 
-                <!--                <div fxFlex="50">-->
-                <!--                    <button mat-button (click)="openStartDialog(theTask.id, theTask.name)" color="primary">-->
-                <!--                        <mat-icon>play_circle_filled</mat-icon> Start-->
-                <!--                    </button>-->
-                <!--                </div>-->
+
+                <div fxFlex="50" *ngIf="theTask.state == 'COMPLETED' ">
+                    <button mat-button color="primary" [disabled]="true">
+                        <mat-icon>done_outline</mat-icon> Completed
+                    </button>
+                </div>
+
+                <div fxFlex="50">
+                    <button mat-button (click)="openStartDialog(theTask.id, theTask.name)" color="primary" *ngIf="theTask.state == 'CREATED' ">
+                        <mat-icon>play_circle_filled</mat-icon> Start
+                    </button>
+                </div>
+
+                <div fxFlex="50" *ngIf="theTask.state == 'ACTIVE' ">
+                    <button mat-button (click)="openConfirmDialog(theTask.id, theTask.name, false)" color="primary">
+                        <mat-icon>pause_circle_outline</mat-icon> Pause
+                    </button>
+                </div>
+
+                <div fxFlex="50" *ngIf="theTask.state == 'PAUSED' ">
+                    <button mat-button (click)="openStartDialog(theTask.id, theTask.name)" color="primary">
+                        <mat-icon>play_circle_outline</mat-icon> Restart
+                    </button>
+                </div>
+
+                <div fxFlex="50" *ngIf="theTask.state == 'ACTIVE' || theTask.state == 'PAUSED'">
+                    <button mat-button (click)="openConfirmDialog(theTask.id, theTask.name, true)" color="primary">
+                        <mat-icon>done</mat-icon> Done
+                    </button>
+                </div>
+
 
             </mat-card-header>
             <mat-card-content>
@@ -107,41 +131,23 @@ Description: Template for the dashboard.
                         </div>
                     </div>
 
-                    <!--					<button mat-raised-button color="primary">Start</button>-->
 
                 </div>
             </mat-card-content>
-            <!--            <mat-card-actions>-->
-            <!--                <button mat-button (click)="openEditDialog(theTask.id, i)">-->
-            <!--                    <mat-icon>edit</mat-icon>-->
-            <!--                </button>-->
-            <!--                &lt;!&ndash;		    	<button mat-button>&ndash;&gt;-->
-            <!--                &lt;!&ndash;		    		<mat-icon>share</mat-icon>&ndash;&gt;-->
-            <!--                &lt;!&ndash;		    	</button>&ndash;&gt;-->
-            <!--                <button mat-button (click)="openDeleteDialog(theTask.id, theTask.name)">-->
-            <!--                    <mat-icon>delete</mat-icon>-->
-            <!--                </button>-->
-            <!--            </mat-card-actions>-->
+            <mat-card-actions>
+                <button mat-button (click)="openEditDialog(theTask.id, i)" *ngIf="theTask.state == 'CREATED' ">
+                    <mat-icon>edit</mat-icon>
+                </button>
+
+                <button mat-button (click)="openDeleteDialog(theTask.id, theTask.name)" *ngIf="theTask.state == 'CREATED' ">
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </mat-card-actions>
 
         </mat-card>
 
-        <!--    </div>-->
     </div>
 
-    <!--    <div fxFlex="50">-->
-    <!--        <mat-toolbar color="accent">-->
-    <!--            <span class="header-text">Tasks</span>-->
-    <!--        </mat-toolbar>-->
-    <!--        <div *ngFor="let task of filteredTasks; let i = index" >-->
-    <!--            <mat-action-list>-->
-    <!--                <mat-divider></mat-divider>-->
-    <!--                <button mat-list-item (click)="selectedTask(i)"> {{task.name}} </button>-->
-    <!--            </mat-action-list>-->
-    <!--        </div>-->
-    <!--    </div>-->
-    <!--  <ul>
-      <li *ngFor="let number of [0,1,2,3,4]">{{number}}</li>
-    </ul> -->
 </div>
 
 <p></p>
@@ -164,39 +170,22 @@ Description: Template for the dashboard.
                 <mat-card *ngIf="task.state == 'ACTIVE' " >
                     <mat-card-header>
                         <mat-card-title>{{task.name}}</mat-card-title>
-                        <mat-card-subtitle>{{task.category}}</mat-card-subtitle>
+                        <mat-card-subtitle *ngFor="let category of task.categories" class="label-color">
+                            <b>{{category.name}}</b>
+                        </mat-card-subtitle>
                         <mat-card-subtitle>{{task.description}}</mat-card-subtitle>
                     </mat-card-header>
-                    <mat-card-actions>
-                        <button mat-button>View More</button>
-                    </mat-card-actions>
                 </mat-card>
             </div>
 
         </div>
         <p></p>
-        <!--        <img src="assets/img/time-management-clock.png" alt="Clock picture" width="100%"/>-->
     </div>
 
-    <!--    <div fxFlex="40" >-->
-    <!--        <div *ngFor="let task of tasks; let i = index">-->
-    <!--            <mat-card *ngIf="task.state == 'ACTIVE' " >-->
-    <!--                <mat-card-header>-->
-    <!--                    <mat-card-title>{{task.name}}</mat-card-title>-->
-    <!--                    <mat-card-subtitle>{{task.category}}</mat-card-subtitle>-->
-    <!--                    <mat-card-subtitle>{{task.description}}</mat-card-subtitle>-->
-    <!--                </mat-card-header>-->
-    <!--                <mat-card-actions>-->
-    <!--                    <button mat-button>View More</button>-->
-    <!--                </mat-card-actions>-->
-    <!--            </mat-card>-->
-    <!--        </div>-->
-    <!--    </div>-->
 
 </div>
 
 <div fxLayout="row" fxLayoutAlign="center none">
-    <!--        <img src="assets/img/time-management-clock.png" alt="Clock picture" width="100%"/>-->
     <div class="paused-task-background" fxFlex="100">
         <p>
             Paused Task(s)
@@ -208,12 +197,11 @@ Description: Template for the dashboard.
                 <mat-card *ngIf="task.state == 'PAUSED' " >
                     <mat-card-header>
                         <mat-card-title>{{task.name}}</mat-card-title>
-                        <mat-card-subtitle>{{task.category}}</mat-card-subtitle>
+                        <mat-card-subtitle *ngFor="let category of task.categories" class="label-color">
+                            <b>{{category.name}}</b>
+                        </mat-card-subtitle>
                         <mat-card-subtitle>{{task.description}}</mat-card-subtitle>
                     </mat-card-header>
-                    <mat-card-actions>
-                        <button mat-button>View More</button>
-                    </mat-card-actions>
                 </mat-card>
             </div>
 
@@ -224,27 +212,23 @@ Description: Template for the dashboard.
 </div>
 
 <div fxLayout="row" fxLayoutAlign="center none">
-    <!--        <img src="assets/img/time-management-clock.png" alt="Clock picture" width="100%"/>-->
     <div class="created-task-background" fxFlex="100">
         <p>
             To-Do Task(s)
         </p>
 
         <div fxLayout="row wrap" fxLayoutAlign="center none"  fxLayoutGap="15px grid">
-            <!--            <cdk-virtual-scroll-viewport itemSize="50">-->
             <div *ngFor="let task of toDoTasks; let i = index">
                 <mat-card *ngIf="task.state == 'CREATED' " >
                     <mat-card-header>
                         <mat-card-title>{{task.name}}</mat-card-title>
-                        <mat-card-subtitle>{{task.category}}</mat-card-subtitle>
+                        <mat-card-subtitle *ngFor="let category of task.categories" class="label-color">
+                            <b>{{category.name}}</b>
+                        </mat-card-subtitle>
                         <mat-card-subtitle>{{task.description}}</mat-card-subtitle>
                     </mat-card-header>
-                    <mat-card-actions>
-                        <button mat-button>View More</button>
-                    </mat-card-actions>
                 </mat-card>
             </div>
-            <!--            </cdk-virtual-scroll-viewport>-->
 
         </div>
         <p></p>
@@ -253,7 +237,6 @@ Description: Template for the dashboard.
 </div>
 
 <div fxLayout="row" fxLayoutAlign="center none">
-    <!--        <img src="assets/img/time-management-clock.png" alt="Clock picture" width="100%"/>-->
     <div class="completed-task-background" fxFlex="100">
         <p>
             Completed Task(s)
@@ -265,12 +248,11 @@ Description: Template for the dashboard.
                 <mat-card *ngIf="task.state == 'COMPLETED' " >
                     <mat-card-header>
                         <mat-card-title>{{task.name}}</mat-card-title>
-                        <mat-card-subtitle>{{task.category}}</mat-card-subtitle>
+                        <mat-card-subtitle *ngFor="let category of task.categories" class="label-color">
+                            <b>{{category.name}}</b>
+                        </mat-card-subtitle>
                         <mat-card-subtitle>{{task.description}}</mat-card-subtitle>
                     </mat-card-header>
-<!--                    <mat-card-actions>-->
-<!--                        <button mat-button>View More</button>-->
-<!--                    </mat-card-actions>-->
                 </mat-card>
             </div>
 

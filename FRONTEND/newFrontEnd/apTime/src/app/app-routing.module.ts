@@ -19,6 +19,7 @@ import { TasksComponent } from './components/tasks/tasks.component';
 import { TaskCategoryComponent } from './components/task-category/task-category.component';
 import { ReportComponent } from './components/report/report.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { MeetTheTeamComponent } from './components/meet-the-team/meet-the-team.component';
 
 
 const routes: Routes = [
@@ -27,9 +28,8 @@ const routes: Routes = [
   { path: 'tasks', component: TasksComponent, pathMatch: 'full' },
   { path: 'category', component: TaskCategoryComponent, pathMatch: 'full' },
   { path: 'dashboard', component: DashboardComponent, pathMatch: 'full'},
-  { path: 'report', component: ReportComponent, pathMatch: 'full' }
-  
-
+  { path: 'report', component: ReportComponent, pathMatch: 'full' },
+  { path: 'meet', component: MeetTheTeamComponent, pathMatch: 'full' }
 ];
 
 @NgModule({

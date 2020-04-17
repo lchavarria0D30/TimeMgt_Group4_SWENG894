@@ -104,5 +104,5 @@ Description: Template for the create task dialog box.
     <mat-error *ngIf="isWrongDate"> End date and time should be later than start date and time.
     </mat-error>
     <button mat-flat-button color="primary" cdkFocusInitial (click) ="onYesClick()" [disabled]="!eTimeFormControl.valid || !sTimeFormControl.valid || !eDateFormControl.valid || !sDateFormControl.valid ||
-  !nameFormControl.valid" >Save</button>
+  !nameFormControl.valid" > <span class="header-text">Save </span> </button>
 </div>

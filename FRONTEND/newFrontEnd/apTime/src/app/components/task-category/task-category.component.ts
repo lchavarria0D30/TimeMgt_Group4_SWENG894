@@ -94,9 +94,17 @@ export class TaskCategoryComponent implements OnInit {
     this.catSevice.getCategories(this.sessionService.getToken()).subscribe({
       next: data => {
         this.categories = data;
+
+        this.categories.sort((a, b) => {
+          if (a.name > b.name) { return 1; }
+          if (a.name < b.name) { return -1; }
+          return 0;
+        });
+
         this.publicCats = this.categories.filter(
             cats => cats.public === true
         );
+
         this.privateCats = this.categories.filter(
             cats => cats.public === false
         );
