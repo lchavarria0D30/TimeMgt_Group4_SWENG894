@@ -4,6 +4,7 @@ import com.apptime.auth.model.AllUserTaskSummary;
 import com.apptime.auth.model.TaskCategory;
 import com.apptime.auth.model.UserTaskSummary;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,6 +15,7 @@ import java.util.Optional;
  */
 public interface TaskSummaryService {
     List<UserTaskSummary> getUserTaskSummaries(String username);
+    List<AllUserTaskSummary> getAllUserTaskSummariesByCategories(Collection<TaskCategory> publicCategories);
 
     Optional<UserTaskSummary> getUserTaskSummaryByCategory(String username, TaskCategory category);
     Optional<AllUserTaskSummary> getAllUserTaskSummaryByCategory(TaskCategory category);
