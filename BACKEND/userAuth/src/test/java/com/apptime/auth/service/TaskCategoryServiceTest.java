@@ -1,8 +1,12 @@
 package com.apptime.auth.service;
 
+import com.apptime.auth.BaseTest;
 import com.apptime.auth.model.Task;
 import com.apptime.auth.model.TaskCategory;
+import com.apptime.auth.repository.AllUserTaskSummaryRepository;
 import com.apptime.auth.repository.TaskCategoryRepository;
+import com.apptime.auth.repository.UserTaskSummaryRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,16 +32,22 @@ import static org.junit.jupiter.api.Assertions.fail;
  * The unit test class for TaskCategoryService
  */
 @SpringBootTest
-public class TaskCategoryServiceTest {
+public class TaskCategoryServiceTest extends BaseTest {
     @Autowired
     private TaskCategoryService service;
 
     @Autowired
     public TaskCategoryRepository repository;
 
+    @Autowired
+    public AllUserTaskSummaryRepository allUserTaskSummaryRepository;
+
+    @Autowired
+    public UserTaskSummaryRepository userTaskSummaryRepository;
+
     @BeforeEach
     public void init() {
-        repository.deleteAll();
+        cleanup();
     }
 
     @Test

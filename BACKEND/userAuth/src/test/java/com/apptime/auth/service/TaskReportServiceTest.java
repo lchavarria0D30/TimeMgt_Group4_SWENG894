@@ -1,11 +1,18 @@
 package com.apptime.auth.service;
 
+import com.apptime.auth.BaseTest;
+import com.apptime.auth.helper.SummaryHelper;
 import com.apptime.auth.model.Task;
+import com.apptime.auth.model.TaskCategory;
 import com.apptime.auth.model.TaskReport;
 import com.apptime.auth.model.TaskReportType;
+import com.apptime.auth.repository.AllUserTaskSummaryRepository;
+import com.apptime.auth.repository.TaskCategoryRepository;
 import com.apptime.auth.repository.TaskReportRepository;
 import com.apptime.auth.repository.TaskRepository;
+import com.apptime.auth.repository.UserTaskSummaryRepository;
 import com.apptime.auth.service.impl.TaskReportServiceImpl;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +20,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.text.SimpleDateFormat;
 import java.time.Duration;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -23,8 +31,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anySet;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 /**
@@ -33,22 +44,35 @@ import static org.mockito.Mockito.verify;
  * Use Case: TMGP4-26, TMGP4-31, TMGP4-35
  */
 @SpringBootTest
-public class TaskReportServiceTest {
+public class TaskReportServiceTest extends BaseTest {
     @Autowired
     private TaskRepository taskRepository;
+
+    @Autowired
+    private TaskCategoryRepository categoryRepository;
 
     @Autowired
     private TaskReportRepository reportRepository;
 
     @Autowired
+    public AllUserTaskSummaryRepository allUserTaskSummaryRepository;
+
+    @Autowired
+    public UserTaskSummaryRepository userTaskSummaryRepository;
+
+    @Autowired
     private TaskReportServiceImpl service;
+
+    private SummaryHelper summaryHelper;
 
     private SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_PATTERN);
 
     @BeforeEach
     public void init() {
-        reportRepository.deleteAll();
-        taskRepository.deleteAll();
+        cleanup();
+
+        summaryHelper = mock(SummaryHelper.class);
+        service.setSummaryHelper(summaryHelper);
         service.setReportRepository(reportRepository);
     }
 
@@ -80,9 +104,15 @@ public class TaskReportServiceTest {
     @Test
     public void testGenerateReportEndingLater() {
         String username = UUID.randomUUID().toString();
+
         Task task = new Task();
         task.setUserName(username);
         task.setName("name");
+
+        TaskCategory category = new TaskCategory("privateCategory", username, false);
+        categoryRepository.save(category);
+
+        task.setCategories(Collections.singleton(category));
 
         long current = System.currentTimeMillis();
         long gap = 1000L * 60 * 20; // 20 minutes
@@ -102,6 +132,7 @@ public class TaskReportServiceTest {
         assertEquals(Duration.ofMinutes(80), report.getActualDuration());
         assertEquals(Duration.ofMinutes(100), report.getScheduledDuration());
         assertEquals(80, report.getEfficiency());
+        verify(summaryHelper, times(1)).start(eq(username), anySet());
     }
 
     @Test
@@ -126,6 +157,7 @@ public class TaskReportServiceTest {
         assertEquals(gap, report.getDifference().toMillis());
         assertNotNull(report.getActualDuration());
         assertNull(report.getScheduledDuration());
+        verify(summaryHelper, never()).start(eq(username), anySet());
     }
 
     @Test

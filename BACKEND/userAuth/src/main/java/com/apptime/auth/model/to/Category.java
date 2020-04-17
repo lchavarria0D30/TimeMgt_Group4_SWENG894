@@ -49,6 +49,9 @@ public class Category {
     }
 
     public static Category parse(TaskCategory po) {
+        if (po == null) {
+            return null;
+        }
         return new Category(po.getId(), po.getName(), po.isPublic());
     }
 
