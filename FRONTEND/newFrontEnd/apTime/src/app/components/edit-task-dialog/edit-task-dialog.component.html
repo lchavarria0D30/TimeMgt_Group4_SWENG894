@@ -5,14 +5,14 @@ Description: Template for the edit task dialog box. Includes the forms where use
 -->
 <mat-toolbar color="primary" style="width:100%;">
     <mat-toolbar-row>
-        <h1 mat-dialog-title>Edit Task "{{task.name}}"</h1>
+        <h1 mat-dialog-title>{{dialogTitle}} "{{task.name}}"</h1>
         <span class="example-spacer"></span>
         <button mat-button  (click)="onNoClick()">
             <mat-icon class="text-button" aria-hidden="false" aria-label="Close">close</mat-icon>
         </button>
     </mat-toolbar-row>
 </mat-toolbar>
-<div mat-dialog-content>
+<div mat-dialog-content *ngIf="!suggView">
     <form>
         <div fxLayout="column">
             <mat-form-field>
@@ -94,10 +94,25 @@ Description: Template for the edit task dialog box. Includes the forms where use
         </div>
     </form>
 </div>
-<div mat-dialog-actions align="end" class="header-text">
+
+<div mat-dialog-content *ngIf="suggView">
+    <div fxLayout="column" >
+        <h4> <mat-icon inline="true">trending_up</mat-icon> <b> Confidence Factor: </b> {{factor}}</h4>
+        <h4> <mat-icon inline="true">schedule</mat-icon> <b> Suggested Duration: </b> {{suggestedDuration}} </h4>
+    </div>
+</div>
+
+<div mat-dialog-actions align="end" class="header-text" *ngIf="!suggView">
     <mat-error *ngIf="isWrongDate"> End date and time should be later than start date and time.
     </mat-error>
-    <button mat-raised-button color="primary" (click)="onYesClick()" cdkFocusInitial
+    <button mat-flat-button color="suggest" (click) ="onSuggClick()" [disabled]="!eTimeFormControl.valid || !sTimeFormControl.valid || !eDateFormControl.valid || !sDateFormControl.valid ||
+  !nameFormControl.valid || task.category === undefined" > <span class="header-text"> View Suggestions </span>  </button>
+
+    <button mat-raised-button color="primary" (click)="onYesClick()"
             [disabled]="!eTimeFormControl.valid || !sTimeFormControl.valid || !eDateFormControl.valid ||
             !sDateFormControl.valid || !nameFormControl.valid"> <span class="text-button">Save </span></button>
+</div>
+
+<div mat-dialog-actions *ngIf="suggView">
+    <button mat-stroked-button (click) ="onBackClick()"> <span class="label-color"> Back </span> </button>
 </div>

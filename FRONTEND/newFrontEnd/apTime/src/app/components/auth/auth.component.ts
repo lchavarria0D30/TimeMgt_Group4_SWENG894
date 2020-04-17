@@ -4,7 +4,7 @@
  * Jira Task: N/A
  * Description: Component for the Authorization in the app (not used).
  *
- **/
+ */
 import { Component, OnInit } from '@angular/core';
 
 @Component({
