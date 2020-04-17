@@ -28,7 +28,10 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
@@ -84,6 +87,19 @@ public class TaskSummaryControllerTest extends AbstractControllerTest {
         summary3.setAverageDuration(Duration.ofMinutes(30));
         userTaskSummaryRepository.save(summary3);
 
+        AllUserTaskSummary allUserTaskSummary1 = new AllUserTaskSummary();
+        allUserTaskSummary1.setCategoryId(category2.getId());
+        allUserTaskSummary1.setAverageDuration(Duration.ofMinutes(45));
+        allUserTaskSummaryRepository.save(allUserTaskSummary1);
+
+        TaskCategory category3 = new TaskCategory("c3", UUID.randomUUID().toString(), true);
+        categoryRepository.save(category3);
+        AllUserTaskSummary allUserTaskSummary2 = new AllUserTaskSummary();
+        allUserTaskSummary2.setCategoryId(category3.getId());
+        allUserTaskSummary2.setAverageDuration(Duration.ofMinutes(35));
+        allUserTaskSummaryRepository.save(allUserTaskSummary2);
+
+
         ResultActions actions = mockMvc.perform(MockMvcRequestBuilders.get("/summary/mine")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
@@ -93,10 +109,39 @@ public class TaskSummaryControllerTest extends AbstractControllerTest {
         List<Map<String, Object>> list = mapper.readValue(content, List.class);
         assertEquals(2, list.size());
         for (Map<String, Object> map : list) {
-            String type = (String) map.get("type");
-            assertEquals(SummaryType.MINE.name(), type);
-            assertTrue(map.containsKey("category"));
-            assertTrue(map.containsKey("averageDuration"));
+            Map<String, Object> category = (Map<String, Object>) map.get("category");
+            String categoryName = (String) category.get("name");
+            Boolean isPublic = (Boolean) category.get("public");
+
+            Map<String, Object> userSummary = (Map<String, Object>) map.get("summaryForCurrentUser");
+            Map<String, Object> allUserSummary = (Map<String, Object>) map.get("summaryForAllUsers");
+
+            if (category1.getName().equals(categoryName)) {
+                assertFalse(isPublic);
+                assertNotNull(userSummary);
+                assertNull(allUserSummary);
+
+                String type = (String) userSummary.get("type");
+                assertEquals(SummaryType.MINE.name(), type);
+                assertTrue(userSummary.containsKey("category"));
+                assertTrue(userSummary.containsKey("averageDuration"));
+            } else if (category2.getName().equals(categoryName)) {
+                assertTrue(isPublic);
+                assertNotNull(userSummary);
+                assertNotNull(allUserSummary);
+
+                String type = (String) userSummary.get("type");
+                assertEquals(SummaryType.MINE.name(), type);
+                assertTrue(userSummary.containsKey("category"));
+                assertTrue(userSummary.containsKey("averageDuration"));
+
+                String allUserSummaryType = (String) allUserSummary.get("type");
+                assertEquals(SummaryType.ALL_USERS.name(), allUserSummaryType);
+                assertTrue(allUserSummary.containsKey("category"));
+                assertTrue(allUserSummary.containsKey("averageDuration"));
+            } else {
+                fail();
+            }
         }
     }
 

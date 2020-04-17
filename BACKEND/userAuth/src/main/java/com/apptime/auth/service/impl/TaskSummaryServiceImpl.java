@@ -9,9 +9,11 @@ import com.apptime.auth.service.TaskSummaryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * @author Qi Zhang
@@ -32,6 +34,14 @@ public class TaskSummaryServiceImpl implements TaskSummaryService {
             return Collections.emptyList();
         }
         return userTaskSummaryRepository.findByUsername(username);
+    }
+
+    @Override
+    public List<AllUserTaskSummary> getAllUserTaskSummariesByCategories(Collection<TaskCategory> publicCategories) {
+        if (publicCategories == null || publicCategories.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return allUserTaskSummaryRepository.findByCategoryIds(publicCategories.stream().map(TaskCategory::getId).collect(Collectors.toList()));
     }
 
     @Override
