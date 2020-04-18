@@ -16,7 +16,7 @@
 			<id>dev</id>
 			<activation>
 				<!-- this profile is active by default -->
-				<activeByDefault>false</activeByDefault>
+				<activeByDefault>true</activeByDefault>
 			<!--	 activate if system properties 'env=dev' -->
 				<property>
 					<name>env</name>
@@ -38,18 +38,13 @@
 					<artifactId>h2</artifactId>
 					<version>1.4.196</version>
 					<scope>runtime</scope>
-
 				</dependency>
-
-
 			</dependencies>
 		</profile>
 		<profile>
-			<id>postgres</id>
+			<id>aws</id>
 			<activation>
-				 	<activeByDefault>false</activeByDefault>
-
-
+				<activeByDefault>false</activeByDefault>
 				<property>
 					<name>env</name>
 					<value>postgres</value>
@@ -57,9 +52,9 @@
 			</activation>
 			<properties>
 				<db.driverClassName>org.postgresql.Driver</db.driverClassName>
-				<db.url>jdbc:postgresql://localhost:5432/authDb</db.url>
-				<db.username>flowable</db.username>
-				<db.password>flowable</db.password>
+				<db.url>jdbc:postgresql://aa4gunc5mrmbny.cfbbfychwenn.us-east-2.rds.amazonaws.com:5432/ebdb</db.url>
+				<db.username>authdb</db.username>
+				<db.password>password</db.password>
 			</properties>
 			<dependencies>
 				<dependency>
@@ -69,7 +64,6 @@
 				</dependency>
 			</dependencies>
 		</profile>
-
 	</profiles>
 
 	<parent>
@@ -159,6 +153,11 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>1.7.20</version>
+		</dependency>
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>42.2.12</version>
 		</dependency>
 
 	</dependencies>
