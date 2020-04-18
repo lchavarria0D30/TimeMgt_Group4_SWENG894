@@ -3,6 +3,7 @@ import {FormControl, Validators} from "@angular/forms";
 import {HttpClient} from "@angular/common/http";
 import {SessionService} from "../../services/session.service";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import {environment} from '../../../environments/environment';
 
 
 export interface DialogData {
@@ -74,7 +75,7 @@ export class StartPopupTaskComponent implements OnInit {
       scheduledEnd: scheduledEnd
     };
 
-    this.http.post('http://localhost:8001/tasks/newtask', body, { headers }).subscribe({
+    this.http.post(environment.baseUrl+'/tasks/newtask', body, { headers }).subscribe({
       next: data => {
         this.dialogRef.close(data);
       },
@@ -97,7 +98,7 @@ export class StartPopupTaskComponent implements OnInit {
       CategoryID: this.selectedCategory
     };
 
-    this.http.post('http://localhost:8001/tasks/predict', body , { headers }).subscribe({
+    this.http.post(environment.baseUrl+'/tasks/predict', body , { headers }).subscribe({
       next: data => {
         this.suggestions = data;
         this.factor = this.suggestions.Confidence;
@@ -125,7 +126,7 @@ export class StartPopupTaskComponent implements OnInit {
     const headers = { Authorization: 'Bearer ' + this.token
     };
 
-    this.http.get('http://localhost:8001/category/', { headers }).subscribe({
+    this.http.get(environment.baseUrl+'/category/', { headers }).subscribe({
       next: data => {
         this.categories = this.categories.concat(data);
         this.categories.sort((a, b) => {

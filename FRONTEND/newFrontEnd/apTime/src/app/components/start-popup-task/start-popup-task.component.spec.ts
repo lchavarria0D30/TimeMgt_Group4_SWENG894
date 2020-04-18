@@ -13,6 +13,7 @@ import { EditTaskDialogComponent } from '../edit-task-dialog/edit-task-dialog.co
 import { StartTaskDialogComponent } from '../start-task-dialog/start-task-dialog.component';
 import { ConfirmTaskDialogComponent } from '../confirm-task-dialog/confirm-task-dialog.component';
 import { StartPopupTaskComponent } from './start-popup-task.component';
+import {environment} from '../../../environments/environment';
 import {
   MatFormFieldModule,
   MatInputModule,
@@ -72,18 +73,18 @@ describe('StartPopupTaskComponent', () => {
 
   it('should call the service for getCategory - No Error', () => {
     expect(component.onNoClick).toBeTruthy();
-    const categoryMineRequest = httpMock.expectOne('http://localhost:8001/category/');
+    const categoryMineRequest = httpMock.expectOne(environment.baseUrl+'/category/');
     categoryMineRequest.flush([]);
-   /* const categoryPublicRequest = httpMock.expectOne('http://localhost:8001/category/public');
+   /* const categoryPublicRequest = httpMock.expectOne(environment.baseUrl+'/category/public');
     categoryPublicRequest.flush([]);
     httpMock.verify();*/
   });
 
   it('should call the service for getCategory - Error ', () => {
     expect(component.onNoClick).toBeTruthy();
-    const categoryMineRequest = httpMock.expectOne('http://localhost:8001/category/');
+    const categoryMineRequest = httpMock.expectOne(environment.baseUrl+'/category/');
     categoryMineRequest.error(new ErrorEvent('Generated testing error'));
-/*    const categoryPublicRequest = httpMock.expectOne('http://localhost:8001/category/public');
+/*    const categoryPublicRequest = httpMock.expectOne(environment.baseUrl+'/category/public');
     categoryPublicRequest.flush([]);*/
     httpMock.verify();
   });

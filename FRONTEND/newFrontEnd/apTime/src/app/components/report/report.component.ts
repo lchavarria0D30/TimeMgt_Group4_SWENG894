@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { SessionService } from 'src/app/services/session.service';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
+import {environment} from '../../../environments/environment';
 
 export class Report {
   id: number;
@@ -58,7 +59,7 @@ export class ReportComponent implements OnInit {
       'Content-Type': 'application/json'
     };
     this._http
-      .get<Report[]>('http://localhost:8001/report/', {
+      .get<Report[]>(environment.baseUrl+'/report/', {
         headers
       })
       .subscribe({
@@ -86,7 +87,7 @@ export class ReportComponent implements OnInit {
     };
     this._http
       .get<Report[]>(
-        'http://localhost:8001/report?startDate=' +
+        environment.baseUrl+'/report?startDate=' +
           start +
           '&' +
           'endDate=' +

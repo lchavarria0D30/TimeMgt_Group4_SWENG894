@@ -13,6 +13,7 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {HttpClient} from '@angular/common/http';
 import {SessionService} from '../../services/session.service';
 import {DialogData} from '../tasks/tasks.component';
+import {environment} from '../../../environments/environment';
 
 @Component({
   selector: 'app-edit-task-dialog',
@@ -139,7 +140,7 @@ export class EditTaskDialogComponent implements OnInit {
         scheduledEnd: this.scheduledEnd
       };
 
-      this.http.put('http://localhost:8001/tasks/task', body, {headers}).subscribe({
+      this.http.put(environment.baseUrl+'/tasks/task', body, {headers}).subscribe({
         next: data => console.log('Task saved'),
         error: error => console.error('There was an error!', error)
       });
@@ -168,7 +169,7 @@ export class EditTaskDialogComponent implements OnInit {
         CategoryID: this.selectedCategory
       };
 
-      this.http.post('http://localhost:8001/tasks/predict', body , { headers }).subscribe({
+      this.http.post(environment.baseUrl+'/tasks/predict', body , { headers }).subscribe({
         next: data => {
           this.suggestions = data;
           this.factor = this.suggestions.Confidence;
@@ -210,7 +211,7 @@ export class EditTaskDialogComponent implements OnInit {
     const headers = { Authorization: 'Bearer ' + this.sessionService.getToken()
     };
 
-    this.http.get('http://localhost:8001/category/', { headers }).subscribe({
+    this.http.get(environment.baseUrl+'/category/', { headers }).subscribe({
       next: data => {
         this.categories = this.categories.concat(data);
         this.categories.sort((a, b) => {

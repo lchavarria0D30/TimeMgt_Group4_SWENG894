@@ -13,6 +13,7 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {HttpClient} from '@angular/common/http';
 import {SessionService} from '../../services/session.service';
 import {DialogData} from '../tasks/tasks.component';
+import {environment} from '../../../environments/environment'
 
 @Component({
   selector: 'app-create-task-dialog',
@@ -99,7 +100,7 @@ export class CreateTaskDialogComponent implements OnInit {
       };
 
 
-      this.http.post('http://localhost:8001/tasks/newtask', body, { headers }).subscribe({
+      this.http.post(environment.baseUrl+'/tasks/newtask', body, { headers }).subscribe({
         next: data => console.log('new task created'),
         error: error => console.error('There was an error!', error)
       });
@@ -128,7 +129,7 @@ export class CreateTaskDialogComponent implements OnInit {
         CategoryID: this.selectedCategory
       };
 
-      this.http.post('http://localhost:8001/tasks/predict', body , { headers }).subscribe({
+      this.http.post(environment.baseUrl+'/tasks/predict', body , { headers }).subscribe({
         next: data => {
           this.suggestions = data;
           this.factor = this.suggestions.Confidence;
@@ -171,7 +172,7 @@ export class CreateTaskDialogComponent implements OnInit {
     const headers = { Authorization: 'Bearer ' + this.token
     };
 
-    this.http.get('http://localhost:8001/category/', { headers }).subscribe({
+    this.http.get(environment.baseUrl+'/category/', { headers }).subscribe({
       next: data => {
         this.categories = this.categories.concat(data);
         this.categories.sort((a, b) => {
