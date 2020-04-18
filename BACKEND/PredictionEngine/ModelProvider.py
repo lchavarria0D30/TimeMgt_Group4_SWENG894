@@ -6,7 +6,7 @@ from flask import Flask, jsonify
 from flask import request
 import math
 from flask_cors import CORS
-#http://127.0.0.1:5000/prediction/api/v1.0/task?plannedDuration=120&Category=3
+# http://127.0.0.1:5000/prediction/api/v1.0/task?plannedDuration=120&Category=3
 app = Flask(__name__)
 CORS(app)
 new_model = load_model('./model/model.h5')
@@ -22,9 +22,9 @@ def get_tasks():
     print(Y_predKM[0][0])
     predf = float(pred)
     durf = float(dur)
-    conf = math.floor ((1+ ( durf - predf)/pred)*100)
-    return jsonify({'duration': str(pred), 'confidance':str(conf)+"%"})
+    conf = math.floor((1 + (durf - predf)/pred)*100)
+    return jsonify({'duration': str(pred), 'confidence': str(conf)+"%"})
 
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0",port=5000, threaded=False)
+    app.run(host="0.0.0.0", port=5000, threaded=False)
