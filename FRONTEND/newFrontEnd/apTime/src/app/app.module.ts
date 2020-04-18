@@ -41,6 +41,7 @@ import { StartTaskDialogComponent } from './components/start-task-dialog/start-t
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { ConfirmTaskDialogComponent } from './components/confirm-task-dialog/confirm-task-dialog.component';
 import { StartPopupTaskComponent } from './components/start-popup-task/start-popup-task.component';
+import { MeetTheTeamComponent } from './components/meet-the-team/meet-the-team.component';
 
 
 @NgModule({
@@ -59,7 +60,8 @@ import { StartPopupTaskComponent } from './components/start-popup-task/start-pop
     StartTaskDialogComponent,
     DashboardComponent,
     ConfirmTaskDialogComponent,
-    StartPopupTaskComponent
+    StartPopupTaskComponent,
+    MeetTheTeamComponent
   ],
 
   imports: [

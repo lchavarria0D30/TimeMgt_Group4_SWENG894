@@ -43,7 +43,9 @@ public class NotificationControllerTest extends AbstractControllerTest {
     @BeforeEach
     public void init() {
         MockitoAnnotations.initMocks(this);
-        notificationRepository.deleteAll();
+
+        cleanup();
+
         initMvc();
     }
 

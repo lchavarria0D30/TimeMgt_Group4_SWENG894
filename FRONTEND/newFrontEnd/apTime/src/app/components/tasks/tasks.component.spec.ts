@@ -16,7 +16,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatDialog} from '@angular/material/dialog';
 import {EMPTY} from 'rxjs';
 import { TasksComponent } from './tasks.component';
-import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
+import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
 import {
   MatFormFieldModule,
   MatInputModule,
@@ -35,7 +35,7 @@ describe('TasksComponent', () => {
   let num: number;
   let index: number;
   const dialogMock = {
-    close: () =>{ }
+    close: () => { }
   };
 
   beforeEach(async(() => {
@@ -111,12 +111,12 @@ describe('TasksComponent', () => {
     const openPopSpy = spyOn(component.dialog, 'open')
         .and
         .returnValue({afterClosed: () => EMPTY} as any);
-    component.openStartPopUpDialog(1, 'TestTask');
+    component.openStartPopUpDialog();
     expect(openPopSpy).toHaveBeenCalled();
   });
 
   it('should be Defined getTasks', async(() => {
-    let spy = spyOn(component, 'getTasks').and.callThrough();
+    const spy = spyOn(component, 'getTasks').and.callThrough();
     component.getTasks();
     fixture.whenStable().then(() => {
       expect(spy).toBeDefined();

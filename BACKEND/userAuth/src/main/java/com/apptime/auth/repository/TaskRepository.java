@@ -12,12 +12,10 @@ import org.springframework.data.jpa.repository.Query;
  * @author Bashiir Mohamed
  * this class represent jpa Task repository
  */
-public interface TaskRepository extends JpaRepository<Task, Integer>{
+public interface TaskRepository extends JpaRepository<Task, Long>{
 	
 	//find task by username
 	 List<Task> findByUserName(String user);
-//view task details
-	Task findById(Long id);
 	//view task details
 	Task findByIdAndUserName(Long id, String userName);
 	Task findByUserNameAndState(String userName, TaskState state);

@@ -3,10 +3,204 @@ Author: Yanisse
 Jira Task: TBD
 Description: Template for the homepage.
 -->
-<!--<div fxLayout="column" fxLayoutAlign="space-evenly none">-->
-<!--&lt;!&ndash;        <img src="assets/img/tasks.jpg" alt="Task picture" height="300px"/>&ndash;&gt;-->
-<!--    <div fxFlex="40" fxFlexOffset="20">-->
 
+<div fxLayout="row wrap" fxLayout.xs="column wrap" fxLayoutAlign="center stretch">
+<!--        <img src="assets/img/tasks.jpg" alt="Task picture" height="300px"/>-->
+    <div fxLayout="column" fxLayoutAlign="space-around center" fxFlex="100" class="space-toolbar">
+
+        <p>
+            Need help managing your daily tasks?
+        </p>
+        <p></p>
+        <img src="assets/img/frontimg.png" alt="Task picture" height="300px" class="main-img"/>
+        <p></p>
+        <h2>Time Helper is here!</h2>
 <!--    </div>-->
-<!--</div>-->
-<p>Home works!</p>
+<!--    <div fxLayout="column" fxLayoutAlign="space-around center" fxFlex="50" class="space-toolbar">-->
+        <p></p>
+
+    </div>
+</div>
+
+<div fxLayout="row wrap" fxLayoutAlign="center center" class="space-toolbar">
+    <p></p>
+</div>
+
+<div fxLayout="row wrap" fxLayout.xs="column wrap"  fxLayoutAlign="center center" fxLayoutGap="15px grid"
+     class="space-toolbar">
+
+    <div fxLayout="column" fxLayoutAlign="space-around center" fxFlex="30">
+        <p></p>
+        <div class="circle">
+            <mat-icon class="mat-icon-size">assignment</mat-icon>
+        </div>
+        <h3>Tasks</h3>
+        <p>Manage your daily tasks</p>
+    </div>
+    <div fxLayout="column" fxLayoutAlign="space-around center" fxFlex="40">
+        <p></p>
+        <div class="circle">
+            <mat-icon class="mat-icon-size">category</mat-icon>
+        </div>
+        <h3>Categorize</h3>
+        <p>Classify your tasks</p>
+    </div>
+    <div fxLayout="column" fxLayoutAlign="space-around center" fxFlex="30">
+        <p></p>
+        <div class="circle">
+            <mat-icon class="mat-icon-size">view_list</mat-icon>
+        </div>
+        <h3>Report</h3>
+        <p>Insights on your performance</p>
+    </div>
+
+</div>
+
+<div fxLayout="row wrap" fxLayout.xs="column wrap" fxLayoutAlign="center stretch" >
+    <div fxLayout="column" fxLayoutAlign="space-around center" fxFlex="50" class="space-toolbar">
+        <p></p>
+        <h3>Personalized Tasks</h3>
+        <mat-card>
+            <mat-card-header>
+
+
+                <div fxFlex="50">
+
+                    <mat-card-title>Presentation </mat-card-title>
+                    <mat-card-subtitle class="label-color">
+                        <b>Work</b>
+                    </mat-card-subtitle>
+                    <mat-card-subtitle>Complete the presentation</mat-card-subtitle>
+
+
+                </div>
+
+                <div fxFlex="50">
+                    <button mat-button color="primary" >
+                        <mat-icon>play_circle_filled</mat-icon> Start
+                    </button>
+                </div>
+
+            </mat-card-header>
+            <mat-card-content>
+                <div fxLayout="column">
+
+                    <div fxLayout="row" fxLayoutGap="15px">
+                        <div fxFlex="">
+                            <mat-label class="label-color">Start Date</mat-label>
+                        </div>
+                        <div fxFlex="">
+                            <mat-label class="label-color">Start Time</mat-label>
+                        </div>
+                    </div>
+
+                    <div fxLayout="row" fxLayoutGap="15px">
+                        <div fxFlex="">
+                            <mat-label>April 20, 2020</mat-label>
+                        </div>
+                        <div fxFlex="">
+                            <mat-label>10:00 AM</mat-label>
+                        </div>
+                    </div>
+
+                    <div><p></p></div>
+
+                    <div fxLayout="row" fxLayoutGap="15px">
+                        <div fxFlex="">
+                            <mat-label class="label-color">End Date</mat-label>
+                        </div>
+                        <div fxFlex="">
+                            <mat-label class="label-color">End Time</mat-label>
+                        </div>
+                    </div>
+
+                    <div fxLayout="row" fxLayoutGap="15px">
+                        <div fxFlex="">
+                            <mat-label>April 20, 2020</mat-label>
+                        </div>
+                        <div fxFlex="">
+                            <mat-label>12:00 PM</mat-label>
+                        </div>
+                    </div>
+
+
+                </div>
+            </mat-card-content>
+            <mat-card-actions>
+                <button mat-button >
+                    <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-button >
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </mat-card-actions>
+
+        </mat-card>
+        <p></p>
+    </div>
+
+    <div fxLayout="column" fxLayoutAlign="space-around center" fxFlex="50" >
+        <h3 class="sec-header-text">Tasks Features</h3>
+        <p> <mat-icon>done_outline</mat-icon> Start the task anytime</p>
+        <p> <mat-icon>done_outline</mat-icon> Pause and Restart anytime</p>
+        <p> <mat-icon>done_outline</mat-icon> Complete the task</p>
+        <p> <mat-icon>done_outline</mat-icon> Obtain insights on your task's performance</p>
+
+    </div>
+
+</div>
+
+<div fxLayout="row wrap" fxLayout.xs="column wrap" fxLayoutAlign="center stretch" >
+    <div fxLayout="column" fxLayoutAlign="space-around center" fxFlex="30" class="space-toolbar">
+        <p></p>
+        <h3>Notifications </h3>
+        When tasks are:
+        <p> <mat-icon>done_outline</mat-icon> Close to be started</p>
+        <p> <mat-icon>done_outline</mat-icon> Close to be finished</p>
+        <p> <mat-icon>done_outline</mat-icon> Behind of schedule</p>
+        <p> <mat-icon>done_outline</mat-icon> Ahead of schedule</p>
+
+        <p></p>
+    </div>
+    <div fxLayout="column" fxLayoutAlign="space-around center" fxFlex="40" class="space-toolbar">
+        <p></p>
+        <h3>Estimation Accuracy </h3>
+        Machine Learning
+        <p> <mat-icon>done_outline</mat-icon> Measures the accuracy of the current task duration</p>
+        <p> <mat-icon>done_outline</mat-icon> Calculates a confidence factor for the estimated task's completion</p>
+
+
+        <p></p>
+    </div>
+    <div fxLayout="column" fxLayoutAlign="space-around center" fxFlex="30" class="space-toolbar">
+        <p></p>
+        <h3>Suggestions</h3>
+        <p> <mat-icon>done_outline</mat-icon> Best time to complete the task</p>
+        <p> <mat-icon>done_outline</mat-icon> Best duration for the task</p>
+        <p></p>
+    </div>
+
+
+</div>
+
+<div fxLayout="row wrap" fxLayout.xs="column wrap" fxLayoutAlign="center stretch" >
+<div fxLayout="column" fxLayoutAlign="space-around center" fxFlex="100" >
+    <h4 class="header-text">Try it now</h4>
+    <button mat-raised-button color="primary">
+        <span class="text-button" routerLink="/login">  Let's get started! </span>
+    </button>
+    <p></p>
+</div>
+</div>
+
+<mat-toolbar class="space-toolbar">
+    <mat-toolbar-row>
+        <button mat-button routerLink="/" > <span class="text-button"> Home </span></button> |
+        <button mat-button routerLink="/login"> <span class="text-button"> Login </span> </button> |
+        <button mat-button routerLink="/meet"> <span class="text-button"> Contact Us </span></button>
+        <span class="fill-remaining-space"></span>
+        <p class="footer-small-letters">Current Version 1.0
+        Angular 8</p>
+        <mat-icon class="example-icon" aria-hidden="false" aria-label="Example user verified icon">verified_user</mat-icon>
+    </mat-toolbar-row>
+</mat-toolbar>

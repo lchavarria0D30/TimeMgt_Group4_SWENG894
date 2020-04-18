@@ -6,3 +6,11 @@
 .mat-flat-button{
    color: white !important;
  }
+
+.toolbar-spacer {
+    flex: 1 1 auto;
+}
+
+.meet-button {
+    background-color: white;
+}

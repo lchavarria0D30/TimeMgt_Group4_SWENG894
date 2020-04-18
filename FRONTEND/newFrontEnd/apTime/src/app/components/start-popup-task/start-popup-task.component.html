@@ -1,60 +1,77 @@
 <mat-toolbar color="primary" style="width:100%;">
     <mat-toolbar-row>
-        <h1 mat-dialog-title>Starts at: {{today | date: 'medium'}}</h1>
+        <h1 mat-dialog-title>{{dialogTitle}} {{today | date: 'medium'}}</h1>
         <span class="example-spacer"></span>
         <button mat-button (click)="onNoClick()">
             <mat-icon class="example-icon" aria-hidden="false" aria-label="Close button" class="header-text">close</mat-icon>
         </button>
     </mat-toolbar-row>
 </mat-toolbar>
+<div mat-dialog-content *ngIf="!suggView">
+    <div fxLayout="column">
+        <mat-form-field>
+            <mat-label>Name</mat-label>
+            <input matInput [(ngModel)]="taskName" [formControl]="nameFormControl">
+            <mat-error *ngIf="nameFormControl.hasError('required')">
+                Name is <strong>required</strong>
+            </mat-error>
 
-<div fxLayout="column">
-    <mat-form-field>
-        <mat-label>Name</mat-label>
-        <input matInput [(ngModel)]="taskName" [formControl]="nameFormControl">
-        <mat-error *ngIf="nameFormControl.hasError('required')">
-            Name is <strong>required</strong>
-        </mat-error>
+        </mat-form-field>
 
-    </mat-form-field>
+        <mat-form-field>
+            <mat-label>Category</mat-label>
+            <mat-select [(ngModel)]="selectedCategory">
+                <mat-option *ngFor="let category of categories" [value]="category.id">
+                    {{category.name}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
 
-    <mat-form-field>
-        <mat-label>Category</mat-label>
-        <mat-select [(ngModel)]="selectedCategory">
-            <mat-option *ngFor="let category of categories" [value]="category.id">
-                {{category.name}}
-            </mat-option>
-        </mat-select>
-    </mat-form-field>
+        <p><b>Duration</b></p>
+        <div fxLayout="row" fxLayoutGap="15px">
+            <div fxFlex="100">
+                <mat-form-field>
+                    <mat-label>Hours</mat-label>
+                    <input matInput [(ngModel)]="hours" [formControl]="hoursFormControl">
 
-    <p><b>Duration</b></p>
-    <div fxLayout="row" fxLayoutGap="15px">
-        <div fxFlex="100">
-            <mat-form-field>
-                <mat-label>Hours</mat-label>
-                <input matInput [(ngModel)]="hours" [formControl]="hoursFormControl">
+                    <mat-error *ngIf="hoursFormControl.hasError('required')"> Hour(s) are <strong>required</strong>
+                    </mat-error>
+                    <mat-error *ngIf="hoursFormControl.hasError('pattern')"> Only numbers are accepted
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div fxFlex="100">
+                <mat-form-field>
+                    <mat-label>Minutes</mat-label>
+                    <input matInput [(ngModel)]="minutes" [formControl]="minutesFormControl">
 
-                <mat-error *ngIf="hoursFormControl.hasError('required')"> Hour(s) are <strong>required</strong>
-                </mat-error>
-                <mat-error *ngIf="hoursFormControl.hasError('pattern')"> Only numbers are accepted
-                </mat-error>
-            </mat-form-field>
+                    <mat-error *ngIf="minutesFormControl.hasError('required')"> Minutes are <strong>required</strong>
+                    </mat-error>
+                    <mat-error *ngIf="minutesFormControl.hasError('pattern')"> Minutes must be in <strong>00-59</strong> range
+                    </mat-error>
+                </mat-form-field>
+
+
+            </div>
         </div>
-        <div fxFlex="100">
-            <mat-form-field>
-                <mat-label>Minutes</mat-label>
-                <input matInput [(ngModel)]="minutes" [formControl]="minutesFormControl">
 
-                <mat-error *ngIf="minutesFormControl.hasError('required')"> Minutes are <strong>required</strong>
-                </mat-error>
-                <mat-error *ngIf="minutesFormControl.hasError('pattern')"> Minutes must be in <strong>00-59</strong> range
-                </mat-error>
-            </mat-form-field>
-
-
-        </div>
     </div>
+</div>
 
-    <button mat-flat-button color="primary" cdkFocusInitial (click) ="onYesClick()" [disabled]=" !hoursFormControl.valid || !minutesFormControl.valid ||
-  !nameFormControl.valid" >Start Task</button>
+<div mat-dialog-content *ngIf="suggView">
+    <div fxLayout="column" >
+        <h4> <mat-icon inline="true">trending_up</mat-icon> <b> Confidence Factor: </b> {{factor}}</h4>
+        <h4> <mat-icon inline="true">schedule</mat-icon> <b> Suggested Duration: </b> {{suggestedDuration}} </h4>
+    </div>
+</div>
+
+<div mat-dialog-actions align="end" class="header-text" *ngIf="!suggView">
+    <button mat-flat-button color="suggest" (click) ="onSuggClick()" [disabled]=" !hoursFormControl.valid || !minutesFormControl.valid ||
+            !nameFormControl.valid" > <span class="header-text"> View Suggestions </span>  </button>
+    <button mat-flat-button color="primary" (click) ="onYesClick()" [disabled]=" !hoursFormControl.valid || !minutesFormControl.valid ||
+  !nameFormControl.valid" > <span class="header-text">Start Task </span></button>
+</div>
+
+<div mat-dialog-actions *ngIf="suggView">
+    <button mat-stroked-button (click) ="onBackClick()"> <span class="label-color"> Back </span> </button>
 </div>

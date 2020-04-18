@@ -125,10 +125,12 @@ public class NotificationServiceImpl implements NotificationService {
         }
 
         long taskId = report.getTaskId();
-        Task task = taskRepository.findById(taskId);
-        if (task == null) {
+        Optional<Task> taskOptional = taskRepository.findById(taskId);
+        if (!taskOptional.isPresent()) {
             return false;
         }
+
+        Task task = taskOptional.get();
 
         String key = Long.toString(taskId);
 

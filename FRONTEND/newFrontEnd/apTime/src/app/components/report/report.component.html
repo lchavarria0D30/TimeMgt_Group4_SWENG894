@@ -22,17 +22,17 @@
 
 <div *ngIf="displayReport">
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-    'id', 'taskId', 'owner', 'type', 'difference', 'scheduledDuration',
-    'actualDuration', 'efficiency'
     <!-- Position Column -->
     <ng-container matColumnDef="id">
-      <th mat-header-cell *matHeaderCellDef>Report id.</th>
-      <td mat-cell *matCellDef="let element">{{ element.id }}</td>
+      <th [hidden]="true" mat-header-cell *matHeaderCellDef>Report id.</th>
+      <td [hidden]="true" mat-cell *matCellDef="let element">
+        {{ element.id }}
+      </td>
     </ng-container>
 
     <!-- Name Column -->
     <ng-container matColumnDef="taskId">
-      <th mat-header-cell *matHeaderCellDef>Task</th>
+      <th mat-header-cell *matHeaderCellDef>Task Name</th>
       <td mat-cell *matCellDef="let element">{{ element.taskId }}</td>
     </ng-container>
 
@@ -45,32 +45,68 @@
     </ng-container>
     <!-- Weight Column -->
     <ng-container matColumnDef="type">
-      <th mat-header-cell *matHeaderCellDef>Type</th>
-      <td mat-cell *matCellDef="let element">{{ element.type }}</td>
+      <th [hidden]="true" mat-header-cell *matHeaderCellDef>Type</th>
+      <td [hidden]="true" mat-cell *matCellDef="let element">
+        {{ element.type }}
+      </td>
     </ng-container>
 
     <!-- Symbol Column -->
     <ng-container matColumnDef="difference">
-      <th mat-header-cell *matHeaderCellDef>Difference</th>
-      <td mat-cell *matCellDef="let element">{{ element.difference }}</td>
+      <th [hidden]="true" mat-header-cell *matHeaderCellDef>Difference</th>
+      <td [hidden]="true" mat-cell *matCellDef="let element">
+        {{ element.difference }}
+      </td>
     </ng-container>
 
     <!-- Symbol Column -->
     <ng-container matColumnDef="scheduledDuration">
-      <th mat-header-cell *matHeaderCellDef>Scheduled Duration</th>
+      <th mat-header-cell *matHeaderCellDef>Planned Task Duration</th>
       <td mat-cell *matCellDef="let element">
         {{ element.scheduledDuration }}
       </td>
     </ng-container>
     <!-- Symbol Column -->
     <ng-container matColumnDef="actualDuration">
-      <th mat-header-cell *matHeaderCellDef>Actual Duration</th>
+      <th mat-header-cell *matHeaderCellDef>Actual Task Duration</th>
       <td mat-cell *matCellDef="let element">{{ element.actualDuration }}</td>
     </ng-container>
     <!-- Symbol Column -->
     <ng-container matColumnDef="efficiency">
-      <th mat-header-cell *matHeaderCellDef>Efficiency</th>
-      <td mat-cell *matCellDef="let element">{{ element.efficiency }}</td>
+      <th [hidden]="true" mat-header-cell *matHeaderCellDef>Efficiency</th>
+      <td [hidden]="true" mat-cell *matCellDef="let element">
+        {{ element.efficiency }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actualStartDate">
+      <th mat-header-cell *matHeaderCellDef>Task Started</th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.actualStartDate }} {{ element.actualStartTime }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actualStartTime">
+      <th [hidden]="true" mat-header-cell *matHeaderCellDef>
+        Actual start time
+      </th>
+      <td [hidden]="true" mat-cell *matCellDef="let element">
+        {{ element.actualStartTime }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actualEndDate">
+      <th mat-header-cell *matHeaderCellDef>Task Ended</th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.actualEndDate }} {{ element.actualEndTime }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actualEndTime">
+      <th [hidden]="true" mat-header-cell *matHeaderCellDef>Actual end time</th>
+      <td [hidden]="true" mat-cell *matCellDef="let element">
+        {{ element.actualEndTime }}
+      </td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

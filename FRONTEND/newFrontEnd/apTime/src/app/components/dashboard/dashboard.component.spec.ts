@@ -85,7 +85,7 @@ describe('DashboardComponent', () => {
     const openStartPopSpy = spyOn(component.dialog, 'open')
         .and
         .returnValue({afterClosed: () => EMPTY} as any);
-    component.openStartPopUpDialog(1, 'TestTask');
+    component.openStartPopUpDialog();
     expect(openStartPopSpy).toHaveBeenCalled();
   });
 

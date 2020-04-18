@@ -1,9 +1,9 @@
 <!--
-Author: Asma
+Author: Asma/Yanisse
 Jira Task:
 Description:
 -->
-<mat-tab-group [(selectedIndex)]="tabIndex">
+<mat-tab-group [(selectedIndex)]="tabIndex" (click) = "onStats()">
   <mat-tab label="My categories">
 
     <section>
@@ -82,7 +82,7 @@ Description:
                     color="primary"
                     [disabled]="!categoryForm.valid"
             >
-              Create
+              <span class="text-button"> Create </span>
             </button>
             <button
                     type="button"
@@ -90,7 +90,7 @@ Description:
                     color="warn"
                     (click)="onCancel()"
             >
-              Cancel
+              <span class="text-button"> Cancel </span>
             </button>
           </mat-card-actions>
         </form>
@@ -98,4 +98,47 @@ Description:
     </section>
 
   </mat-tab>
+
+  <mat-tab label="Statistics">
+
+    <section>
+
+      <div fxLayout="column wrap" >
+      <mat-list>
+        <div fxLayout="row">
+        <div fxFlex="46">
+          <h3 matSubheader class="header-text">Categories ({{categories.length}})</h3>
+        </div>
+        <div fxFlex="26">
+          <h3 matSubheader class="header-text">My Average Duration</h3>
+        </div>
+          <div fxFlex="25">
+            <h3 matSubheader class="header-text">All Users Average Duration</h3>
+          </div>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <mat-list-item *ngFor="let category of categories">
+
+            <div fxFlex="50">
+              <mat-icon matListIcon>category</mat-icon>
+              {{category.name}}
+            </div>
+            <div fxFlex="27" *ngIf="category.avg !== undefined">
+              {{category.avg.summaryForCurrentUser.averageDuration}}
+            </div>
+            <div fxFlex="25" *ngIf="category.avg !== undefined">
+              {{category.avg.summaryForAllUsers.averageDuration}}
+            </div>
+
+          <mat-divider></mat-divider>
+        </mat-list-item>
+        <mat-divider></mat-divider>
+      </mat-list>
+    </div>
+    </section>
+
+  </mat-tab>
+
 </mat-tab-group>

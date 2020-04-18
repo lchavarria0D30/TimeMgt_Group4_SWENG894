@@ -19,11 +19,18 @@ export interface DialogData {
 export class StartPopupTaskComponent implements OnInit {
   token;
   taskName;
+  dialogTitle = 'Starts at: ';
+
+  suggestions;
+
   today = new Date();
   hours;
   minutes;
   categories = [];
-  selectedCategory;
+  selectedCategory = '';
+  suggView = false;
+  factor;
+  suggestedDuration;
 
   hoursRegex = /^([0-9]*)$/;
   minsRegex = /^([0-9]|[0-5][0-9])$/;
@@ -58,10 +65,6 @@ export class StartPopupTaskComponent implements OnInit {
   onYesClick(): void {
     const scheduledEnd = new Date (this.today.toString());
     scheduledEnd.setTime(this.today.getTime() + this.hours * 3600000 + this.minutes * 60000);
-
-    // console.log('The start date: ' + this.today);
-    // console.log('New Date: ' + scheduledEnd);
-
     const headers = { Authorization: 'Bearer ' + this.sessionService.getToken()};
 
     const body = { name: this.taskName,
@@ -71,17 +74,48 @@ export class StartPopupTaskComponent implements OnInit {
       scheduledEnd: scheduledEnd
     };
 
-    console.log('Request PopUp Body: ', body);
-
     this.http.post('http://localhost:8001/tasks/newtask', body, { headers }).subscribe({
       next: data => {
-        console.log(data);
         this.dialogRef.close(data);
       },
       error: error => console.error('There was an error!', error)
     });
 
 
+  }
+
+  onSuggClick() {
+    const scheduledEnd = new Date (this.today.toString());
+    scheduledEnd.setTime(this.today.getTime() + this.hours * 3600000 + this.minutes * 60000);
+
+    const diff = Math.abs(scheduledEnd.getTime() - this.today.getTime() );
+    const minutes = Math.floor((diff / 1000) / 60);
+
+
+    const headers = { Authorization: 'Bearer ' + this.sessionService.getToken() };
+    const body = { Duration: minutes,
+      CategoryID: this.selectedCategory
+    };
+
+    this.http.post('http://localhost:8001/tasks/predict', body , { headers }).subscribe({
+      next: data => {
+        this.suggestions = data;
+        this.factor = this.suggestions.Confidence;
+        this.suggestedDuration = this.suggestions.Duration;
+      },
+      error: error => console.error('There was an error!', error)
+    })
+
+
+
+    this.dialogTitle = 'Suggestions - ';
+    this.suggView = true;
+
+  }
+
+  onBackClick() {
+    this.dialogTitle = 'Starts at:  ';
+    this.suggView = false;
   }
 
   getCategory(): void {
@@ -94,6 +128,11 @@ export class StartPopupTaskComponent implements OnInit {
     this.http.get('http://localhost:8001/category/', { headers }).subscribe({
       next: data => {
         this.categories = this.categories.concat(data);
+        this.categories.sort((a, b) => {
+          if (a.name > b.name) { return 1; }
+          if (a.name < b.name) { return -1; }
+          return 0;
+        });
       },
       error: error => console.error('There was an error!', error)
     });

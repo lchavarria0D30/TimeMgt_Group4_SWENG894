@@ -2,6 +2,7 @@ package com.apptime.auth.controller;
 
 import com.apptime.auth.model.Task;
 import com.apptime.auth.model.TaskReportType;
+import com.apptime.auth.model.TaskState;
 import com.apptime.auth.repository.TaskReportRepository;
 import com.apptime.auth.repository.TaskRepository;
 import com.apptime.auth.service.TaskManagerService;
@@ -15,15 +16,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -33,8 +28,6 @@ import java.util.UUID;
 
 import static com.apptime.auth.service.impl.TaskReportServiceImpl.DATE_PATTERN;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
@@ -60,8 +53,7 @@ public class TaskReportControllerTest extends AbstractControllerTest {
 
     @BeforeEach
     public void init() {
-        reportRepository.deleteAll();
-        taskRepository.deleteAll();
+        cleanup();
 
         MockitoAnnotations.initMocks(this);
         initMvc();
@@ -255,6 +247,13 @@ public class TaskReportControllerTest extends AbstractControllerTest {
         task.setUserName(USERNAME);
         taskRepository.save(task);
         reportService.generateReport(task);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/report/task/" + task.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isNotFound());
+
+        task.setState(TaskState.COMPLETED);
+        taskRepository.save(task);
 
         ResultActions actions = mockMvc.perform(MockMvcRequestBuilders.get("/report/task/" + task.getId())
                 .contentType(MediaType.APPLICATION_JSON)

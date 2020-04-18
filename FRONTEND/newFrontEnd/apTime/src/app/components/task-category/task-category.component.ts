@@ -4,7 +4,7 @@
  * Jira Task:
  * Description:
  *
- **/
+ */
 
 import { Component, OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -40,11 +40,13 @@ export class TaskCategoryComponent implements OnInit {
   };
   token = '';
 
-  categories;
+  categories = [];
   tabIndex = 0;
 
   publicCats = [];
   privateCats = [];
+
+  statsCats = [];
 
   constructor(
     private location: Location,
@@ -93,10 +95,19 @@ export class TaskCategoryComponent implements OnInit {
   private getCategories() {
     this.catSevice.getCategories(this.sessionService.getToken()).subscribe({
       next: data => {
-        this.categories = data;
+
+        this.categories = this.categories.concat(data);
+
+        this.categories.sort((a, b) => {
+          if (a.name > b.name) { return 1; }
+          if (a.name < b.name) { return -1; }
+          return 0;
+        });
+
         this.publicCats = this.categories.filter(
             cats => cats.public === true
         );
+
         this.privateCats = this.categories.filter(
             cats => cats.public === false
         );
@@ -112,7 +123,6 @@ export class TaskCategoryComponent implements OnInit {
       name: categoryFormValue.name,
       isPublic: this.isPublic
     };
-    console.log(this.cat.isPublic);
 
     this.createCat();
   }
@@ -123,7 +133,6 @@ export class TaskCategoryComponent implements OnInit {
       'Content-Type': 'application/json'
     };
     if (this.cat.isPublic) {
-      console.log(this.cat.isPublic);
       this.http
         .post(
           'http://localhost:8001/category/public',
@@ -156,7 +165,7 @@ export class TaskCategoryComponent implements OnInit {
         )
         .subscribe({
           next: data => {
-            console.log(data);
+            // console.log(data);
             this.openSnackBar('Category Created', 'redirecting to categories');
             this.getCategories();
             this.tabIndex = 0;
@@ -171,5 +180,42 @@ export class TaskCategoryComponent implements OnInit {
     this.snackBar.open(message, action, {
       duration: 2000
     });
+  }
+
+  onStats(): void {
+    if (this.tabIndex === 2) {
+      this.catSevice.getAvgCategories(this.sessionService.getToken()).subscribe({
+        next: data => {
+
+          this.statsCats = this.statsCats.concat(data);
+
+          for (let i in this.categories) {
+            this.categories[i].avg = this.findCat(this.categories[i].id);
+          }
+        },
+        error: error => console.error('There was an error!', error)
+      });
+
+    }
+  }
+
+  findCat(i: number): object {
+    let found = this.statsCats.find(element => element.category.id === i);
+
+    if (found === undefined) {
+      found = {};
+      found.summaryForAllUsers = {averageDuration: 'Not Sufficient Data'};
+      found.summaryForCurrentUser = {averageDuration: 'Not Sufficient Data'};
+    } else {
+      if (found.summaryForAllUsers == null) {
+        found.summaryForAllUsers = {averageDuration: 'Not Sufficient Data'};
+      }
+
+      if (found.summaryForCurrentUser == null) {
+        found.summaryForCurrentUser = {averageDuration: 'Not Sufficient Data'};
+      }
+    }
+
+    return found;
   }
 }
