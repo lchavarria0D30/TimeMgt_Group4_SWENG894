@@ -1,22 +1,25 @@
 package com.apptime.auth.model;
 
 public class Prediction {
-    public String getConfidance() {
-        return Confidance;
+
+
+    public String getConfidence() {
+        return confidence;
     }
 
-    public void setConfidance(String confidance) {
-        Confidance = confidance;
+    public void setConfidence(String confidence) {
+        this.confidence = confidence;
     }
 
     public String getDuration() {
-        return Duration;
+        return duration;
     }
 
     public void setDuration(String duration) {
-        Duration = duration;
+        this.duration = duration;
     }
 
-    String Confidance;
-    String Duration;
+    String confidence;
+    String duration;
 }
+
