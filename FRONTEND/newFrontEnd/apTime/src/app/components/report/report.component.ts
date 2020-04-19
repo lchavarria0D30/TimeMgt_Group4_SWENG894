@@ -9,6 +9,7 @@ import {environment} from '../../../environments/environment';
 export class Report {
   id: number;
   taskId: number;
+  taskName: string;
   owner: string;
   type: string;
   difference: Date;
@@ -35,6 +36,7 @@ export class ReportComponent implements OnInit {
   displayedColumns: string[] = [
     'id',
     'taskId',
+    'taskName',
     'owner',
     'actualStartDate',
     'actualStartTime',
@@ -49,7 +51,7 @@ export class ReportComponent implements OnInit {
   dataSource: Report[];
   constructor(
     private route: Router,
-    private _http: HttpClient,
+    private http: HttpClient,
     private sessionService: SessionService
   ) {}
 
@@ -58,7 +60,7 @@ export class ReportComponent implements OnInit {
       Authorization: 'Bearer ' + this.sessionService.getToken(),
       'Content-Type': 'application/json'
     };
-    this._http
+    this.http
       .get<Report[]>(environment.baseUrl+'/report/', {
         headers
       })
@@ -85,7 +87,7 @@ export class ReportComponent implements OnInit {
       Authorization: 'Bearer ' + this.sessionService.getToken(),
       'Content-Type': 'application/json'
     };
-    this._http
+    this.http
       .get<Report[]>(
         environment.baseUrl+'/report?startDate=' +
           start +

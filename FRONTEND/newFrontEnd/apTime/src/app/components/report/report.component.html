@@ -32,8 +32,13 @@
 
     <!-- Name Column -->
     <ng-container matColumnDef="taskId">
+      <th [hidden]="true" mat-header-cell *matHeaderCellDef>Task Id</th>
+      <td [hidden]="true" mat-cell *matCellDef="let element">{{ element.taskId }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="taskName">
       <th mat-header-cell *matHeaderCellDef>Task Name</th>
-      <td mat-cell *matCellDef="let element">{{ element.taskId }}</td>
+      <td mat-cell *matCellDef="let element">{{ element.taskName }}</td>
     </ng-container>
 
     <!-- Weight Column -->

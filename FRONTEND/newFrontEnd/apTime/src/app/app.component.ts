@@ -85,7 +85,7 @@ export class AppComponent implements OnInit {
           'Authorization',
           'Bearer ' + data.getAccessToken().getJwtToken()
         );
-        interval(3000)
+        interval(60000)
           .pipe(
             startWith(0), // Starts immediatly
             mapTo(
