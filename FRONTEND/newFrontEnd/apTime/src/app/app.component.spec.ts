@@ -1,10 +1,11 @@
-/** Linked Issue: TMGP4-184: Create Final Web Designs
+/** Use Case Linked Issue: TMGP4-184
+ *
+ *  Test Case Linked Issue: TMGP4-280
  *
  *  Author: Chavarria Leo
  *
  *  Unit Test - Frontend
  */
-
 import { TestBed, async } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
@@ -37,7 +38,7 @@ describe('AppComponent', () => {
       ],
       providers: [AmplifyService, HttpClient],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
-      }).compileComponents();
+    }).compileComponents();
 
   }));
   beforeEach(() => {
@@ -51,7 +52,7 @@ describe('AppComponent', () => {
   });
 
   it('should have a title Time Helper', () => {
-     // const fixture = TestBed.createComponent(AppComponent);
+    // const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.debugElement.componentInstance;
     expect(app.title).toEqual('Time Helper');
   });

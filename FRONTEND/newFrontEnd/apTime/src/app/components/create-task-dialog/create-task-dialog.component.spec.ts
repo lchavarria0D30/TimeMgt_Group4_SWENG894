@@ -1,4 +1,6 @@
-/** Linked Issue: TMGP4-29: Create Task
+/** Use Case Linked Issue: TMGP4-29: Create Task
+ *
+ *  Test Case Linked Issue: TMGP4-77
  *
  *  Author: Chavarria Leo
  *
@@ -13,6 +15,7 @@ import { BrowserDynamicTestingModule, platformBrowserDynamicTesting } from '@ang
 import {RouterTestingModule} from '@angular/router/testing';
 import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
 import {
   MatFormFieldModule,
   MatInputModule,
@@ -21,23 +24,15 @@ import {
   MAT_DIALOG_DATA,
   MatSelectModule
 } from '@angular/material';
-import {SessionService} from '../../services/session.service';
-import any = jasmine.any;
-import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
-
 
 
 describe('CreateTaskDialogComponent', () => {
   let component: CreateTaskDialogComponent;
   let fixture: ComponentFixture<CreateTaskDialogComponent>;
-  let diaMatRef: CreateTaskDialogComponent;
   let httpMock: HttpTestingController;
-  let mockTest: any;
-  let session: SessionService;
-  let spy = any;
 
   const dialogMock = {
-    close: () =>{ }
+    close: () => { }
   };
 
   beforeEach(async(() => {
@@ -54,15 +49,16 @@ describe('CreateTaskDialogComponent', () => {
         MatInputModule,
         MatDialogModule,
 
+
       ],
       providers: [AmplifyService, {
         provide: MatDialogRef,
-        useValue: dialogMock,},
+        useValue: dialogMock, },
         { provide: MAT_DIALOG_DATA, useValue: {}}],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       declarations: [ CreateTaskDialogComponent, ]
     })
-    .compileComponents();
+        .compileComponents();
   }));
 
   beforeEach(() => {
@@ -72,77 +68,160 @@ describe('CreateTaskDialogComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component.onNoClick).toBeTruthy();
-    const categoryMineRequest = httpMock.expectOne('http://localhost:8001/category/');
-    categoryMineRequest.flush([]);
-    /*const categoryPublicRequest = httpMock.expectOne('http://localhost:8001/category/public');
-    categoryPublicRequest.flush([]);*/
-    httpMock.verify();
-  });
-
-  it('should have error for failed category requests', () => {
-    expect(component.onNoClick).toBeTruthy();
-    const categoryMineRequest = httpMock.expectOne('http://localhost:8001/category/');
-    categoryMineRequest.error(new ErrorEvent('Generated testing error'));
-    /*const categoryPublicRequest = httpMock.expectOne('http://localhost:8001/category/public');
-    categoryPublicRequest.flush([]);*/
-    httpMock.verify();
-  });
-
-  it('Test onNoClick DialogRef - Close', () => {
-    let spy = spyOn(component.dialogRef, 'close').and.callThrough();
-    component.onNoClick();
-    expect(spy).toHaveBeenCalled();
-    // add expects to test that onNoClick does what it is supposed to
-  });
-  
-  it('should create', () => {
+  // This test verifies that the component is able to be created.
+  it('should create the Component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should onNoclick', () => {
-    component.onNoClick();
+  // This test verifies that the URL is able to be called and calls the function onNoClick when no error exist.
+  it('should verify that the URL is able to be called - onNoClick Function', () => {
     expect(component.onNoClick).toBeTruthy();
+    const categoryMineRequest = httpMock.expectOne('http://localhost:8001/category/');
+    categoryMineRequest.flush([]);
+    httpMock.verify();
   });
 
-  it('should onYesClick', () => {
-    expect(component.onYesClick).toBeTruthy();
+  // This test verified that the URL is able to be called and calls the function onNoClick when an error exist.
+  it('should have error for failed category requests - onNoClick Function', () => {
+    expect(component.onNoClick).toBeTruthy();
+    const categoryMineRequest = httpMock.expectOne('http://localhost:8001/category/');
+    categoryMineRequest.error(new ErrorEvent('Generated testing error'));
+    httpMock.verify();
   });
 
-  it('should dateConversion', () => {
-    let date = new Date();
-    let time = '12:00PM';
-    component.dateConversion(time, date);
-    expect(component.dateConversion).toBeTruthy();
-  });
-
-  it('should be Defined onNoClick', async(() => {
-    spyOn(component, 'onNoClick').and.callThrough();
-    fixture.whenStable().then(() => {
-      expect(component.onNoClick).toBeDefined();
-      expect(component.onNoClick).toHaveBeenCalledTimes(0);
-    });
-  }));
-
-  it('should be Defined and Should be Called - changeMinEndDate', async(() => {
-    let spy = spyOn(component, 'changeMinEndDate').and.callThrough();
-    component.changeMinEndDate();
-    fixture.whenStable().then(() => {
+  // This test verifies that the function onNoClick calls the dialogRef function 'close'.
+  it('Test Function onNoClick - Method DialogRef - Close function is Called', () => {
+    const spy = spyOn(component.dialogRef, 'close').and.callThrough();
+    component.onNoClick();
     expect(spy).toBeDefined();
     expect(spy).toHaveBeenCalled();
-    });
-  }));
+  });
 
-  it('should be Defined and Should be Called - dateConversion', async(() => {
-    let date = new Date();
-    let time = '12:00PM';
-    let spy = spyOn(component, 'dateConversion').and.callThrough();
+  // This test verifies that the the function dateConversion has been defined and been called.
+  it('should test that the function dateConversion is able to be defined and called', () => {
+    const date = new Date();
+    const time = '12:00PM';
+    const spy = spyOn(component, 'dateConversion').and.callThrough();
     component.dateConversion(time, date);
+    expect(spy).toBeDefined();
+    expect(spy).toHaveBeenCalled();
+  });
+
+  // This test verifies that the the function onNoClick has been defined and been called.
+  it('should test that the function onNoClick is able to be defined and called', async(() => {
+    const spy = spyOn(component, 'onNoClick').and.callThrough();
+    component.onNoClick();
     fixture.whenStable().then(() => {
       expect(spy).toBeDefined();
       expect(spy).toHaveBeenCalled();
     });
   }));
-});
 
+  // This test verifies that the the function changeMinEndDate has been defined and been called.
+  it('should be Defined and Should be Called - changeMinEndDate', async(() => {
+    const spy = spyOn(component, 'changeMinEndDate').and.callThrough();
+    component.changeMinEndDate();
+    fixture.whenStable().then(() => {
+      expect(spy).toBeDefined();
+      expect(spy).toHaveBeenCalled();
+    });
+  }));
+
+ // This test verifies that the function onBackClick contains the expected Title
+  it(' This test verifies that the function onBackClick contains the expected Title ' +
+      'and is called', async(() => {
+    const spy = spyOn(component, 'onBackClick').and.callThrough();
+    component.dialogTitle.valueOf();
+    component.onBackClick();
+    fixture.whenStable().then(() => {
+      expect(component.dialogTitle).toContain('New Task');
+      expect(spy).toHaveBeenCalled();
+    });
+  }));
+
+  // This test verifies that the the function onSuggClick has been defined and been called.
+  it('should onSuggClick is called and that the function WrongDate is called when an error is present, ' +
+      'and that it does not send any information to the URL', () => {
+    expect(component.onSuggClick).toBeTruthy();
+
+    // set the dates so that the scheduled end date is before the start
+    component.data.ssDate = new Date();
+    component.data.ssTime = '01:00 PM';
+    component.data.seDate = new Date( );
+    component.data.seDate.setDate(component.data.ssDate.getDate() + 5);
+
+    component.data.seTime = '01:30 PM';
+
+    // run the onSuggClick method
+    component.onSuggClick();
+
+    // first check that the isWrongDate flag is set correctly
+    expect(component.isWrongDate).toBeFalsy();
+
+    // second check that the httpClient did post, to create new task
+    const categoryMineRequest = httpMock.expectOne('http://localhost:8001/tasks/predict');
+
+  });
+
+  // should onSuggClick create new task (with wrong date)
+  it('should onSuggClick create new task (with wrong date)', () => {
+    expect(component.onSuggClick).toBeTruthy();
+
+    // set the dates so that the scheduled end date is before the start
+    component.data.ssDate = new Date();
+    component.data.ssTime = '01:00 PM';
+    component.data.seDate = new Date();
+
+    component.data.seTime = '11:00 AM';
+
+    // run the onSuggClick method
+    component.onSuggClick();
+
+    // first check that the isWrongDate flag is set correctly
+    expect(component.isWrongDate).toBeTruthy();
+
+  });
+
+  // This test verifies that the the function onYesClick has been defined and been called.
+  it('should onYesClick is called and that the function WrongDate is called when an error is present, ' +
+      'and that it does not send any information to the URL', () => {
+    expect(component.onYesClick).toBeTruthy();
+
+    // set the dates so that the scheduled end date is before the start
+    component.data.ssDate = new Date();
+    component.data.ssTime = '01:00 PM';
+    component.data.seDate = new Date( );
+    component.data.seDate.setDate(component.data.ssDate.getDate() + 5);
+
+    component.data.seTime = '01:30 PM';
+
+    // run the onYesClick method
+    component.onYesClick();
+
+    // first check that the isWrongDate flag is set correctly
+    expect(component.isWrongDate).toBeFalsy();
+
+    // second check that the httpClient did post, to create new task
+    const categoryMineRequest = httpMock.expectOne('http://localhost:8001/tasks/newtask');
+
+  });
+
+  // // should onSuggClick create new task (with wrong date)
+  it('should onYesClick create new task (with wrong date)', () => {
+    expect(component.onYesClick).toBeTruthy();
+
+    // set the dates so that the scheduled end date is before the start
+    component.data.ssDate = new Date();
+    component.data.ssTime = '01:00 PM';
+    component.data.seDate = new Date();
+
+    component.data.seTime = '11:00 AM';
+
+    // run the onYesClick method
+    component.onYesClick();
+
+    // first check that the isWrongDate flag is set correctly
+    expect(component.isWrongDate).toBeTruthy();
+
+  });
+});
