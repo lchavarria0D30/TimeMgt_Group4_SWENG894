@@ -4,6 +4,7 @@ import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import com.apptime.auth.config.TaskStateMachine;
+import com.apptime.auth.helper.SpringProperties;
 import com.apptime.auth.model.Prediction;
 import com.apptime.auth.model.Task;
 import com.apptime.auth.model.TaskCategory;
@@ -30,7 +31,6 @@ public class TaskManagerService {
 	@Autowired
 	TaskRepository taskRepo;
 
-
 	@Autowired
 	private TaskReportRepository reportRepository;
 
@@ -42,6 +42,9 @@ public class TaskManagerService {
 
 	@Autowired
 	private TaskCategoryRepository categoryRepository;
+
+	@Autowired
+	private SpringProperties springProperties;
 
 	//view task details
 	//view task details
@@ -138,6 +141,7 @@ public class TaskManagerService {
 
 	}
 	public List<Task> findUserTasks(String user) {
+		System.out.println(">>>>>>>>>>>>> " + springProperties.getPredictionEngineHost());
 		return taskRepo.findByUserName(user);
 	}
 
@@ -212,8 +216,9 @@ public class TaskManagerService {
 		result = taskRepo.getTasksStartedLaterThan(start,eDate,name);
 		return result;
 	}
+
 	public Prediction getPrediction(int duration, int catergoryID)  {
-		final String predictionEngineUrl = "http://localhost:5000/prediction/api/v1.0/task?plannedDuration=";
+		final String predictionEngineUrl = springProperties.getPredictionEngineHost() + "/prediction/api/v1.0/task?plannedDuration=";
 		final String prams = ""+duration+"&"+"Category="+catergoryID;
 		Prediction result= null;
 		RestTemplate restTemplate = new RestTemplate();
