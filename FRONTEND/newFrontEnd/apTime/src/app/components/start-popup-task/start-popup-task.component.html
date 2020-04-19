@@ -62,6 +62,7 @@
     <div fxLayout="column" >
         <h4> <mat-icon inline="true">trending_up</mat-icon> <b> Confidence Factor: </b> {{factor}}</h4>
         <h4> <mat-icon inline="true">schedule</mat-icon> <b> Suggested Duration: </b> {{suggestedDuration}} </h4>
+        <h4> <mat-icon inline="true">date_range</mat-icon> <b> Suggested End Date: </b> {{suggestedDate | date:'short'}} </h4>
     </div>
 </div>
 
@@ -74,4 +75,5 @@
 
 <div mat-dialog-actions *ngIf="suggView">
     <button mat-stroked-button (click) ="onBackClick()"> <span class="label-color"> Back </span> </button>
+    <button mat-stroked-button color="suggest" (click) ="onAcceptClick()"> <span class="text-button"> Accept Suggestion </span> </button>
 </div>
