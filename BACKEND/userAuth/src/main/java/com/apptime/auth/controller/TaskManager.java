@@ -239,7 +239,6 @@ public class TaskManager {
 
 	@GetMapping("/predict")
 	public ResponseEntity<?> getPrediction(@RequestParam int duration, @RequestParam int categoryId ){
-
 		return new ResponseEntity<Prediction> (taskService.getPrediction(duration,categoryId), HttpStatus.OK);
 	}
 

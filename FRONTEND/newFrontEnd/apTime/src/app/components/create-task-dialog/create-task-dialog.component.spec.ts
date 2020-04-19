@@ -76,7 +76,7 @@ describe('CreateTaskDialogComponent', () => {
   // This test verifies that the URL is able to be called and calls the function onNoClick when no error exist.
   it('should verify that the URL is able to be called - onNoClick Function', () => {
     expect(component.onNoClick).toBeTruthy();
-    const categoryMineRequest = httpMock.expectOne('http://localhost:8001/category/');
+    const categoryMineRequest = httpMock.expectOne(environment.baseUrl+'/category/');
     categoryMineRequest.flush([]);
     httpMock.verify();
   });
@@ -84,7 +84,7 @@ describe('CreateTaskDialogComponent', () => {
   // This test verified that the URL is able to be called and calls the function onNoClick when an error exist.
   it('should have error for failed category requests - onNoClick Function', () => {
     expect(component.onNoClick).toBeTruthy();
-    const categoryMineRequest = httpMock.expectOne('http://localhost:8001/category/');
+    const categoryMineRequest = httpMock.expectOne(environment.baseUrl+'/category/');
     categoryMineRequest.error(new ErrorEvent('Generated testing error'));
     httpMock.verify();
   });

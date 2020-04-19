@@ -13,6 +13,7 @@ import com.apptime.auth.repository.TaskCategoryRepository;
 import com.apptime.auth.repository.TaskReportRepository;
 import com.apptime.auth.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,9 @@ import javax.transaction.Transactional;
 public class TaskManagerService {
 	@Autowired
 	TaskRepository taskRepo;
+
+	@Value("${predictionHost}")
+	private String predHost;
 
 
 	@Autowired
@@ -213,11 +217,14 @@ public class TaskManagerService {
 		return result;
 	}
 	public Prediction getPrediction(int duration, int catergoryID)  {
-		final String predictionEngineUrl = "http://localhost:5000/prediction/api/v1.0/task?plannedDuration=";
+		final String predictionEngineUrl = predHost+"/prediction/api/v1.0/task?plannedDuration=";
 		final String prams = ""+duration+"&"+"Category="+catergoryID;
 		Prediction result= null;
 		RestTemplate restTemplate = new RestTemplate();
 		result = restTemplate.getForObject(predictionEngineUrl+prams,Prediction.class);
+
 		return result;
 	}
 }
+
+

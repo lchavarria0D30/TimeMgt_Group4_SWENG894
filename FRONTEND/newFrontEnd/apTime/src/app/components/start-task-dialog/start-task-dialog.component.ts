@@ -12,6 +12,7 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {HttpClient} from '@angular/common/http';
 import {SessionService} from '../../services/session.service';
 import {DialogData} from '../tasks/tasks.component';
+import {environment} from '../../../environments/environment';
 
 @Component({
   selector: 'app-start-task-dialog',
@@ -62,7 +63,7 @@ export class StartTaskDialogComponent implements OnInit {
     const body = { startDate: new Date()
     };
 
-    this.http.post('http://localhost:8001/tasks/task/' + i + '/start', body, { headers }).subscribe({
+    this.http.post(environment.baseUrl+'/tasks/task/' + i + '/start', body, { headers }).subscribe({
       next: data => {
         console.log(data)
         this.dialogRef.close();
@@ -86,7 +87,7 @@ export class StartTaskDialogComponent implements OnInit {
     const body = {
     };
 
-    this.http.post('http://localhost:8001/tasks/task/' + i + '/pause', body, { headers }).subscribe({
+    this.http.post(environment.baseUrl+'/tasks/task/' + i + '/pause', body, { headers }).subscribe({
       next: data => {
         // console.log(data)
         this.startTask(this.id);
@@ -101,7 +102,7 @@ export class StartTaskDialogComponent implements OnInit {
     const body = {
     };
 
-    this.http.post('http://localhost:8001/tasks/task/' + i + '/complete', body, { headers }).subscribe({
+    this.http.post(environment.baseUrl+'/tasks/task/' + i + '/complete', body, { headers }).subscribe({
       next: data => {
         // console.log(data)
         this.startTask(this.id);

@@ -10,6 +10,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Category } from '../components/task-category/Category';
 import {Auth} from "aws-amplify";
+import {environment} from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -26,7 +27,7 @@ export class CategoryService {
     const headers = { Authorization: 'Bearer ' + token
     };
 
-    return this.http.get('http://localhost:8001/category/', { headers });
+    return this.http.get(environment.baseUrl+'/category/', { headers });
   }
 
   public getAvgCategories(token: string) {
@@ -34,7 +35,7 @@ export class CategoryService {
     const headers = { Authorization: 'Bearer ' + token
     };
 
-    return this.http.get('http://localhost:8001/summary/mine', { headers });
+    return this.http.get(environment.baseUrl+'/summary/mine', { headers });
   }
 
 }

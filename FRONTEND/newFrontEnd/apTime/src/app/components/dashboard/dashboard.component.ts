@@ -18,6 +18,7 @@ import {StartTaskDialogComponent} from "../start-task-dialog/start-task-dialog.c
 import {ConfirmTaskDialogComponent} from "../confirm-task-dialog/confirm-task-dialog.component";
 import {EditTaskDialogComponent} from "../edit-task-dialog/edit-task-dialog.component";
 import {DeleteTaskDialogComponent} from "../delete-task-dialog/delete-task-dialog.component";
+import {environment} from '../../../environments/environment';
 
 
 @Component({
@@ -163,7 +164,7 @@ export class DashboardComponent implements OnInit {
     };
 
 
-    this.http.post('http://localhost:8001/tasks/due/start', body, { headers }).subscribe({
+    this.http.post(environment.baseUrl+'/tasks/due/start', body, { headers }).subscribe({
       next: data => {
         this.dateTasks = data;
 
@@ -218,7 +219,7 @@ export class DashboardComponent implements OnInit {
     const headers = { Authorization: 'Bearer ' + this.token
     };
 
-    this.http.get('http://localhost:8001/tasks/', { headers }).subscribe({
+    this.http.get(environment.baseUrl+'/tasks/', { headers }).subscribe({
       next: data => {
         this.tasks = data
         if (this.tasks !== undefined) {

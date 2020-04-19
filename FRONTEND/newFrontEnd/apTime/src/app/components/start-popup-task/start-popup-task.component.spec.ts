@@ -16,6 +16,7 @@ import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
 import { StartPopupTaskComponent } from './start-popup-task.component';
+import {environment} from '../../../environments/environment';
 import {
   MatFormFieldModule,
   MatInputModule,
@@ -74,14 +75,15 @@ describe('StartPopupTaskComponent', () => {
   // This test verifies the call to the service for getCategory within onNoClick - No Error
   it('This test verifies the call to the service getCategory within onNoClick - No Error', () => {
     expect(component.onNoClick).toBeTruthy();
-    const categoryMineRequest = httpMock.expectOne('http://localhost:8001/category/');
+    const categoryMineRequest = httpMock.expectOne(environment.baseUrl+'/category/');
     categoryMineRequest.flush([]);
+    httpMock.verify();*/
   });
 
   // This test verifies the call to the function getCategory within onNoClick - Error
   it('This test verifies the call to the service getCategory within onNoClick - Error ', () => {
     expect(component.onNoClick).toBeTruthy();
-    const categoryMineRequest = httpMock.expectOne('http://localhost:8001/category/');
+    const categoryMineRequest = httpMock.expectOne(environment.baseUrl+'/category/');
     categoryMineRequest.error(new ErrorEvent('Generated testing error'));
     httpMock.verify();
   });
