@@ -10,7 +10,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Category } from '../components/task-category/Category';
 import {Auth} from "aws-amplify";
-import {environment} from '../../environments/environment'
 import {environment} from '../../environments/environment';
 
 @Injectable({

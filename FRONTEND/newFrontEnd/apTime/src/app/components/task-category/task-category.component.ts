@@ -22,7 +22,6 @@ import { FlexAlignStyleBuilder } from '@angular/flex-layout';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {environment} from '../../../environments/environment';
-import {environment} from '../../../environments/environment';
 
 @Component({
   selector: 'app-task-category',
