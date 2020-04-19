@@ -28,4 +28,13 @@ export class CategoryService {
 
     return this.http.get('http://localhost:8001/category/', { headers });
   }
+
+  public getAvgCategories(token: string) {
+
+    const headers = { Authorization: 'Bearer ' + token
+    };
+
+    return this.http.get('http://localhost:8001/summary/mine', { headers });
+  }
+
 }

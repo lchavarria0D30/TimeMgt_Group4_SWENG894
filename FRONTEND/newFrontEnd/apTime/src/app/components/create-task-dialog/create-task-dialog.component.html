@@ -5,15 +5,15 @@ Description: Template for the create task dialog box.
 -->
 <mat-toolbar color="primary" style="width:100%;">
     <mat-toolbar-row>
-        <h1 mat-dialog-title>New Task</h1>
+        <h1 mat-dialog-title>{{dialogTitle}}</h1>
         <span class="example-spacer"></span>
         <button mat-button (click)="onNoClick()">
             <mat-icon class="example-icon" aria-hidden="false" aria-label="Close button" class="header-text">close</mat-icon>
         </button>
     </mat-toolbar-row>
 </mat-toolbar>
-<div mat-dialog-content>
-    <div fxLayout="column">
+<div mat-dialog-content *ngIf="!suggView">
+    <div fxLayout="column" >
         <mat-form-field>
             <mat-label>Name</mat-label>
             <input matInput [(ngModel)]="data.name" [formControl]="nameFormControl">
@@ -22,11 +22,6 @@ Description: Template for the create task dialog box.
             </mat-error>
 
         </mat-form-field>
-
-<!--        <mat-form-field>-->
-<!--            <mat-label>Category</mat-label>-->
-<!--            <input matInput [(ngModel)]="data.category">-->
-<!--        </mat-form-field>-->
 
         <mat-form-field>
             <mat-label>Category</mat-label>
@@ -100,9 +95,23 @@ Description: Template for the create task dialog box.
         </div>
     </div>
 </div>
-<div mat-dialog-actions>
+
+<div mat-dialog-content *ngIf="suggView">
+<div fxLayout="column" >
+    <h4> <mat-icon inline="true">trending_up</mat-icon> <b> Confidence Factor: </b> {{factor}}</h4>
+    <h4> <mat-icon inline="true">schedule</mat-icon> <b> Suggested Duration: </b> {{suggestedDuration}} </h4>
+</div>
+</div>
+
+<div mat-dialog-actions *ngIf="!suggView">
     <mat-error *ngIf="isWrongDate"> End date and time should be later than start date and time.
     </mat-error>
+    <button mat-flat-button color="suggest" (click) ="onSuggClick()" [disabled]="!eTimeFormControl.valid || !sTimeFormControl.valid || !eDateFormControl.valid || !sDateFormControl.valid ||
+  !nameFormControl.valid || selectedCategory == ''" > <span class="header-text"> View Suggestions </span>  </button>
     <button mat-flat-button color="primary" cdkFocusInitial (click) ="onYesClick()" [disabled]="!eTimeFormControl.valid || !sTimeFormControl.valid || !eDateFormControl.valid || !sDateFormControl.valid ||
   !nameFormControl.valid" > <span class="header-text">Save </span> </button>
+</div>
+
+<div mat-dialog-actions *ngIf="suggView">
+    <button mat-stroked-button (click) ="onBackClick()"> <span class="label-color"> Back </span> </button>
 </div>

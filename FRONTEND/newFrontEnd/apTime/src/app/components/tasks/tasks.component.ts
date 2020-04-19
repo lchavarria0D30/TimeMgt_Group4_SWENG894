@@ -138,7 +138,9 @@ export class TasksComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The start popup task dialog was closed');
-      this.openStartDialog(result.id, result.name);
+      if (result !== undefined) {
+        this.openStartDialog(result.id, result.name);
+      }
     });
   }
 

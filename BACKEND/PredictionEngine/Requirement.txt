@@ -1,0 +1,16 @@
+wrapt==1.11.2
+flask
+flask-cors
+tensorflow
+keras
+numpy
+jupyter
+html5lib
+pandas
+seaborn
+sklearn
+pylint
+autopep8
+matplotlib
+pillow
+opencv-python

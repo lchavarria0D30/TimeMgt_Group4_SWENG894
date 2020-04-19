@@ -7,6 +7,7 @@ import java.util.*;
 
 import com.apptime.auth.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -150,7 +151,7 @@ public class TaskManager {
 		task.setState(TaskState.CREATED);
 		task.setUserName(getPrinciple(p).getName());
 		Task updatedTask = taskService.updateTask(removeCategoryOwner(task), getPrinciple(p).getName());
-			return new ResponseEntity<>(updatedTask, HttpStatus.OK);
+		return new ResponseEntity<>(updatedTask, HttpStatus.OK);
 	}
 
 	/**
@@ -234,6 +235,11 @@ public class TaskManager {
 			return new ResponseEntity<TaskError>(new TaskError(ErrorType.unauthorized_Action, null),HttpStatus.UNAUTHORIZED);
 		}
 		return new ResponseEntity<TaskState>(taskService.complete(id), HttpStatus.OK);
+	}
+
+	@GetMapping("/predict")
+	public ResponseEntity<?> getPrediction(@RequestParam int duration, @RequestParam int categoryId ){
+		return new ResponseEntity<Prediction> (taskService.getPrediction(duration,categoryId), HttpStatus.OK);
 	}
 
 	/**
