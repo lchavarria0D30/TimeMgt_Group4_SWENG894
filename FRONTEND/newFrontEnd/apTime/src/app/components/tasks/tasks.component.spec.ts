@@ -1,4 +1,6 @@
-/** Linked Issue: TMGP4-229: Create Task
+/** Use Case Linked Issue: TMGP4-229
+ *
+ *  Test Case Linked Issue: TMGP4-113
  *
  *  Author: Chavarria Leo
  *
@@ -7,13 +9,11 @@
 import {async, ComponentFixture, getTestBed, TestBed} from '@angular/core/testing';
 import { MatIconModule} from '@angular/material/icon';
 import {CustomMaterialModule} from '../../modules/material.module';
-// import {HttpClient, HttpClientModule} from '@angular/common/http';
 import {AmplifyService} from 'aws-amplify-angular';
 import { BrowserDynamicTestingModule, platformBrowserDynamicTesting } from '@angular/platform-browser-dynamic/testing';
 import {RouterTestingModule} from '@angular/router/testing';
 import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {MatDialog} from '@angular/material/dialog';
 import {EMPTY} from 'rxjs';
 import { TasksComponent } from './tasks.component';
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
@@ -26,14 +26,14 @@ import {
   MAT_DIALOG_DATA,
   MatSelectModule
 } from '@angular/material';
-import any = jasmine.any;
+
+
 
 describe('TasksComponent', () => {
   let component: TasksComponent;
   let fixture: ComponentFixture<TasksComponent>;
   let httpMock: HttpTestingController;
-  let num: number;
-  let index: number;
+
   const dialogMock = {
     close: () => { }
   };
@@ -71,11 +71,13 @@ describe('TasksComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create Component', () => {
+  // This test verifies the Component is able to be created.
+  it('This test verifies the Component is able to be created', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should openDialog New Test', () => {
+  // This test verifies that the method afterClosed is called within the function openDialog
+  it('This test verifies that the method afterClosed is called within the function openDialog', () => {
     const openDialogSpy = spyOn(component.dialog, 'open')
         .and
         .returnValue({afterClosed: () => EMPTY} as any);
@@ -83,7 +85,8 @@ describe('TasksComponent', () => {
     expect(openDialogSpy).toHaveBeenCalled();
   });
 
-  it('should openDeleteDialog New Test', () => {
+  // This test verifies that the method afterClosed is called within the function openDeleteDialog
+  it('This test verifies that the method afterClosed is called within the function openDeleteDialog', () => {
     const openDeleteSpy = spyOn(component.dialog, 'open')
         .and
         .returnValue({afterClosed: () => EMPTY} as any);
@@ -91,7 +94,8 @@ describe('TasksComponent', () => {
     expect(openDeleteSpy).toHaveBeenCalled();
   });
 
-  it('should openConfirmDialog New Test', () => {
+  // This test verifies that the method afterClosed is called within the function openConfirmDialog
+  it('This test verifies that the method afterClosed is called within the function openConfirmDialog', () => {
     const openConfirmSpy = spyOn(component.dialog, 'open')
         .and
         .returnValue({afterClosed: () => EMPTY} as any);
@@ -99,7 +103,8 @@ describe('TasksComponent', () => {
     expect(openConfirmSpy).toHaveBeenCalled();
   });
 
-  it('should openStartDialog New Test', () => {
+  // This test verifies that the method afterClosed is called within the function openStartDialog
+  it('This test verifies that the method afterClosed is called within the function openStartDialog', () => {
     const openStartSpy = spyOn(component.dialog, 'open')
         .and
         .returnValue({afterClosed: () => EMPTY} as any);
@@ -107,7 +112,8 @@ describe('TasksComponent', () => {
     expect(openStartSpy).toHaveBeenCalled();
   });
 
-  it('should openStartPopUpDialog New Test', () => {
+  // This test verifies that the method afterClosed is called within the function openStartPopUpDialog
+  it('// This test verifies that the method afterClosed is called within the function openStartPopUpDialog', () => {
     const openPopSpy = spyOn(component.dialog, 'open')
         .and
         .returnValue({afterClosed: () => EMPTY} as any);
@@ -115,7 +121,8 @@ describe('TasksComponent', () => {
     expect(openPopSpy).toHaveBeenCalled();
   });
 
-  it('should be Defined getTasks', async(() => {
+  // This test verifies that the function getTasks is defined and called
+  it('This test verifies that the function getTasks is defined and called', async(() => {
     const spy = spyOn(component, 'getTasks').and.callThrough();
     component.getTasks();
     fixture.whenStable().then(() => {
@@ -124,28 +131,12 @@ describe('TasksComponent', () => {
     });
   }));
 
-  it('should be Defined openDialog', async(() => {
+  // This test verifies that the function openDialog is defined and called
+  it('This test verifies that the function openDialog is defined and called', async(() => {
     spyOn(component, 'openDialog').and.callThrough();
     fixture.whenStable().then(() => {
       expect(component.openDialog).toBeDefined();
       expect(component.openDialog).toHaveBeenCalledTimes(0);
     });
   }));
-  /*it('should openEditDialog New Test', () => {
-    let mockArray = [1,0];
-    const openPopSpy = spyOn(component.dialog, 'open')
-        .and
-        .returnValue({afterClosed: () => EMPTY} as any);
-    component.openEditDialog(1, mockArray[0]);
-    expect(openPopSpy).toHaveBeenCalled();
-  });*/
-
-  /*it('should be Defined openDialog', async(() => {
-    let spy = spyOn(component, 'openDialog').and.callThrough();
-    component.openDialog();
-    fixture.whenStable().then(() => {
-      expect(spy).toBeDefined();
-      expect(spy).toHaveBeenCalled();
-    });
-  }));*/
 });

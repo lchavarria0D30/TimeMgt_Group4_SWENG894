@@ -1,4 +1,6 @@
-/** Linked Issue: TMGP4-47: Start Task
+/** Linked Issue: TMGP4-47
+ *
+ * Test Case Linked Issue: TMGP4-288
  *
  *  Author: Chavarria Leo
  *
@@ -148,23 +150,15 @@ describe('StartTaskDialogComponent', () => {
       expect(spy).toHaveBeenCalled();
     });
   }));
-    /*  it('should close dialog when onNoClick called', async(() => {
-        spyOn(component, 'onNoClick').and.callThrough();
-        fixture.whenStable().then(() => {
-          console.log('should close dialog when onNoClick called');
-          console.log('component.dialogRef', component.dialogRef);
-          component.onNoClick();
-          expect(component.onNoClick).toBeDefined();
-          expect(component.onNoClick).toHaveBeenCalledTimes(1);
-        });
-      }));*/
+
 
   it('should be Defined onYesClick', fakeAsync(() => {
-        spyOn(component, 'onYesClick').and.callThrough();
-        fixture.whenStable().then(() => {
-          expect(component.onYesClick).toBeDefined();
-          expect(component.onYesClick).toHaveBeenCalledTimes(0);
-        });
-      }));
-
+    const spy = spyOn(component, 'onYesClick').and.callThrough();
+    component.onYesClick();
+    tick(20000);
+    fixture.whenStable().then(() => {
+    expect(spy).toBeDefined();
+    expect(spy).toHaveBeenCalled();
     });
+  }));
+});

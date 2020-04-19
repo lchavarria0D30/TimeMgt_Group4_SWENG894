@@ -1,4 +1,6 @@
-/** Linked Issue: TMGP4-40: Notification Task About Start
+/** Use Case Linked Issue: TMGP4-40
+ *
+ *  Test Case Linked Issue: TMGP4-239
  *
  *  Author: Chavarria Leo
  *
@@ -7,7 +9,8 @@
 import {async, TestBed} from '@angular/core/testing';
 
 import { NotificationsServiceService } from './notifications-service.service';
-import {NotificationType} from "./notification_model";
+import {NotificationType} from './notification_model';
+import any = jasmine.any;
 
 describe('NotificationsServiceService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
@@ -40,15 +43,29 @@ describe('NotificationsServiceService', () => {
       keepAfterRouteChange: false,
       fade: false});
 
+    // This test verifies that the Component is created.
     expect(notifyReceived).toBeTruthy();
   }));
 
-  it('should be Defined remaind', async(() => {
+  // This test verifies that the function remaind is defined and called
+  it('This test verifies that the function remaind is defined and called', () => {
+    const message = 'Test Message';
+    const id = '123Test';
+    const opt = any;
     const service: NotificationsServiceService = TestBed.get(NotificationsServiceService);
     spyOn(service, 'remaind').and.callThrough();
-    // fixture.whenStable().then(() => {
+    service.remaind(message, id, opt);
     expect(service.remaind).toBeDefined();
-    expect(service.remaind).toHaveBeenCalledTimes(0);
+    expect(service.remaind).toHaveBeenCalled();
+  });
 
-  }));
+  // This test verifies that the function clear is defined and called
+  it('This test verifies that the function clear is defined and called', () => {
+    const id = '123Test';
+    const service: NotificationsServiceService = TestBed.get(NotificationsServiceService);
+    const spy = spyOn(service, 'clear').and.callThrough();
+    service.clear(id);
+    expect(spy).toBeDefined();
+    expect(spy).toHaveBeenCalled();
+  });
 });
