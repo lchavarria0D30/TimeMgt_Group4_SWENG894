@@ -5,7 +5,7 @@
  * Description: The main component code for application. Holds the component code to be used in all the other components
  * of the app.
  *
- **/
+ */
 
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
@@ -64,8 +64,8 @@ export class AppComponent implements OnInit {
           .then(data => {
             sessionService.setToken(data.getAccessToken().getJwtToken());
             sessionService.setExpirationTime(data.getAccessToken().getExpiration());
-            console.log('Token: ' + this.sessionService.getToken());
-            console.log('Init Date: ' + new Date());
+            // console.log('Token: ' + this.sessionService.getToken());
+            // console.log('Init Date: ' + new Date());
             }
           )
           .catch(err => console.log(err));
@@ -85,7 +85,7 @@ export class AppComponent implements OnInit {
           'Authorization',
           'Bearer ' + data.getAccessToken().getJwtToken()
         );
-        interval(60000)
+        interval(2100000)
           .pipe(
             startWith(0), // Starts immediatly
             mapTo(
