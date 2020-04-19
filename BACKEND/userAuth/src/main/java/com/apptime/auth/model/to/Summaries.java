@@ -10,11 +10,6 @@ public class Summaries {
     private Summary summaryForCurrentUser;
     private Summary summaryForAllUsers;
 
-    public Summaries(Category category, Summary summaryForCurrentUser) {
-        this.category = category;
-        this.summaryForCurrentUser = summaryForCurrentUser;
-    }
-
     public Summaries(Category category, Summary summaryForCurrentUser, Summary summaryForAllUsers) {
         this.category = category;
         this.summaryForCurrentUser = summaryForCurrentUser;
@@ -25,23 +20,11 @@ public class Summaries {
         return category;
     }
 
-    public void setCategory(Category category) {
-        this.category = category;
-    }
-
     public Summary getSummaryForCurrentUser() {
         return summaryForCurrentUser;
     }
 
-    public void setSummaryForCurrentUser(Summary summaryForCurrentUser) {
-        this.summaryForCurrentUser = summaryForCurrentUser;
-    }
-
     public Summary getSummaryForAllUsers() {
         return summaryForAllUsers;
-    }
-
-    public void setSummaryForAllUsers(Summary summaryForAllUsers) {
-        this.summaryForAllUsers = summaryForAllUsers;
     }
 }

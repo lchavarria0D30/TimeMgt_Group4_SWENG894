@@ -47,7 +47,7 @@
 				<activeByDefault>false</activeByDefault>
 				<property>
 					<name>env</name>
-					<value>postgres</value>
+					<value>aws</value>
 				</property>
 			</activation>
 			<properties>

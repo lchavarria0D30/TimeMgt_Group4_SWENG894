@@ -1,7 +1,7 @@
-package com.apptime.auth.helper;
+package com.apptime.auth.helper.impl;
 
 import com.apptime.auth.BaseTest;
-import com.apptime.auth.helper.impl.SummaryHelperImpl;
+import com.apptime.auth.helper.SummaryHelper;
 import com.apptime.auth.model.TaskCategory;
 import com.apptime.auth.repository.AllUserTaskSummaryRepository;
 import com.apptime.auth.repository.UserTaskSummaryRepository;
@@ -11,13 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -91,5 +91,61 @@ public class SummaryHelperTest extends BaseTest {
 
         verify(userTaskSummaryRepository, times(2)).save(any());
         verify(allUserTaskSummaryRepository, times(1)).save(any());
+    }
+
+    @Test
+    public void testStart() {
+        ExecutorService executorService = mock(ExecutorService.class);
+
+        SummaryHelperImpl spy = new SummaryHelperImpl() {
+            @Override
+            public ExecutorService getExecutorService() {
+                return executorService;
+            }
+        };
+
+        spy.start(null, null);
+        verify(executorService, never()).execute(any());
+
+        spy.start(null, Collections.singleton(mock(TaskCategory.class)));
+        verify(executorService, never()).execute(any());
+
+        spy.start("username", null);
+        verify(executorService, never()).execute(any());
+
+        spy.start("username", Collections.emptySet());
+        verify(executorService, never()).execute(any());
+
+        spy.start("username", Collections.singleton(mock(TaskCategory.class)));
+        verify(executorService, times(1)).execute(any());
+    }
+
+    @Test
+    public void testUserTaskSummaryRunnable() {
+        SummaryHelper mockHelper = mock(SummaryHelper.class);
+        SummaryHelperImpl.UserTaskSummaryRunnable runnable = new SummaryHelperImpl.UserTaskSummaryRunnable(null, null, null);
+        runnable.run();
+
+        runnable = new SummaryHelperImpl.UserTaskSummaryRunnable(null, null, mockHelper);
+        runnable.run();
+        verify(mockHelper, never()).generateSummary(any(), any());
+
+        runnable = new SummaryHelperImpl.UserTaskSummaryRunnable("username", null, mockHelper);
+        runnable.run();
+        verify(mockHelper, never()).generateSummary(any(), any());
+
+        runnable = new SummaryHelperImpl.UserTaskSummaryRunnable("username", Collections.emptySet(), mockHelper);
+        runnable.run();
+        verify(mockHelper, never()).generateSummary(any(), any());
+
+        runnable = new SummaryHelperImpl.UserTaskSummaryRunnable(null, Collections.singleton(mock(TaskCategory.class)), mockHelper);
+        runnable.run();
+        verify(mockHelper, never()).generateSummary(any(), any());
+
+        runnable = new SummaryHelperImpl.UserTaskSummaryRunnable("username", Collections.singleton(mock(TaskCategory.class)), mockHelper);
+        runnable.run();
+        verify(mockHelper, times(1)).generateSummary(any(), any());
+
+
     }
 }
