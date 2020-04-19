@@ -11,6 +11,7 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {HttpClient} from '@angular/common/http';
 import {SessionService} from '../../services/session.service';
 import {DialogData} from '../tasks/tasks.component';
+import {environment} from '../../../environments/environment'
 
 @Component({
   selector: 'app-delete-task-dialog',
@@ -37,7 +38,7 @@ export class DeleteTaskDialogComponent implements OnInit  {
 
     const headers = { Authorization: 'Bearer ' + this.sessionService.getToken()};
 
-    this.http.delete('http://localhost:8001/tasks/task/' + this.data.id, { headers }).subscribe({
+    this.http.delete(environment.baseUrl+'/tasks/task/' + this.data.id, { headers }).subscribe({
       next: data => console.log(data),
       error: error => console.error('There was an error!', error)
     });

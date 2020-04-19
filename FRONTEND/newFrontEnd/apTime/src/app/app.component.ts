@@ -18,6 +18,7 @@ import { interval, Observable } from 'rxjs';
 import { mapTo, startWith, map, flatMap, switchMap } from 'rxjs/operators';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ajax } from 'rxjs/ajax';
+import {environment} from '../environments/environment'
 
 interface IQuote {
   id: string;
@@ -84,13 +85,13 @@ export class AppComponent implements OnInit {
           'Authorization',
           'Bearer ' + data.getAccessToken().getJwtToken()
         );
-        interval(3000)
+        interval(60000)
           .pipe(
             startWith(0), // Starts immediatly
             mapTo(
               // Map to your request
               this._http.get<IQuote[]>(
-                'http://localhost:8001/notification/new',
+                environment.baseUrl+'/notification/new',
                 { headers }
               )
             ),
