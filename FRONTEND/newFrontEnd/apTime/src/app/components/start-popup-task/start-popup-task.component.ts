@@ -32,6 +32,7 @@ export class StartPopupTaskComponent implements OnInit {
   suggView = false;
   factor;
   suggestedDuration;
+  suggestedDate;
 
   hoursRegex = /^([0-9]*)$/;
   minsRegex = /^([0-9]|[0-5][0-9])$/;
@@ -92,26 +93,46 @@ export class StartPopupTaskComponent implements OnInit {
     const diff = Math.abs(scheduledEnd.getTime() - this.today.getTime() );
     const minutes = Math.floor((diff / 1000) / 60);
 
-
     const headers = { Authorization: 'Bearer ' + this.sessionService.getToken() };
-    const body = { Duration: minutes,
-      CategoryID: this.selectedCategory
-    };
+    const body = { Duration: minutes, CategoryID: this.selectedCategory };
 
-    this.http.post(environment.baseUrl+'/tasks/predict', body , { headers }).subscribe({
-      next: data => {
-        this.suggestions = data;
-        this.factor = this.suggestions.Confidence;
-        this.suggestedDuration = this.suggestions.Duration;
-      },
-      error: error => console.error('There was an error!', error)
-    })
+    this.http
+        .get(
+            environment.baseUrl+'/tasks/predict?duration=' +
+            body.Duration +
+            '&categoryId=' +
+            body.CategoryID,
+            { headers }
+        )
+        .subscribe({
+          next: data => {
+            console.log(data);
+            this.suggestions = data;
+            this.factor = this.suggestions.confidence;
+            this.suggestedDuration = this.suggestions.duration;
+          },
+          error: error => console.error('There was an error!', error)
+        });
 
+    this.suggestedDate = new Date();
 
+    this.suggestedDate.setTime(this.today.getTime() + this.suggestedDuration * 60000);
 
     this.dialogTitle = 'Suggestions - ';
     this.suggView = true;
 
+  }
+
+  onAcceptClick() {
+
+    const diffHours = Math.abs(this.suggestedDate.getTime() - this.today.getTime()) / 3600000;
+    const diffMins = (Math.abs(this.suggestedDate.getTime() - this.today.getTime()) % 3600000) / 60000;
+
+    this.hours = Math.floor(diffHours);
+    this.minutes = diffMins;
+
+    this.dialogTitle = 'Starts at:  ';
+    this.suggView = false;
   }
 
   onBackClick() {
