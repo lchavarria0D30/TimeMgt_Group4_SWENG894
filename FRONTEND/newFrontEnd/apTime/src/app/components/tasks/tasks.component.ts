@@ -18,6 +18,7 @@ import { EditTaskDialogComponent } from '../edit-task-dialog/edit-task-dialog.co
 import { StartTaskDialogComponent } from '../start-task-dialog/start-task-dialog.component';
 import { ConfirmTaskDialogComponent } from '../confirm-task-dialog/confirm-task-dialog.component';
 import { StartPopupTaskComponent } from '../start-popup-task/start-popup-task.component';
+import {environment} from '../../../environments/environment';
 
 export interface DialogData {
   name: string;
@@ -168,7 +169,7 @@ export class TasksComponent implements OnInit {
       const headers = { Authorization: 'Bearer ' + this.token
        };
 
-      this.http.get('http://localhost:8001/tasks/', { headers }).subscribe({
+      this.http.get(environment.baseUrl+'/tasks/', { headers }).subscribe({
       next: data => {
 
         // console.log(this.tasks);

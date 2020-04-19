@@ -6,6 +6,7 @@ import { NotificationsServiceService } from '../notifications-service.service';
 import { Auth } from 'aws-amplify';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { SessionService } from 'src/app/services/session.service';
+import {environment} from '../../../../environments/environment';
 
 @Component({
   selector: 'app-notifications',
@@ -78,7 +79,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
         'Content-Type': 'application/json'
       };
       this._http
-        .delete('http://localhost:8001/notification/' + alert.id, {
+        .delete(environment.baseUrl+'/notification/' + alert.id, {
           headers
         })
         .subscribe({
@@ -99,7 +100,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     };
     this._http
       .put(
-        'http://localhost:8001/notification/' + alert.id + '/' + 'snooze',
+        environment.baseUrl+'/notification/' + alert.id + '/' + 'snooze',
         {},
         {
           headers

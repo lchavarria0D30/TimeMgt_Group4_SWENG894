@@ -13,6 +13,7 @@ import { BrowserDynamicTestingModule, platformBrowserDynamicTesting } from '@ang
 import {RouterTestingModule} from '@angular/router/testing';
 import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {environment} from '../../../environments/environment';
 import {
   MatFormFieldModule,
   MatInputModule,
@@ -74,18 +75,18 @@ describe('CreateTaskDialogComponent', () => {
 
   it('should create', () => {
     expect(component.onNoClick).toBeTruthy();
-    const categoryMineRequest = httpMock.expectOne('http://localhost:8001/category/');
+    const categoryMineRequest = httpMock.expectOne(environment.baseUrl+'/category/');
     categoryMineRequest.flush([]);
-    /*const categoryPublicRequest = httpMock.expectOne('http://localhost:8001/category/public');
+    /*const categoryPublicRequest = httpMock.expectOne(environment.baseUrl+'/category/public');
     categoryPublicRequest.flush([]);*/
     httpMock.verify();
   });
 
   it('should have error for failed category requests', () => {
     expect(component.onNoClick).toBeTruthy();
-    const categoryMineRequest = httpMock.expectOne('http://localhost:8001/category/');
+    const categoryMineRequest = httpMock.expectOne(environment.baseUrl+'/category/');
     categoryMineRequest.error(new ErrorEvent('Generated testing error'));
-    /*const categoryPublicRequest = httpMock.expectOne('http://localhost:8001/category/public');
+    /*const categoryPublicRequest = httpMock.expectOne(environment.baseUrl+'/category/public');
     categoryPublicRequest.flush([]);*/
     httpMock.verify();
   });

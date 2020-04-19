@@ -14,6 +14,7 @@ import com.apptime.auth.repository.TaskCategoryRepository;
 import com.apptime.auth.repository.TaskReportRepository;
 import com.apptime.auth.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
@@ -31,7 +32,7 @@ public class TaskManagerService {
 	@Autowired
 	TaskRepository taskRepo;
 
-	@Autowired
+  @Autowired
 	private TaskReportRepository reportRepository;
 
 	@Autowired
@@ -223,7 +224,9 @@ public class TaskManagerService {
 		Prediction result= null;
 		RestTemplate restTemplate = new RestTemplate();
 		result = restTemplate.getForObject(predictionEngineUrl+prams,Prediction.class);
+
 		return result;
 	}
 }
+
 

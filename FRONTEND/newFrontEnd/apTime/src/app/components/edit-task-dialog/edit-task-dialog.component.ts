@@ -13,6 +13,7 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {HttpClient} from '@angular/common/http';
 import {SessionService} from '../../services/session.service';
 import {DialogData} from '../tasks/tasks.component';
+import {environment} from '../../../environments/environment';
 
 @Component({
   selector: 'app-edit-task-dialog',
@@ -36,6 +37,7 @@ export class EditTaskDialogComponent implements OnInit {
   factor;
   suggestedDuration;
   suggestions;
+  suggestedDate;
 
   nameFormControl = new FormControl('', [
     Validators.required
@@ -127,7 +129,6 @@ export class EditTaskDialogComponent implements OnInit {
     } else {
       this.isWrongDate = false;
 
-
       const headers = {Authorization: 'Bearer ' + this.sessionService.getToken()};
 
       const body = {
@@ -139,7 +140,7 @@ export class EditTaskDialogComponent implements OnInit {
         scheduledEnd: this.scheduledEnd
       };
 
-      this.http.put('http://localhost:8001/tasks/task', body, {headers}).subscribe({
+      this.http.put(environment.baseUrl+'/tasks/task', body, {headers}).subscribe({
         next: data => console.log('Task saved'),
         error: error => console.error('There was an error!', error)
       });
@@ -160,26 +161,47 @@ export class EditTaskDialogComponent implements OnInit {
     } else {
       this.isWrongDate = false;
 
-      const diff = Math.abs(this.scheduledEnd.getTime() - this.scheduledStart.getTime() );
+      const diff = Math.abs(this.scheduledEnd.getTime() - this.scheduledStart.getTime());
       const minutes = Math.floor((diff / 1000) / 60);
 
       const headers = { Authorization: 'Bearer ' + this.sessionService.getToken() };
-      const body = { Duration: minutes,
-        CategoryID: this.selectedCategory
-      };
+      const body = { Duration: minutes, CategoryID: this.task.category };
 
-      this.http.post('http://localhost:8001/tasks/predict', body , { headers }).subscribe({
-        next: data => {
-          this.suggestions = data;
-          this.factor = this.suggestions.Confidence;
-          this.suggestedDuration = this.suggestions.Duration;
-        },
-        error: error => console.error('There was an error!', error)
-      });
+      this.http
+          .get(
+              environment.baseUrl+'/tasks/predict?duration=' +
+              body.Duration +
+              '&categoryId=' +
+              body.CategoryID,
+              { headers }
+          )
+          .subscribe({
+            next: data => {
+              console.log(data);
+              this.suggestions = data;
+              this.factor = this.suggestions.confidence;
+              this.suggestedDuration = this.suggestions.duration;
+            },
+            error: error => console.error('There was an error!', error)
+          });
+
+      this.suggestedDate = new Date();
+
+      this.suggestedDate.setTime(this.scheduledStart.getTime() + this.suggestedDuration * 60000);
 
       this.dialogTitle = 'Suggestions for ';
       this.suggView = true;
     }
+  }
+
+  onAcceptClick() {
+    this.scheduledEnd.setTime(this.scheduledStart.getTime() + this.suggestedDuration * 60000);
+
+    const seTime = this.scheduledEnd.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
+    this.task.seTime = seTime;
+
+    this.dialogTitle = 'Edit Task - ';
+    this.suggView = false;
   }
 
   onBackClick() {
@@ -210,7 +232,7 @@ export class EditTaskDialogComponent implements OnInit {
     const headers = { Authorization: 'Bearer ' + this.sessionService.getToken()
     };
 
-    this.http.get('http://localhost:8001/category/', { headers }).subscribe({
+    this.http.get(environment.baseUrl+'/category/', { headers }).subscribe({
       next: data => {
         this.categories = this.categories.concat(data);
         this.categories.sort((a, b) => {
