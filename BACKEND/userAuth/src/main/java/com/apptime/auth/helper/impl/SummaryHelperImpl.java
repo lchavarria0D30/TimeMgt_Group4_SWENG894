@@ -41,8 +41,15 @@ public class SummaryHelperImpl implements SummaryHelper {
 
     @Override
     public void start(String username, Set<TaskCategory> categories) {
-        ExecutorService executorService = Executors.newCachedThreadPool();
+        if (username == null || categories == null || categories.isEmpty()) {
+            return;
+        }
+        ExecutorService executorService = getExecutorService();
         executorService.execute(new UserTaskSummaryRunnable(username, categories, this));
+    }
+
+    ExecutorService getExecutorService() {
+        return Executors.newCachedThreadPool();
     }
 
     @Override
@@ -109,7 +116,7 @@ public class SummaryHelperImpl implements SummaryHelper {
         this.entityManager = entityManager;
     }
 
-    private static class UserTaskSummaryRunnable implements Runnable {
+    static class UserTaskSummaryRunnable implements Runnable {
         private String username;
         private Set<TaskCategory> categories;
         private SummaryHelper helper;
