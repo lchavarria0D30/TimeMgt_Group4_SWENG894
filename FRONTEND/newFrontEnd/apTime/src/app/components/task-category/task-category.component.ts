@@ -35,6 +35,7 @@ export class TaskCategoryComponent implements OnInit {
   amplifyService: any;
   canCreateTask = false;
   isPublic = false;
+  name;
   headers = {
     Authorization: 'Bearer'
   };
@@ -83,7 +84,9 @@ export class TaskCategoryComponent implements OnInit {
   }
 
   public onCancel = () => {
-    this.location.back();
+    this.name = '';
+    this.isPublic = false;
+    // this.location.back();
   }
 
   public createCategory = categoryFormValue => {
@@ -95,7 +98,7 @@ export class TaskCategoryComponent implements OnInit {
   private getCategories() {
     this.catSevice.getCategories(this.sessionService.getToken()).subscribe({
       next: data => {
-
+        this.categories = [];
         this.categories = this.categories.concat(data);
 
         this.categories.sort((a, b) => {
@@ -145,6 +148,8 @@ export class TaskCategoryComponent implements OnInit {
             this.openSnackBar('Category Created', 'redirecting to categories');
             this.getCategories();
             this.tabIndex = 0;
+            this.name = '';
+            this.isPublic = false;
             // this.router.navigate(['/']);
             // this.location.go('/');
           },
@@ -169,6 +174,8 @@ export class TaskCategoryComponent implements OnInit {
             this.openSnackBar('Category Created', 'redirecting to categories');
             this.getCategories();
             this.tabIndex = 0;
+            this.name = '';
+            this.isPublic = false;
             // this.router.navigate(['/']);
             // this.location.go('/');
           },
@@ -186,7 +193,7 @@ export class TaskCategoryComponent implements OnInit {
     if (this.tabIndex === 2) {
       this.catSevice.getAvgCategories(this.sessionService.getToken()).subscribe({
         next: data => {
-
+          this.statsCats = [];
           this.statsCats = this.statsCats.concat(data);
 
           for (let i in this.categories) {

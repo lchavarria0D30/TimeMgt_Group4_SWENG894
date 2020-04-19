@@ -34,6 +34,7 @@ export class CreateTaskDialogComponent implements OnInit {
   factor;
   suggestedDuration;
   suggestions;
+  suggestedDate;
 
   nameFormControl = new FormControl('', [
     Validators.required
@@ -124,22 +125,45 @@ export class CreateTaskDialogComponent implements OnInit {
       const minutes = Math.floor((diff / 1000) / 60);
 
       const headers = { Authorization: 'Bearer ' + this.sessionService.getToken() };
-      const body = { Duration: minutes,
-        CategoryID: this.selectedCategory
-      };
+      const body = { Duration: minutes, CategoryID: this.selectedCategory };
 
-      this.http.post('http://localhost:8001/tasks/predict', body , { headers }).subscribe({
-        next: data => {
-          this.suggestions = data;
-          this.factor = this.suggestions.Confidence;
-          this.suggestedDuration = this.suggestions.Duration;
-        },
-        error: error => console.error('There was an error!', error)
-      });
+      this.http
+          .get(
+              'http://localhost:8001/tasks/predict?duration=' +
+              body.Duration +
+              '&categoryId=' +
+              body.CategoryID,
+              { headers }
+          )
+          .subscribe({
+            next: data => {
+              console.log(data);
+              this.suggestions = data;
+              this.factor = this.suggestions.confidence;
+              this.suggestedDuration = this.suggestions.duration;
+            },
+            error: error => console.error('There was an error!', error)
+          });
+
+      this.suggestedDate = new Date();
+
+      this.suggestedDate.setTime(this.scheduledStart.getTime() + this.suggestedDuration * 60000);
 
       this.dialogTitle = 'Suggestions';
       this.suggView = true;
     }
+  }
+
+  onAcceptClick() {
+    console.log(this.scheduledEnd);
+    this.scheduledEnd.setTime(this.scheduledStart.getTime() + this.suggestedDuration * 60000);
+    console.log(this.scheduledEnd);
+
+    const seTime = this.scheduledEnd.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
+    this.data.seTime = seTime;
+
+    this.dialogTitle = 'New Task';
+    this.suggView = false;
   }
 
   onBackClick() {
