@@ -138,27 +138,26 @@ export class CreateTaskDialogComponent implements OnInit {
           )
           .subscribe({
             next: data => {
-              console.log(data);
+              // console.log(data);
               this.suggestions = data;
               this.factor = this.suggestions.confidence;
               this.suggestedDuration = this.suggestions.duration;
+              this.suggestedDate = new Date();
+
+              this.suggestedDate.setTime(this.scheduledStart.getTime() + this.suggestedDuration * 60000);
+
+              this.dialogTitle = 'Suggestions';
+              this.suggView = true;
             },
             error: error => console.error('There was an error!', error)
           });
 
-      this.suggestedDate = new Date();
-
-      this.suggestedDate.setTime(this.scheduledStart.getTime() + this.suggestedDuration * 60000);
-
-      this.dialogTitle = 'Suggestions';
-      this.suggView = true;
     }
   }
 
   onAcceptClick() {
-    console.log(this.scheduledEnd);
+
     this.scheduledEnd.setTime(this.scheduledStart.getTime() + this.suggestedDuration * 60000);
-    console.log(this.scheduledEnd);
 
     const seTime = this.scheduledEnd.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
     this.data.seTime = seTime;
