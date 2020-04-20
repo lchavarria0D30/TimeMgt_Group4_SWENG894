@@ -28,11 +28,8 @@
 				<db.url>jdbc:h2:mem:testdb</db.url>
 				<db.username>sa</db.username>
 				<db.password>sa</db.password>
-
 			</properties>
-
 			<dependencies>
-
 				<dependency>
 					<groupId>com.h2database</groupId>
 					<artifactId>h2</artifactId>
@@ -53,6 +50,29 @@
 			<properties>
 				<db.driverClassName>org.postgresql.Driver</db.driverClassName>
 				<db.url>jdbc:postgresql://aa4gunc5mrmbny.cfbbfychwenn.us-east-2.rds.amazonaws.com:5432/ebdb</db.url>
+				<db.username>authdb</db.username>
+				<db.password>password</db.password>
+			</properties>
+			<dependencies>
+				<dependency>
+					<groupId>org.postgresql</groupId>
+					<artifactId>postgresql</artifactId>
+					<scope>runtime</scope>
+				</dependency>
+			</dependencies>
+		</profile>
+		<profile>
+			<id>postgre</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+				<property>
+					<name>env</name>
+					<value>postgre</value>
+				</property>
+			</activation>
+			<properties>
+				<db.driverClassName>org.postgresql.Driver</db.driverClassName>
+				<db.url>jdbc:postgresql://localhost:5432/authdb</db.url>
 				<db.username>authdb</db.username>
 				<db.password>password</db.password>
 			</properties>

@@ -43,3 +43,20 @@ spring:
 server:
   port: 5000
 predictionEngineHost: http://localhost:5002 # will be updated later
+---
+spring:
+  profiles: postgre
+  jpa:
+    database: POSTGRESQL
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+  datasource:
+    platform: postgres
+    url: jdbc:postgresql://localhost:5432/authdb
+    username: authdb
+    password: password
+    driverClassName: org.postgresql.Driver
+server:
+  port: 8001
+predictionEngineHost: http://localhost:5000 # will be updated later
