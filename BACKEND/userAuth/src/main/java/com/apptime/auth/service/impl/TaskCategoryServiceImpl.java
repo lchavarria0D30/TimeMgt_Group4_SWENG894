@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -25,7 +26,6 @@ public class TaskCategoryServiceImpl implements TaskCategoryService {
         if (name == null || owner == null) {
             return null;
         }
-//        Collection<TaskCategory> existingCategories = taskCategoryRepository.findByOwnerName(owner, name);
         Collection<TaskCategory> existingCategories = taskCategoryRepository.findByOwner(owner);
         if (existingCategories != null && !existingCategories.isEmpty() && !existingCategories.stream().filter(c -> name.equals(c.getName())).collect(Collectors.toSet()).isEmpty()) {
             return null;
@@ -52,5 +52,23 @@ public class TaskCategoryServiceImpl implements TaskCategoryService {
     @Override
     public Collection<TaskCategory> getAllPublicCategories() {
         return taskCategoryRepository.findByIsPublic(true);
+    }
+
+    @Override
+    public Collection<TaskCategory> getAllAccessibleCategories(String owner) {
+        if (owner == null) {
+            return Collections.emptyList();
+        }
+        return taskCategoryRepository.findAllAccessibleCategories(owner);
+    }
+
+    @Override
+    public Optional<TaskCategory> getCategory(int id) {
+        return taskCategoryRepository.findById(id);
+    }
+
+    @Override
+    public Collection<TaskCategory> getCategories(Collection<Integer> ids) {
+        return taskCategoryRepository.findAllById(ids);
     }
 }

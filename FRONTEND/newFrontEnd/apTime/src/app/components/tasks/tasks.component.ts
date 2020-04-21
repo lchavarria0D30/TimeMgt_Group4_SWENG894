@@ -17,6 +17,8 @@ import { DeleteTaskDialogComponent } from '../delete-task-dialog/delete-task-dia
 import { EditTaskDialogComponent } from '../edit-task-dialog/edit-task-dialog.component';
 import { StartTaskDialogComponent } from '../start-task-dialog/start-task-dialog.component';
 import { ConfirmTaskDialogComponent } from '../confirm-task-dialog/confirm-task-dialog.component';
+import { StartPopupTaskComponent } from '../start-popup-task/start-popup-task.component';
+import {environment} from '../../../environments/environment';
 
 export interface DialogData {
   name: string;
@@ -96,7 +98,7 @@ export class TasksComponent implements OnInit {
           data: {
             id: i,
             name,
-            isDone: isDone
+            isDone
           }
         });
 
@@ -128,6 +130,21 @@ export class TasksComponent implements OnInit {
     });
   }
 
+  openStartPopUpDialog(): void {
+    const dialogRef = this.dialog.open(
+        StartPopupTaskComponent, {
+          data: {
+          }
+        });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The start popup task dialog was closed');
+      if (result !== undefined) {
+        this.openStartDialog(result.id, result.name);
+      }
+    });
+  }
+
   openStartDialog(i: number, name: string): void {
     const dialogRef = this.dialog.open(
         StartTaskDialogComponent, {
@@ -144,24 +161,32 @@ export class TasksComponent implements OnInit {
   }
 
 
+
+
   getTasks(): void {
       this.token = this.sessionService.getToken();
 
       const headers = { Authorization: 'Bearer ' + this.token
        };
 
-      this.http.get('http://localhost:8001/tasks/', { headers }).subscribe({
+      this.http.get(environment.baseUrl+'/tasks/', { headers }).subscribe({
       next: data => {
 
-        console.log(this.tasks);
+        // console.log(this.tasks);
         this.tasks = data
 
         this.tasks.sort((a, b) => {
-          return <any> new Date(b.scheduledstart.substring(0, b.scheduledstart.length - 5)) -
-          <any> new Date(a.scheduledstart.substring(0, a.scheduledstart.length - 5));
+          const date = new Date(a.scheduledstart);
+          if (isNaN(date.getTime())) {
+            return <any> new Date(a.scheduledstart.substring(0, a.scheduledstart.length - 5)) -
+                <any> new Date(b.scheduledstart.substring(0, b.scheduledstart.length - 5)) ;
+          } else {
+            return <any> new Date(a.scheduledstart) -
+            <any> new Date(b.scheduledstart);
+          }
         });
 
-        console.log('sorted: ', this.tasks);
+        // console.log('sorted: ', this.tasks);
 
 
 

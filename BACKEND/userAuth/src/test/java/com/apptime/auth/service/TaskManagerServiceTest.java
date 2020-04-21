@@ -1,4 +1,5 @@
 package com.apptime.auth.service;
+import com.apptime.auth.BaseTest;
 import com.apptime.auth.config.TaskStateMachine;
 import com.apptime.auth.model.FormatedDate;
 import com.apptime.auth.model.Task;
@@ -14,10 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 import static com.apptime.auth.model.TaskState.ACTIVE;
 import static com.apptime.auth.model.TaskState.COMPLETED;
@@ -43,7 +41,7 @@ import static org.mockito.Mockito.when;
  * The unit test class for TaskManagerServiceTest
  */
 @SpringBootTest
-public class TaskManagerServiceTest {
+public class TaskManagerServiceTest extends BaseTest {
     @Autowired
     private TaskManagerService service;
 
@@ -62,9 +60,8 @@ public class TaskManagerServiceTest {
 
     @BeforeEach
     public void init() {
-        repository.deleteAll();
-        categoryRepository.deleteAll();
-        reportRepository.deleteAll();
+        cleanup();
+
         notificationService = mock(NotificationService.class);
         service.setNotificationService(notificationService);
         reportService = mock(TaskReportService.class);
@@ -230,13 +227,13 @@ public class TaskManagerServiceTest {
         TaskRepository repository = mock(TaskRepository.class);
         service.setTaskRepo(repository);
 
-        when(repository.findById(anyLong())).thenReturn(null);
+        when(repository.findById(anyLong())).thenReturn(Optional.empty());
         TaskState state = service.start(1L);
         assertNull(state);
         verify(repository, never()).save(any(Task.class));
 
         Task task = new Task();
-        when(repository.findById(anyLong())).thenReturn(task);
+        when(repository.findById(anyLong())).thenReturn(Optional.of(task));
 
         task.setState(CREATED);
         state = service.start(1L);
@@ -263,15 +260,20 @@ public class TaskManagerServiceTest {
         String name = "userName";
         Task task = new Task();
         Set<Task> tasks = new HashSet<Task>();
-        //test empty result
-        when(repository.getTasksStartedLaterThan(start,name)).thenReturn(tasks);
+        Calendar c = Calendar.getInstance();
+        c.setTime(start);
+        c.add(Calendar.DATE, 1);
+        Date end = c.getTime();
+                //test empty result
+        when(repository.getTasksStartedLaterThan(start,end,name)).thenReturn(tasks);
         Set<Task> resultSet =  service.getTasksStartedLaterThan(start,name);
         assertEquals(0, resultSet.size());
         tasks.add(task);
         task.setScheduledstart(start);
-        when(repository.getTasksStartedLaterThan(start,name)).thenReturn(tasks);
-        Task result =  service.getTasksStartedLaterThan(start,name).iterator().next();
-        assertEquals(task.getScheduledstart(),result.getScheduledstart() );
+        when(repository.getTasksStartedLaterThan(start,start,name)).thenReturn(tasks);
+        Set<Task> result =  service.getTasksStartedLaterThan(start,name);
+        assertEquals(1,result.size());
+        assertEquals(task.getScheduledstart(),result.iterator().next().getScheduledstart());
 
 
     }
@@ -282,13 +284,13 @@ public class TaskManagerServiceTest {
         TaskRepository repository = mock(TaskRepository.class);
         service.setTaskRepo(repository);
 
-        when(repository.findById(anyLong())).thenReturn(null);
+        when(repository.findById(anyLong())).thenReturn(Optional.empty());
         TaskState state = service.pause(1L);
         assertNull(state);
         verify(repository, never()).save(any(Task.class));
 
         Task task = new Task();
-        when(repository.findById(anyLong())).thenReturn(task);
+        when(repository.findById(anyLong())).thenReturn(Optional.of(task));
 
         task.setState(ACTIVE);
         task.setStart(new Date(System.currentTimeMillis() - 1000L));
@@ -310,13 +312,13 @@ public class TaskManagerServiceTest {
         TaskRepository repository = mock(TaskRepository.class);
         service.setTaskRepo(repository);
 
-        when(repository.findById(anyLong())).thenReturn(null);
+        when(repository.findById(anyLong())).thenReturn(Optional.empty());
         TaskState state = service.complete(1L);
         assertNull(state);
         verify(repository, never()).save(any(Task.class));
 
         Task task = new Task();
-        when(repository.findById(anyLong())).thenReturn(task);
+        when(repository.findById(anyLong())).thenReturn(Optional.of(task));
 
         task.setState(ACTIVE);
         task.setStart(new Date(System.currentTimeMillis() - 1000L));

@@ -13,6 +13,7 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {HttpClient} from '@angular/common/http';
 import {SessionService} from '../../services/session.service';
 import {DialogData} from '../tasks/tasks.component';
+import {environment} from '../../../environments/environment'
 
 @Component({
   selector: 'app-create-task-dialog',
@@ -20,15 +21,21 @@ import {DialogData} from '../tasks/tasks.component';
   styleUrls: ['./create-task-dialog.component.css']
 })
 export class CreateTaskDialogComponent implements OnInit {
+  dialogTitle = 'New Task';
   scheduledStart;
   scheduledEnd;
   token;
   selectedCategory = '';
-  categories;
+  categories = [];
   minDate;
   minEndDate;
   timeRegex = /^(?:(?:1[0-2]|0?[1-9]):[0-5]\d\s[AP][M])?$/;
   isWrongDate = false;
+  suggView = false;
+  factor;
+  suggestedDuration;
+  suggestions;
+  suggestedDate;
 
   nameFormControl = new FormControl('', [
     Validators.required
@@ -62,37 +69,40 @@ export class CreateTaskDialogComponent implements OnInit {
 
   }
 
+  ngOnInit() {
+
+    this.getCategory();
+  }
+
   onNoClick(): void {
+
     this.dialogRef.close();
   }
 
   onYesClick(): void {
 
-
     this.scheduledStart = this.dateConversion(this.data.ssTime, this.data.ssDate);
+
     this.scheduledEnd = this.dateConversion(this.data.seTime, this.data.seDate);
 
-    if (this.scheduledEnd < this.scheduledStart) {
+    if (this.scheduledEnd <= this.scheduledStart) {
       this.isWrongDate = true;
 
     } else {
       this.isWrongDate = false;
-      console.log(this.scheduledStart);
-      console.log(this.scheduledEnd);
-      console.log('Before POST');
 
       const headers = { Authorization: 'Bearer ' + this.sessionService.getToken()};
 
       const body = { name: this.data.name,
         description: this.data.description,
-        category: this.selectedCategory,
+        categories: [{id: this.selectedCategory}],
         scheduledstart: this.scheduledStart,
         scheduledEnd: this.scheduledEnd,
       };
 
 
-      this.http.post('http://localhost:8001/tasks/newtask', body, { headers }).subscribe({
-        next: data => console.log(data),
+      this.http.post(environment.baseUrl+'/tasks/newtask', body, { headers }).subscribe({
+        next: data => console.log('new task created'),
         error: error => console.error('There was an error!', error)
       });
 
@@ -101,10 +111,70 @@ export class CreateTaskDialogComponent implements OnInit {
 
   }
 
+  onSuggClick() {
+
+    this.scheduledStart = this.dateConversion(this.data.ssTime, this.data.ssDate);
+    this.scheduledEnd = this.dateConversion(this.data.seTime, this.data.seDate);
+
+    if (this.scheduledEnd <= this.scheduledStart) {
+      this.isWrongDate = true;
+
+    } else {
+      this.isWrongDate = false;
+
+      const diff = Math.abs(this.scheduledEnd.getTime() - this.scheduledStart.getTime());
+      const minutes = Math.floor((diff / 1000) / 60);
+
+      const headers = { Authorization: 'Bearer ' + this.sessionService.getToken() };
+      const body = { Duration: minutes, CategoryID: this.selectedCategory };
+
+      this.http
+          .get(
+              environment.baseUrl+'/tasks/predict?duration=' +
+              body.Duration +
+              '&categoryId=' +
+              body.CategoryID,
+              { headers }
+          )
+          .subscribe({
+            next: data => {
+              // console.log(data);
+              this.suggestions = data;
+              this.factor = this.suggestions.confidence;
+              this.suggestedDuration = this.suggestions.duration;
+              this.suggestedDate = new Date();
+
+              this.suggestedDate.setTime(this.scheduledStart.getTime() + this.suggestedDuration * 60000);
+
+              this.dialogTitle = 'Suggestions';
+              this.suggView = true;
+            },
+            error: error => console.error('There was an error!', error)
+          });
+
+    }
+  }
+
+  onAcceptClick() {
+
+    this.scheduledEnd.setTime(this.scheduledStart.getTime() + this.suggestedDuration * 60000);
+
+    const seTime = this.scheduledEnd.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
+    this.data.seTime = seTime;
+
+    this.dialogTitle = 'New Task';
+    this.suggView = false;
+  }
+
+  onBackClick() {
+    this.dialogTitle = 'New Task';
+    this.suggView = false;
+  }
+
   dateConversion(time: string, date: Date): Date {
     const tempDate = date;
     const tempTime = time;
-    console.log('IN dateconversion');
+
     const parts = tempTime.match(/(\d+):(\d+) (AM|PM)/);
     if (parts) {
       let hours = parseInt(parts[1], 10);
@@ -118,10 +188,6 @@ export class CreateTaskDialogComponent implements OnInit {
     return tempDate;
   }
 
-  ngOnInit() {
-    console.log("getCategory");
-    this.getCategory();
-  }
 
   getCategory(): void {
     this.token = this.sessionService.getToken();
@@ -129,13 +195,18 @@ export class CreateTaskDialogComponent implements OnInit {
     const headers = { Authorization: 'Bearer ' + this.token
     };
 
-    this.http.get('http://localhost:8001/category/mine', { headers }).subscribe({
+    this.http.get(environment.baseUrl+'/category/', { headers }).subscribe({
       next: data => {
-        this.categories = data
-        console.log(this.categories);
+        this.categories = this.categories.concat(data);
+        this.categories.sort((a, b) => {
+          if (a.name > b.name) { return 1; }
+          if (a.name < b.name) { return -1; }
+          return 0;
+        });
       },
       error: error => console.error('There was an error!', error)
     });
+
   }
 
   changeMinEndDate() {

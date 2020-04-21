@@ -1,3 +1,7 @@
+.fill-remaining-space {
+    flex: 1 1 auto;
+}
+
 .custom-button{
     right: 20px;
     bottom: 10px;
@@ -7,4 +11,78 @@
 
 .label-color {
     color:#673AB7 !important;
+}
+
+.mat-icon-not-found {
+    transform: scale(4);
+}
+
+.active-task-background {
+    background-color: #C8E6C9;
+}
+
+.paused-task-background{
+    background-color: #FFF9C4;
+}
+
+.created-task-background{
+    background-color: #B2EBF2;
+}
+
+.completed-task-background {
+    background-color: #F5F5F5;
+}
+
+.completed-shadow {
+    /*text-shadow: 2px 2px 4px #000;*/
+    color:#FF9E80 !important;
+    font-size: x-large;
+}
+.paused-shadow {
+    /*text-shadow: 2px 2px 4px #000;*/
+    color:#FFECB3!important;
+    font-size: x-large;
+}
+.active-shadow {
+    /*text-shadow: 2px 2px 4px #000;*/
+    color:#81C784 !important;
+    font-size: x-large;
+}
+.todo-shadow {
+    /*text-shadow: 2px 2px 4px #000;*/
+    color:#81D4FA !important;
+    font-size: x-large;
+}
+
+.sec-toolbar{
+    text-shadow: 2px 2px 4px #000;
+    color: #FFFFFF !important;
+}
+.mat-toolbar.mat-primary {
+    text-shadow: 2px 2px 4px #000;
+    background: #FFAB40;
+    color: #fff;
+}
+
+.mat-card{
+    /*width: 350px;*/
+    /*height: 400px;*/
+    display: block;
+    margin-left:auto;
+    margin-right:auto;
+    vertical-align:middle;
+}
+
+.cards-background {
+    background: #673AB7 !important;
+}
+
+.running-color {
+    background-color: #EEEEEE;
+    color:#81C784 !important;
+}
+
+.paused-color {
+    background-color: #EEEEEE;
+    color:#FFAB40 !important;
 }

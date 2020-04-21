@@ -10,3 +10,20 @@ mat-card-title {
   justify-content: center;
   align-items: center;
 }
+
+.header-text {
+  /*text-shadow: 1px 1px 6px #000;*/
+  color:#673AB7 !important;
+}
+
+table {
+  width: 100%;
+}
+
+th.mat-sort-header-sorted {
+  color: black;
+}
+
+.text-button {
+  color: white !important;
+}

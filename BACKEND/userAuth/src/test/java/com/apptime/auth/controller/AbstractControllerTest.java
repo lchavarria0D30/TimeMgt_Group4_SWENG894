@@ -1,5 +1,6 @@
 package com.apptime.auth.controller;
 
+import com.apptime.auth.BaseTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -11,7 +12,7 @@ import org.springframework.web.context.WebApplicationContext;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public abstract class AbstractControllerTest {
+public abstract class AbstractControllerTest extends BaseTest {
     protected static final String USERNAME = "username";
 
     protected MockMvc mockMvc;

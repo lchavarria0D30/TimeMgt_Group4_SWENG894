@@ -4,7 +4,7 @@
  * Jira Task:
  * Description:
  *
- **/
+ */
 
 import { Component, OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -21,6 +21,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { FlexAlignStyleBuilder } from '@angular/flex-layout';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import {environment} from '../../../environments/environment';
 
 @Component({
   selector: 'app-task-category',
@@ -35,10 +36,20 @@ export class TaskCategoryComponent implements OnInit {
   amplifyService: any;
   canCreateTask = false;
   isPublic = false;
+  name;
   headers = {
     Authorization: 'Bearer'
   };
-  token: string = '';
+  token = '';
+
+  categories = [];
+  tabIndex = 0;
+
+  publicCats = [];
+  privateCats = [];
+
+  statsCats = [];
+
   constructor(
     private location: Location,
     private catSevice: CategoryService,
@@ -64,6 +75,9 @@ export class TaskCategoryComponent implements OnInit {
       isPublic: new FormControl(false, [])
 
     });
+
+    this.getCategories();
+
   }
 
   public hasError = (controlName: string, errorName: string) => {
@@ -71,7 +85,9 @@ export class TaskCategoryComponent implements OnInit {
   }
 
   public onCancel = () => {
-    this.location.back();
+    this.name = '';
+    this.isPublic = false;
+    // this.location.back();
   }
 
   public createCategory = categoryFormValue => {
@@ -80,40 +96,68 @@ export class TaskCategoryComponent implements OnInit {
     }
   }
 
+  private getCategories() {
+    this.catSevice.getCategories(this.sessionService.getToken()).subscribe({
+      next: data => {
+        this.categories = [];
+        this.categories = this.categories.concat(data);
+
+        this.categories.sort((a, b) => {
+          if (a.name > b.name) { return 1; }
+          if (a.name < b.name) { return -1; }
+          return 0;
+        });
+
+        this.publicCats = this.categories.filter(
+            cats => cats.public === true
+        );
+
+        this.privateCats = this.categories.filter(
+            cats => cats.public === false
+        );
+      },
+      error: error => {
+        console.error('There was an error!', error);
+      }
+    });
+  }
+
   private createCategoryOb = categoryFormValue => {
     this.cat = {
       name: categoryFormValue.name,
       isPublic: this.isPublic
     };
-    console.log(this.cat.isPublic);
 
     this.createCat();
-  };
-  //create Category
+  }
+  // create Category
   public createCat = function() {
     const headers = {
       Authorization: 'Bearer ' + this.sessionService.getToken(),
       'Content-Type': 'application/json'
     };
     if (this.cat.isPublic) {
-      console.log(this.cat.isPublic);
       this.http
         .post(
-          'http://localhost:8001/category/public',
+          environment.baseUrl+'/category/public',
           { name: this.cat.name },
           { headers }
         )
         .subscribe({
           next: data => {
             console.log(data);
-            this.openSnackBar('Category Created', 'redirecting to home');
-            this.router.navigate(['/']);
+            this.openSnackBar('Category Created', 'redirecting to categories');
+            this.getCategories();
+            this.tabIndex = 0;
+            this.name = '';
+            this.isPublic = false;
+            // this.router.navigate(['/']);
             // this.location.go('/');
           },
           error: error => {
             console.error('There was an error!', error);
             this.openSnackBar(
-              'Error occured while  creating category',
+              'Error occured while creating category',
               'Try again!'
             );
           }
@@ -121,15 +165,19 @@ export class TaskCategoryComponent implements OnInit {
     } else {
       this.http
         .post(
-          'http://localhost:8001/category',
+          environment.baseUrl+'/category',
           { name: this.cat.name },
           { headers }
         )
         .subscribe({
           next: data => {
-            console.log(data);
-            this.openSnackBar('Category Created', 'redirecting to home');
-            this.router.navigate(['/']);
+            // console.log(data);
+            this.openSnackBar('Category Created', 'redirecting to categories');
+            this.getCategories();
+            this.tabIndex = 0;
+            this.name = '';
+            this.isPublic = false;
+            // this.router.navigate(['/']);
             // this.location.go('/');
           },
           error: error => console.error('There was an error!', error)
@@ -140,5 +188,42 @@ export class TaskCategoryComponent implements OnInit {
     this.snackBar.open(message, action, {
       duration: 2000
     });
+  }
+
+  onStats(): void {
+    if (this.tabIndex === 2) {
+      this.catSevice.getAvgCategories(this.sessionService.getToken()).subscribe({
+        next: data => {
+          this.statsCats = [];
+          this.statsCats = this.statsCats.concat(data);
+
+          for (let i in this.categories) {
+            this.categories[i].avg = this.findCat(this.categories[i].id);
+          }
+        },
+        error: error => console.error('There was an error!', error)
+      });
+
+    }
+  }
+
+  findCat(i: number): object {
+    let found = this.statsCats.find(element => element.category.id === i);
+
+    if (found === undefined) {
+      found = {};
+      found.summaryForAllUsers = {averageDuration: 'Not Sufficient Data'};
+      found.summaryForCurrentUser = {averageDuration: 'Not Sufficient Data'};
+    } else {
+      if (found.summaryForAllUsers == null) {
+        found.summaryForAllUsers = {averageDuration: 'Not Sufficient Data'};
+      }
+
+      if (found.summaryForCurrentUser == null) {
+        found.summaryForCurrentUser = {averageDuration: 'Not Sufficient Data'};
+      }
+    }
+
+    return found;
   }
 }

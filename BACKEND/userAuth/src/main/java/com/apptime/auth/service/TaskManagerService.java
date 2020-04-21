@@ -1,17 +1,27 @@
 package com.apptime.auth.service;
-		import java.text.SimpleDateFormat;
-		import java.util.*;
-		import com.apptime.auth.config.TaskStateMachine;
-		import com.apptime.auth.model.Task;
-		import com.apptime.auth.model.TaskCategory;
-		import com.apptime.auth.model.TaskState;
-		import com.apptime.auth.repository.TaskCategoryRepository;
-		import com.apptime.auth.repository.TaskReportRepository;
-		import com.apptime.auth.repository.TaskRepository;
-		import org.springframework.beans.factory.annotation.Autowired;
-		import org.springframework.stereotype.Service;
-		import org.springframework.web.bind.annotation.RequestBody;
-		import javax.transaction.Transactional;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import com.apptime.auth.config.TaskStateMachine;
+import com.apptime.auth.helper.SpringProperties;
+import com.apptime.auth.model.Prediction;
+import com.apptime.auth.model.Task;
+import com.apptime.auth.model.TaskCategory;
+import com.apptime.auth.model.TaskState;
+import com.apptime.auth.model.Prediction;
+import com.apptime.auth.repository.TaskCategoryRepository;
+import com.apptime.auth.repository.TaskReportRepository;
+import com.apptime.auth.repository.TaskRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.*;
+import org.springframework.http.HttpHeaders;
+import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.client.RestTemplate;
+
+import javax.transaction.Transactional;
 
 /**
  * @author Bashiir Mohamed
@@ -22,7 +32,7 @@ public class TaskManagerService {
 	@Autowired
 	TaskRepository taskRepo;
 
-	@Autowired
+  @Autowired
 	private TaskReportRepository reportRepository;
 
 	@Autowired
@@ -34,11 +44,14 @@ public class TaskManagerService {
 	@Autowired
 	private TaskCategoryRepository categoryRepository;
 
+	@Autowired
+	private SpringProperties springProperties;
+
 	//view task details
 	//view task details
 	public Task getTask(long id) {
-		return taskRepo.findById(id);
-
+		Optional<Task> taskOptional = taskRepo.findById(id);
+		return taskOptional.orElse(null);
 	}
 
 	public Task getTask(long id, String username) {
@@ -52,6 +65,10 @@ public class TaskManagerService {
 
 	}
 
+	public List<Task> getTasks(Collection<Long> ids) {
+		return taskRepo.findAllById(ids);
+	}
+
 	//create task
 	public Task createTask(Task task, String user) {
 		task.setUserName(user);
@@ -59,7 +76,7 @@ public class TaskManagerService {
 		updateCategories(task);
 		System.out.println("Before saving in Db in CreatTask: +"+task.getScheduledstart());
 		taskRepo.save(task);
-		Task task2 = taskRepo.findById(task.getId());
+		Task task2 = getTask(task.getId());
 		System.out.println("task after saving to the database CreatTask"+task2.getScheduledstart());
 		notificationService.createNotificationForTask(task);
 		return task;
@@ -71,17 +88,9 @@ public class TaskManagerService {
 			return;
 		}
 
-		List<TaskCategory> privateCategories = categoryRepository.findByOwner(task.getUserName());
-		List<TaskCategory> publicCategories = categoryRepository.findByIsPublic(true);
 		Map<Integer, TaskCategory> idCategoryMap = new HashMap<>();
 		Map<String, TaskCategory> nameCategoryMap = new HashMap<>();
-		List<TaskCategory> allAccessibleCategories = new ArrayList<>();
-		if (privateCategories != null) {
-			allAccessibleCategories.addAll(privateCategories);
-		}
-		if (publicCategories != null) {
-			allAccessibleCategories.addAll(publicCategories);
-		}
+		List<TaskCategory> allAccessibleCategories = categoryRepository.findAllAccessibleCategories(task.getUserName());
 		for (TaskCategory cat : allAccessibleCategories) {
 			idCategoryMap.put(cat.getId(), cat);
 			nameCategoryMap.put(cat.getName(), cat);
@@ -104,7 +113,7 @@ public class TaskManagerService {
 
 	//update task
 	public Task updateTask(@RequestBody Task task, String username) {
-		Task old = taskRepo.findById(task.getId());
+		Task old = getTask(task.getId());
 		if (old == null || !old.getUserName().equals(username)) {
 			return null;
 		}
@@ -120,7 +129,7 @@ public class TaskManagerService {
 	//delete task
 	@Transactional
 	public Task deleteTask(long id) {
-		Task old = taskRepo.findById(id);
+		Task old = getTask(id);
 		if (old != null && old.getState() != null && !old.getState().equals(TaskState.CREATED) && !old.getState().equals(TaskState.COMPLETED)) {
 			return null;
 		}
@@ -133,6 +142,7 @@ public class TaskManagerService {
 
 	}
 	public List<Task> findUserTasks(String user) {
+		System.out.println(">>>>>>>>>>>>> " + springProperties.getPredictionEngineHost());
 		return taskRepo.findByUserName(user);
 	}
 
@@ -155,7 +165,7 @@ public class TaskManagerService {
 	 */
 	@Transactional
 	public TaskState start(long taskId){
-		Task task = taskRepo.findById(taskId);
+		Task task = getTask(taskId);
 		TaskState ts = null;
 		if(task != null){
 			TaskStateMachine.START(task);
@@ -172,7 +182,7 @@ public class TaskManagerService {
 	 */
 	@Transactional
 	public TaskState pause(long taskId){
-		Task task = taskRepo.findById(taskId);
+		Task task = getTask(taskId);
 		TaskState ts = null;
 		if(task != null){
 			TaskStateMachine.PAUSE(task);
@@ -184,7 +194,7 @@ public class TaskManagerService {
 
 	@Transactional
 	public TaskState complete(long taskId){
-		Task task = taskRepo.findById(taskId);
+		Task task = getTask(taskId);
 		TaskState ts = null;
 		if(task != null){
 			TaskStateMachine.COMPLETE(task);
@@ -197,10 +207,26 @@ public class TaskManagerService {
 
 	public Set<Task> getTasksStartedLaterThan(Date start, String name) {
 		String pattern = "yyyy-MM-dd";
+		Calendar c = Calendar.getInstance();
+		c.setTime(start);
+		c.add(Calendar.DATE, 1);
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-		java.sql.Date qdate = new java.sql.Date(start.getTime());
+		//Date sDate = new Date(start.getTime());
+		Date eDate = c.getTime();
 		Set<Task> result = new HashSet<Task>();
-		result = taskRepo.getTasksStartedLaterThan(qdate,name);
+		result = taskRepo.getTasksStartedLaterThan(start,eDate,name);
+		return result;
+	}
+
+	public Prediction getPrediction(int duration, int catergoryID)  {
+		final String predictionEngineUrl = springProperties.getPredictionEngineHost() + "/prediction/api/v1.0/task?plannedDuration=";
+		final String prams = ""+duration+"&"+"Category="+catergoryID;
+		Prediction result= null;
+		RestTemplate restTemplate = new RestTemplate();
+		result = restTemplate.getForObject(predictionEngineUrl+prams,Prediction.class);
+
 		return result;
 	}
 }
+
+

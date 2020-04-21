@@ -1,5 +1,6 @@
 package com.apptime.auth.service.impl;
 
+import com.apptime.auth.helper.SummaryHelper;
 import com.apptime.auth.model.Task;
 import com.apptime.auth.model.TaskReport;
 import com.apptime.auth.model.TaskReportType;
@@ -32,6 +33,9 @@ public class TaskReportServiceImpl implements TaskReportService {
 
     @Autowired
     private NotificationService notificationService;
+
+    @Autowired
+    private SummaryHelper summaryHelper;
 
     @Override
     @Transactional
@@ -67,22 +71,29 @@ public class TaskReportServiceImpl implements TaskReportService {
         report.setType(type);
         report.setDifference(gapDuration);
 
+        report.setActualDuration(task.getDuration());
+
         if (task.getDuration() != null && task.getScheduledstart() != null) {
             long scheduledDurationInMilSec = task.getScheduledEnd().getTime() - task.getScheduledstart().getTime();
             Duration scheduledDuration = Duration.ofMillis(scheduledDurationInMilSec);
             report.setScheduledDuration(scheduledDuration);
-            report.setActualDuration(task.getDuration());
 
             if (scheduledDurationInMilSec != 0) {
                 int efficiency = (int) ((task.getDuration().toMillis() * 100) / scheduledDurationInMilSec);
                 report.setEfficiency(efficiency);
+            } else {
+                report.setEfficiency(-1);
             }
         }
+
+        report.setActualStartDate(task.getStart());
+        report.setActualEndDate(task.getEnd());
 
         reportRepository.save(report);
 
         notificationService.createNotificationForTaskReport(report);
 
+        calculateAverageDuration(task);
         return report;
     }
 
@@ -139,7 +150,18 @@ public class TaskReportServiceImpl implements TaskReportService {
         return reportRepository.findByTaskId(id);
     }
 
+    private void calculateAverageDuration(Task task) {
+        if (task == null || task.getUserName() == null || task.getCategories() == null || task.getCategories().isEmpty()) {
+            return;
+        }
+        summaryHelper.start(task.getUserName(), task.getCategories());
+    }
+
     public void setReportRepository(TaskReportRepository reportRepository) {
         this.reportRepository = reportRepository;
+    }
+
+    public void setSummaryHelper(SummaryHelper summaryHelper) {
+        this.summaryHelper = summaryHelper;
     }
 }

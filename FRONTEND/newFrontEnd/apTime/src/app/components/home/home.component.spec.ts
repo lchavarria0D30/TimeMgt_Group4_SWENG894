@@ -1,4 +1,6 @@
-/** Linked Issue: TMGP4-184: Create Final Web Designs
+/** Use Case Linked Issue: TMGP4-184: Create Final Web Designs
+ *
+ *  Test Case Linked Issue: TMGP4-81
  *
  *  Author: Chavarria Leo
  *
@@ -20,8 +22,6 @@ import {
   MatDialogModule,
   MatDialogRef,
   MAT_DIALOG_DATA,
-  MatButtonModule,
-  MatRadioModule,
   MatSelectModule
 } from '@angular/material';
 
@@ -34,7 +34,7 @@ describe('HomeComponent', () => {
     TestBed.initTestEnvironment(BrowserDynamicTestingModule,
         platformBrowserDynamicTesting());
     TestBed.configureTestingModule({
-      imports: [ HttpClientModule, BrowserAnimationsModule,
+      imports: [HttpClientModule, BrowserAnimationsModule,
         RouterTestingModule.withRoutes([]),
         MatIconModule,
         MatSelectModule,
@@ -45,12 +45,13 @@ describe('HomeComponent', () => {
       ],
       providers: [AmplifyService, HttpClient, {
         provide: MatDialogRef,
-        useValue: {}},
-        { provide: MAT_DIALOG_DATA, useValue: {}}],
+        useValue: {}
+      },
+        {provide: MAT_DIALOG_DATA, useValue: {}}],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
-      declarations: [ HomeComponent ]
+      declarations: [HomeComponent]
     })
-    .compileComponents();
+        .compileComponents();
   }));
 
   beforeEach(() => {
@@ -59,16 +60,8 @@ describe('HomeComponent', () => {
     fixture.detectChanges();
   });
 
+  // This test verifies that the Component can be created
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-
-  it('should be Defined getTasks', async(() => {
-    spyOn(component, 'getTasks').and.callThrough();
-    fixture.whenStable().then(() => {
-      expect(component.getTasks).toBeDefined();
-      expect(component.getTasks).toHaveBeenCalledTimes(0);
-    });
-  }));
-
 });

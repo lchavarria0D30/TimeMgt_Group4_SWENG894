@@ -3,6 +3,7 @@ package com.apptime.auth.service;
 import com.apptime.auth.model.TaskCategory;
 
 import java.util.Collection;
+import java.util.Optional;
 
 /**
  * @author Qi Zhang
@@ -13,4 +14,7 @@ public interface TaskCategoryService {
     TaskCategory createCategory(String name, String owner, boolean isPublic);
     Collection<TaskCategory> getCategoriesByOwner(String owner);
     Collection<TaskCategory> getAllPublicCategories();
+    Collection<TaskCategory> getAllAccessibleCategories(String owner);
+    Optional<TaskCategory> getCategory(int id);
+    Collection<TaskCategory> getCategories(Collection<Integer> ids);
 }

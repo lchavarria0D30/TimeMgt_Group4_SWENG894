@@ -6,7 +6,7 @@
  *
  **/
 
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule, Title } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -40,6 +40,8 @@ import { ReportComponent } from './components/report/report.component';
 import { StartTaskDialogComponent } from './components/start-task-dialog/start-task-dialog.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { ConfirmTaskDialogComponent } from './components/confirm-task-dialog/confirm-task-dialog.component';
+import { StartPopupTaskComponent } from './components/start-popup-task/start-popup-task.component';
+import { MeetTheTeamComponent } from './components/meet-the-team/meet-the-team.component';
 
 
 @NgModule({
@@ -57,7 +59,9 @@ import { ConfirmTaskDialogComponent } from './components/confirm-task-dialog/con
     ReportComponent,
     StartTaskDialogComponent,
     DashboardComponent,
-    ConfirmTaskDialogComponent
+    ConfirmTaskDialogComponent,
+    StartPopupTaskComponent,
+    MeetTheTeamComponent
   ],
 
   imports: [
@@ -71,7 +75,7 @@ import { ConfirmTaskDialogComponent } from './components/confirm-task-dialog/con
     CustomMaterialModule,
     NotificationModule
   ],
-  providers: [AmplifyService, CustomMaterialModule],
+  providers: [AmplifyService, CustomMaterialModule, Title],
   bootstrap: [AppComponent],
 
   entryComponents: [
@@ -79,7 +83,8 @@ import { ConfirmTaskDialogComponent } from './components/confirm-task-dialog/con
     DeleteTaskDialogComponent,
     EditTaskDialogComponent,
     StartTaskDialogComponent,
-    ConfirmTaskDialogComponent
+    ConfirmTaskDialogComponent,
+    StartPopupTaskComponent
   ]
 })
 export class AppModule {}

@@ -11,7 +11,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 // import { FlexLayoutModule } from '@angular/flex-layout';
 import { HttpClientModule } from '@angular/common/http';
 
-
 import {
   MatNativeDateModule,
   MatSnackBarModule,
@@ -26,8 +25,10 @@ import {
   MatToolbarModule,
   MatCard,
   MatCardModule,
+  MatChipsModule,
   MatFormField,
   MatFormFieldModule,
+  MatGridListModule,
   MatMenuModule,
   MatListModule,
   MatDividerModule,
@@ -39,7 +40,6 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSliderModule } from '@angular/material/slider';
 import { Location } from '@angular/common';
-
 
 @NgModule({
   imports: [
@@ -61,7 +61,9 @@ import { Location } from '@angular/common';
     MatCheckboxModule,
     MatToolbarModule,
     MatCardModule,
+    MatChipsModule,
     MatFormFieldModule,
+    MatGridListModule,
     MatProgressSpinnerModule,
     MatInputModule,
     MatMenuModule,
@@ -80,9 +82,11 @@ import { Location } from '@angular/common';
     MatRadioModule,
     MatNativeDateModule,
     MatDatepickerModule,
+    MatGridListModule,
     MatSnackBarModule,
     MatIconModule,
     MatDialogModule,
+    MatChipsModule,
     MatProgressSpinnerModule,
     MatButtonModule,
     MatListModule,

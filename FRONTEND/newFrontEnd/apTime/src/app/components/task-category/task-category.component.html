@@ -1,69 +1,145 @@
 <!--
-Author: Asma
+Author: Asma/Yanisse
 Jira Task:
 Description:
 -->
+<mat-tab-group [(selectedIndex)]="tabIndex" (click) = "onStats()">
+  <mat-tab label="My categories">
 
-<section
-  fxLayout="row wrap"
-  fxLayoutAlign="center center"
-  class="create-category"
->
-  <mat-card>
-    <mat-card-title class="mat-card-title">Create category</mat-card-title>
-    <form
-      [formGroup]="categoryForm"
-      autocomplete="off"
-      novalidate
-      (ngSubmit)="createCategory(categoryForm.value)"
-      fxLayout="column wrap"
-      fxLayoutAlign="center center"
-      fxLayoutGap="10px"
+    <section>
+      <mat-list>
+        <h3 matSubheader class="header-text">Personal ({{privateCats.length}})</h3>
+        <mat-divider></mat-divider>
+        <mat-list-item *ngFor="let category of privateCats">
+          <mat-icon matListIcon>category</mat-icon>
+          {{category.name}}
+          <mat-divider></mat-divider>
+        </mat-list-item>
+        <mat-divider></mat-divider>
+
+        <h3 matSubheader class="header-text">Default ({{publicCats.length}})</h3>
+        <mat-divider></mat-divider>
+        <mat-list-item *ngFor="let category of publicCats">
+          <mat-icon matListIcon>category</mat-icon>
+          {{category.name}}
+<!--          <p matLine class="demo-2"> {{folder.isPublic}} </p>-->
+          <mat-divider></mat-divider>
+        </mat-list-item>
+        <mat-divider></mat-divider>
+      </mat-list>
+    </section>
+
+  </mat-tab>
+
+  <mat-tab label="New Category">
+
+    <section
+            fxLayout="row wrap"
+            fxLayoutAlign="center center"
+            class="create-category"
     >
-      <mat-card-content>
-        <mat-form-field class="mat-form-field">
-          <input
-            matInput
-            type="text"
-            placeholder="category name"
-            formControlName="name"
-            name="name"
-            id="name"
-          />
-          <mat-hint align="end"> less than 80 characters.</mat-hint>
-          <mat-error *ngIf="hasError('name', 'required')"
-            >Name is required</mat-error
-          >
-          <mat-error *ngIf="hasError('name', 'maxlength')"
-            >less than 80 characters</mat-error
-          >
-        </mat-form-field>
-        <br />
-        <mat-checkbox
-          name="isPublic"
-          formControlName="isPublic"
-          id="isPublic"
-          [(ngModel)]="isPublic"
-          >public</mat-checkbox
+      <mat-card>
+        <mat-card-title class="mat-card-title">Create category</mat-card-title>
+        <form
+                [formGroup]="categoryForm"
+                autocomplete="off"
+                novalidate
+                (ngSubmit)="createCategory(categoryForm.value)"
+                fxLayout="column wrap"
+                fxLayoutAlign="center center"
+                fxLayoutGap="10px"
         >
-      </mat-card-content>
-      <mat-card-actions align="center">
-        <button
-          mat-raised-button
-          color="primary"
-          [disabled]="!categoryForm.valid"
-        >
-          Create
-        </button>
-        <button
-          type="button"
-          mat-raised-button
-          color="warn"
-          (click)="onCancel()"
-        >
-          Cancel
-        </button>
-      </mat-card-actions>
-    </form>
-  </mat-card>
-</section>
+          <mat-card-content>
+            <mat-form-field class="mat-form-field">
+              <input
+                      matInput
+                      type="text"
+                      placeholder="category name"
+                      formControlName="name"
+                      name="name"
+                      id="name"
+                      [(ngModel)]="name"
+              />
+              <mat-hint align="end"> less than 80 characters.</mat-hint>
+              <mat-error *ngIf="hasError('name', 'required')"
+              >Name is required</mat-error
+              >
+              <mat-error *ngIf="hasError('name', 'maxlength')"
+              >less than 80 characters</mat-error
+              >
+            </mat-form-field>
+            <br />
+            <mat-checkbox
+                    name="isPublic"
+                    formControlName="isPublic"
+                    id="isPublic"
+                    [(ngModel)]="isPublic"
+            >public</mat-checkbox
+            >
+          </mat-card-content>
+          <mat-card-actions align="center">
+            <button
+                    mat-raised-button
+                    color="primary"
+                    [disabled]="!categoryForm.valid"
+            >
+              <span class="text-button"> Create </span>
+            </button>
+            <button
+                    type="button"
+                    mat-raised-button
+                    color="warn"
+                    (click)="onCancel()"
+            >
+              <span class="text-button"> Cancel </span>
+            </button>
+          </mat-card-actions>
+        </form>
+      </mat-card>
+    </section>
+
+  </mat-tab>
+
+  <mat-tab label="Statistics">
+
+    <section>
+
+      <div fxLayout="column wrap" >
+      <mat-list>
+        <div fxLayout="row">
+        <div fxFlex="46">
+          <h3 matSubheader class="header-text">Categories ({{categories.length}})</h3>
+        </div>
+        <div fxFlex="26">
+          <h3 matSubheader class="header-text">My Average Duration</h3>
+        </div>
+          <div fxFlex="25">
+            <h3 matSubheader class="header-text">All Users Average Duration</h3>
+          </div>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <mat-list-item *ngFor="let category of categories">
+
+            <div fxFlex="50">
+              <mat-icon matListIcon>category</mat-icon>
+              {{category.name}}
+            </div>
+            <div fxFlex="27" *ngIf="category.avg !== undefined">
+              {{category.avg.summaryForCurrentUser.averageDuration}}
+            </div>
+            <div fxFlex="25" *ngIf="category.avg !== undefined">
+              {{category.avg.summaryForAllUsers.averageDuration}}
+            </div>
+
+          <mat-divider></mat-divider>
+        </mat-list-item>
+        <mat-divider></mat-divider>
+      </mat-list>
+    </div>
+    </section>
+
+  </mat-tab>
+
+</mat-tab-group>

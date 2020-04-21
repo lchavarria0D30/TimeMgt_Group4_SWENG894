@@ -4,7 +4,7 @@ Jira Task: N/A
 Description: Template for the main application component.
 -->
 <div style="text-align:center">
-  <!-- <h1>Welcome to {{ title }}!</h1> -->
+
   <mat-toolbar color="primary">
     <mat-toolbar-row>
       <button mat-button [matMenuTriggerFor]="menu">
@@ -12,7 +12,7 @@ Description: Template for the main application component.
       </button>
       <mat-menu #menu="matMenu">
 
-        <button mat-menu-item routerLink="/"><mat-icon>home</mat-icon>Home</button>
+        <button mat-menu-item routerLink="/" *ngIf="user==null"><mat-icon>home</mat-icon>Home</button>
         <button mat-menu-item routerLink="/dashboard" *ngIf="user!=null"><mat-icon>dashboard</mat-icon>Dashboard</button>
         <button mat-menu-item routerLink="/tasks" *ngIf="user!=null"><mat-icon>assignment</mat-icon>Tasks</button>
         <button mat-menu-item routerLink="/category" *ngIf="user!=null"><mat-icon>category</mat-icon>Categories</button>
@@ -21,29 +21,13 @@ Description: Template for the main application component.
         <button mat-menu-item routerLink="/login" *ngIf="user!=null"><mat-icon>exit_to_app</mat-icon>Logout</button>
 
       </mat-menu>
-      <span class="header-text">TimeMngmt</span>
+      <span class="header-text">Time Helper</span>
+      <span class="toolbar-spacer"></span>
+      <button mat-stroked-button color="primary" class="meet-button" routerLink="/meet">Meet the Team</button>
     </mat-toolbar-row>
   </mat-toolbar>
 </div>
 
-<!-- <h2>Links to the Pages</h2>
-<ul>
-  <li>
-    <h2><a >Home</a></h2>
-  </li>
-  <li>
-    <h2><a routerLink="/auth">login</a></h2>
-  </li>
-  <li>
-    <h2><a routerLink="/login">dashboard</a></h2>
-  </li>
-  <li>
-    <h2><a routerLink="/tasks">tasks</a></h2>
-  </li>
-</ul> -->
-<!-- <hr /> -->
-
 <app-notifications></app-notifications>
 <router-outlet></router-outlet>
 
-<!-- <hr /> -->
