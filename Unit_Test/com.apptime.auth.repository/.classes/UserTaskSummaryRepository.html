@@ -1,0 +1,77 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: UserTaskSummaryRepository</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">com.apptime.auth.repository</a> ]
+</div>
+
+<h1>Coverage Summary for Class: UserTaskSummaryRepository (com.apptime.auth.repository)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+</tr>
+  <tr>
+    <td class="name">UserTaskSummaryRepository$MockitoMock$2046050560</td>
+  </tr>
+  <tr>
+    <td class="name">UserTaskSummaryRepository$MockitoMock$2046050560$auxiliary$79R1Nu6C</td>
+  </tr>
+  <tr>
+    <td class="name">UserTaskSummaryRepository$MockitoMock$2046050560$auxiliary$CoYzwFpY</td>
+  </tr>
+<tr>
+  <td class="name"><strong>total</strong></td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package com.apptime.auth.repository;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import com.apptime.auth.model.TaskCategory;
+<i>4</i>&nbsp;import com.apptime.auth.model.UserTaskSummary;
+<i>5</i>&nbsp;import org.springframework.data.jpa.repository.JpaRepository;
+<i>6</i>&nbsp;import org.springframework.data.jpa.repository.Query;
+<i>7</i>&nbsp;
+<i>8</i>&nbsp;import java.util.List;
+<i>9</i>&nbsp;
+<i>10</i>&nbsp;/**
+<i>11</i>&nbsp; * @author Qi Zhang
+<i>12</i>&nbsp; * The DAO to access data of UserTaskSummary
+<i>13</i>&nbsp; * Use Case: TMGP4-319
+<i>14</i>&nbsp; */
+<i>15</i>&nbsp;public interface UserTaskSummaryRepository extends JpaRepository&lt;UserTaskSummary, Integer&gt; {
+<i>16</i>&nbsp;    @Query(&quot;SELECT s FROM UserTaskSummary s WHERE s.username = ?1 AND s.categoryId = ?2&quot;)
+<i>17</i>&nbsp;    List&lt;UserTaskSummary&gt; findByUsernameCategory(String username, int categoryId);
+<i>18</i>&nbsp;
+<i>19</i>&nbsp;    List&lt;UserTaskSummary&gt; findByUsername(String username);
+<i>20</i>&nbsp;
+<i>21</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-04-21 20:23</div>
+</div>
+</body>
+</html>

@@ -24,6 +24,8 @@ import {
   MAT_DIALOG_DATA,
   MatSelectModule
 } from '@angular/material';
+import {DialogData} from '../tasks/tasks.component';
+
 
 
 describe('CreateTaskDialogComponent', () => {
@@ -33,6 +35,37 @@ describe('CreateTaskDialogComponent', () => {
 
   const dialogMock = {
     close: () => { }
+  };
+
+  const data: DialogData = {
+    id : 1,
+    task : {
+      id: 1,
+      categories: [{id: 1, owner: undefined, name: 'name', public: false}],
+      description: 'testdesc',
+      duration: undefined,
+      end: undefined,
+      name: 'test',
+      scheduledstart: '2020-04-15T13:00:00.000+0000',
+      scheduledEnd: '2020-04-15T14:00:00.000+0000',
+      start: undefined,
+      state: 'CREATED',
+      userName: 'team4'
+    },
+    name: 'test',
+    category: undefined,
+    description: undefined,
+    ssDate: undefined,
+    ssTime: undefined,
+    seDate: undefined,
+    seTime: undefined,
+    asDate: undefined,
+    asTime: undefined,
+    aeDate: undefined,
+    aeTime: undefined,
+    number: undefined,
+    token: undefined,
+    isDone: undefined
   };
 
   beforeEach(async(() => {
@@ -54,7 +87,7 @@ describe('CreateTaskDialogComponent', () => {
       providers: [AmplifyService, {
         provide: MatDialogRef,
         useValue: dialogMock, },
-        { provide: MAT_DIALOG_DATA, useValue: {}}],
+        { provide: MAT_DIALOG_DATA, useValue: data}],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       declarations: [ CreateTaskDialogComponent, ]
     })
@@ -127,7 +160,21 @@ describe('CreateTaskDialogComponent', () => {
     });
   }));
 
- // This test verifies that the function onBackClick contains the expected Title
+  // This test verifies that the function onAcceptClick has been defined and been called.
+  it('This test verifies that the the function onAcceptClick has been defined and been called',
+      async(() => {
+        const spy = spyOn(component, 'onAcceptClick').and.callThrough();
+        component.scheduledEnd = new Date();
+        component.scheduledStart = new Date();
+        component.suggestedDuration = 30;
+        component.onAcceptClick();
+        fixture.whenStable().then(() => {
+          expect(spy).toBeDefined();
+          expect(spy).toHaveBeenCalled();
+        });
+      }));
+
+  // This test verifies that the function onBackClick contains the expected Title
   it(' This test verifies that the function onBackClick contains the expected Title ' +
       'and is called', async(() => {
     const spy = spyOn(component, 'onBackClick').and.callThrough();
@@ -157,10 +204,6 @@ describe('CreateTaskDialogComponent', () => {
 
     // first check that the isWrongDate flag is set correctly
     expect(component.isWrongDate).toBeFalsy();
-
-    // second check that the httpClient did post, to create new task
-    const categoryMineRequest = httpMock.expectOne('http://localhost:8001/tasks/predict');
-
   });
 
   // should onSuggClick create new task (with wrong date)
@@ -202,7 +245,7 @@ describe('CreateTaskDialogComponent', () => {
     expect(component.isWrongDate).toBeFalsy();
 
     // second check that the httpClient did post, to create new task
-    const categoryMineRequest = httpMock.expectOne('http://localhost:8001/tasks/newtask');
+    httpMock.expectOne('http://localhost:8001/tasks/newtask');
 
   });
 

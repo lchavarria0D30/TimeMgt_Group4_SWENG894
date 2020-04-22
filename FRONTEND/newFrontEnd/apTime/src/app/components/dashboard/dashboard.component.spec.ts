@@ -6,7 +6,7 @@
  *
  *  Unit Test - Frontend
  */
-import {async, ComponentFixture, getTestBed, TestBed} from '@angular/core/testing';
+import {async, ComponentFixture, fakeAsync, getTestBed, TestBed, tick} from '@angular/core/testing';
 import { MatIconModule} from '@angular/material/icon';
 import {CustomMaterialModule} from '../../modules/material.module';
 import { DashboardComponent } from './dashboard.component';
@@ -27,7 +27,12 @@ import {
   MatMenuModule,
   MatSelectModule
 } from '@angular/material';
-
+import {EditTaskDialogComponent} from '../edit-task-dialog/edit-task-dialog.component';
+import {CreateTaskDialogComponent} from '../create-task-dialog/create-task-dialog.component';
+import {DeleteTaskDialogComponent} from '../delete-task-dialog/delete-task-dialog.component';
+import {StartTaskDialogComponent} from '../start-task-dialog/start-task-dialog.component';
+import {ConfirmTaskDialogComponent} from '../confirm-task-dialog/confirm-task-dialog.component';
+import {StartPopupTaskComponent} from '../start-popup-task/start-popup-task.component';
 
 
 describe('DashboardComponent', () => {
@@ -88,11 +93,23 @@ describe('DashboardComponent', () => {
       providers: [AmplifyService, {
         provide: MatDialogRef,
         useValue: dialogMock, },
-        { provide: MAT_DIALOG_DATA, useValue: {}}],
+        { provide: MAT_DIALOG_DATA, useValue: data}],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
-      declarations: [ DashboardComponent ]
+      declarations: [ DashboardComponent,
+        CreateTaskDialogComponent,
+        DeleteTaskDialogComponent,
+        EditTaskDialogComponent,
+        StartTaskDialogComponent,
+        ConfirmTaskDialogComponent,
+        StartPopupTaskComponent]
     })
-        .compileComponents();
+        .overrideModule(BrowserDynamicTestingModule, { set: { entryComponents: [ CreateTaskDialogComponent,
+              DeleteTaskDialogComponent,
+              EditTaskDialogComponent,
+              StartTaskDialogComponent,
+              ConfirmTaskDialogComponent,
+              StartPopupTaskComponent] } })
+         .compileComponents();
   }));
 
   beforeEach(() => {
@@ -102,11 +119,13 @@ describe('DashboardComponent', () => {
     httpMock = getTestBed().get(HttpTestingController);
   });
 
-  it('should create component', () => {
+  // This test verifies that the Component is able to be created
+  it('This test verifies that the Component is able to be created', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should call afterclosed for openDialog', () => {
+  // This test verifies that afterClosed is called within the openDialog function
+  it('This test verifies that afterClosed is called within the openDialog function', () => {
     const openSpy = spyOn(component.dialog, 'open')
         .and
         .returnValue({afterClosed: () => EMPTY} as any);
@@ -114,7 +133,8 @@ describe('DashboardComponent', () => {
     expect(openSpy).toHaveBeenCalled();
   });
 
-  it('should call afterclosed for openStartDialog', () => {
+  // This test verifies that afterClosed is called within the openStartDialog function
+  it('This test verifies that afterClosed is called within the openStartDialog function', () => {
     const openStartSpy = spyOn(component.dialog, 'open')
         .and
         .returnValue({afterClosed: () => EMPTY} as any);
@@ -122,15 +142,17 @@ describe('DashboardComponent', () => {
     expect(openStartSpy).toHaveBeenCalled();
   });
 
-  it('should call afterclosed for openStartPopUpDialog', () => {
+  // This test verifies that afterClosed is called within the openStartPopDialog function
+  it('This test verifies that afterClosed is called within the openStartPopDialog function', () => {
     const openStartPopSpy = spyOn(component.dialog, 'open')
         .and
-        .returnValue({afterClosed: () => EMPTY} as any);
+        .returnValue({afterClosed: () => EMPTY } as any);
     component.openStartPopUpDialog();
     expect(openStartPopSpy).toHaveBeenCalled();
   });
 
-  it('should be defined and called - getTasks', async(() => {
+  // This test verifies that the function getTasks is defined and called
+  it('This test verifies that the function getTasks is defined and called', async(() => {
     const spy = spyOn(component, 'getTasks').and.callThrough();
     component.getTasks();
     fixture.whenStable().then(() => {
@@ -139,7 +161,8 @@ describe('DashboardComponent', () => {
     });
   }));
 
-  it('should be defined and called - getDateTasks', async(() => {
+  // This test verifies that the function getDateTasks is defined and called
+  it('sThis test verifies that the function getDateTasks is defined and called', async(() => {
     const spy = spyOn(component, 'getDateTasks').and.callThrough();
     component.getDateTasks();
     fixture.whenStable().then(() => {
@@ -148,19 +171,55 @@ describe('DashboardComponent', () => {
     });
   }));
 
+  // This test verifies the command GET is given within the URL
+  it('This test verifies the command GET is given within the URL', async(() => {
+    const req = httpMock.expectOne('http://localhost:8001/tasks/');
+    expect(req.request.method).toEqual('GET');
 
-  /*it('should verify that the function getTasks is called within openDialog', async(() => {
-    const num = 1;
-    const name = 'Test Task';
-    const bool = true;
-    const spy = spyOn(component.dialog, 'open').and.callThrough();
-    component.openConfirmDialog(num, name, bool);
+    const data1 = [{id: 1, state: 'ACTIVE'}, {id: 2, state: 'PAUSED'}, {id: 3, state: 'CREATED'}, {id: 4, state: 'COMPLETED'}];
+    req.flush(data1);
+    }));
+
+  // This test verifies that the function openEditDialog is called and defined.
+  it('should be defined and called - openEditDialog', fakeAsync(() => {
+    component.filteredTasks = [2, 3, 5];
+    const spy = spyOn(component, 'openEditDialog').and.callThrough();
+    component.dialog.open(EditTaskDialogComponent);
+    component.openEditDialog(1, 2);
+    tick(50000);
     fixture.whenStable().then(() => {
-      expect(spy).toBeTruthy();
-      // expect(spy).toHaveBeenCalled();
+      expect(spy).toBeDefined();
+      expect(spy).toHaveBeenCalled();
     });
-  }));*/
+  }));
+
+  // This test verifies that the function openConfirmDialog is called and degined.
+  it('should be defined and called - openConfirmDialog', fakeAsync(() => {
+    component.filteredTasks = [2, 3, 5];
+    const spy = spyOn(component, 'openConfirmDialog').and.callThrough();
+    component.dialog.open(ConfirmTaskDialogComponent);
+    component.openConfirmDialog(1, 'Test', true);
+    tick(50000);
+    fixture.whenStable().then(() => {
+      expect(spy).toBeDefined();
+      expect(spy).toBeTruthy();
+    });
+  }));
+
+  // This test verifies that the function openDeleteDialog is called and defined.
+  it('should be defined and called - openDeleteDialog', fakeAsync(() => {
+    component.filteredTasks = [2, 3, 5];
+    const spy = spyOn(component, 'openDeleteDialog').and.callThrough();
+    component.dialog.open(DeleteTaskDialogComponent);
+    component.openDeleteDialog(1, 'TestDelete');
+    tick(50000);
+    fixture.whenStable().then(() => {
+      expect(spy).toBeDefined();
+      expect(spy).toBeTruthy();
+    });
+  }));
 });
+
 
 
 

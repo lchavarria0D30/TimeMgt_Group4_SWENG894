@@ -1,0 +1,142 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Summary</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">com.apptime.auth.model.to</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Summary (com.apptime.auth.model.to)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Summary</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (9/ 9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    95.8%
+  </span>
+  <span class="absValue">
+    (23/ 24)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package com.apptime.auth.model.to;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import com.apptime.auth.model.AllUserTaskSummary;
+<i>4</i>&nbsp;import com.apptime.auth.model.TaskCategory;
+<i>5</i>&nbsp;import com.apptime.auth.model.UserTaskSummary;
+<i>6</i>&nbsp;import com.apptime.auth.util.DurationUtil;
+<i>7</i>&nbsp;
+<b class="fc"><i>8</i>&nbsp;public class Summary {</b>
+<i>9</i>&nbsp;    private SummaryType type;
+<i>10</i>&nbsp;    private Category category;
+<i>11</i>&nbsp;    private String averageDuration;
+<i>12</i>&nbsp;
+<i>13</i>&nbsp;    public SummaryType getType() {
+<b class="fc"><i>14</i>&nbsp;        return type;</b>
+<i>15</i>&nbsp;    }
+<i>16</i>&nbsp;
+<i>17</i>&nbsp;    public void setType(SummaryType type) {
+<b class="fc"><i>18</i>&nbsp;        this.type = type;</b>
+<b class="fc"><i>19</i>&nbsp;    }</b>
+<i>20</i>&nbsp;
+<i>21</i>&nbsp;    public Category getCategory() {
+<b class="fc"><i>22</i>&nbsp;        return category;</b>
+<i>23</i>&nbsp;    }
+<i>24</i>&nbsp;
+<i>25</i>&nbsp;    public void setCategory(Category category) {
+<b class="fc"><i>26</i>&nbsp;        this.category = category;</b>
+<b class="fc"><i>27</i>&nbsp;    }</b>
+<i>28</i>&nbsp;
+<i>29</i>&nbsp;    public String getAverageDuration() {
+<b class="fc"><i>30</i>&nbsp;        return averageDuration;</b>
+<i>31</i>&nbsp;    }
+<i>32</i>&nbsp;
+<i>33</i>&nbsp;    public void setAverageDuration(String averageDuration) {
+<b class="fc"><i>34</i>&nbsp;        this.averageDuration = averageDuration;</b>
+<b class="fc"><i>35</i>&nbsp;    }</b>
+<i>36</i>&nbsp;
+<i>37</i>&nbsp;    public static Summary parse(UserTaskSummary userTaskSummary, TaskCategory category) {
+<b class="fc"><i>38</i>&nbsp;        if (userTaskSummary == null || category == null || userTaskSummary.getCategoryId() != category.getId()) {</b>
+<b class="nc"><i>39</i>&nbsp;            return null;</b>
+<i>40</i>&nbsp;        }
+<b class="fc"><i>41</i>&nbsp;        Summary summary = new Summary();</b>
+<b class="fc"><i>42</i>&nbsp;        summary.setType(SummaryType.MINE);</b>
+<b class="fc"><i>43</i>&nbsp;        summary.setCategory(Category.parse(category));</b>
+<b class="fc"><i>44</i>&nbsp;        summary.setAverageDuration(DurationUtil.toString(userTaskSummary.getAverageDuration()));</b>
+<b class="fc"><i>45</i>&nbsp;        return summary;</b>
+<i>46</i>&nbsp;    }
+<i>47</i>&nbsp;
+<i>48</i>&nbsp;    public static Summary parse(AllUserTaskSummary allUserTaskSummary, TaskCategory category) {
+<b class="fc"><i>49</i>&nbsp;        if (allUserTaskSummary == null || category == null || allUserTaskSummary.getCategoryId() != category.getId()) {</b>
+<b class="fc"><i>50</i>&nbsp;            return null;</b>
+<i>51</i>&nbsp;        }
+<b class="fc"><i>52</i>&nbsp;        Summary summary = new Summary();</b>
+<b class="fc"><i>53</i>&nbsp;        summary.setType(SummaryType.ALL_USERS);</b>
+<b class="fc"><i>54</i>&nbsp;        summary.setCategory(Category.parse(category));</b>
+<b class="fc"><i>55</i>&nbsp;        summary.setAverageDuration(DurationUtil.toString(allUserTaskSummary.getAverageDuration()));</b>
+<b class="fc"><i>56</i>&nbsp;        return summary;</b>
+<i>57</i>&nbsp;    }
+<i>58</i>&nbsp;
+<i>59</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-04-21 20:23</div>
+</div>
+</body>
+</html>

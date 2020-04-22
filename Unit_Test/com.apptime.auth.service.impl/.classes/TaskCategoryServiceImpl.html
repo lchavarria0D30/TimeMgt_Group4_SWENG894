@@ -1,0 +1,157 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: TaskCategoryServiceImpl</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">com.apptime.auth.service.impl</a> ]
+</div>
+
+<h1>Coverage Summary for Class: TaskCategoryServiceImpl (com.apptime.auth.service.impl)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">TaskCategoryServiceImpl</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (7/ 7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    85.7%
+  </span>
+  <span class="absValue">
+    (18/ 21)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package com.apptime.auth.service.impl;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import com.apptime.auth.model.TaskCategory;
+<i>4</i>&nbsp;import com.apptime.auth.repository.TaskCategoryRepository;
+<i>5</i>&nbsp;import com.apptime.auth.service.TaskCategoryService;
+<i>6</i>&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+<i>7</i>&nbsp;import org.springframework.stereotype.Service;
+<i>8</i>&nbsp;
+<i>9</i>&nbsp;import java.util.Collection;
+<i>10</i>&nbsp;import java.util.Collections;
+<i>11</i>&nbsp;import java.util.Optional;
+<i>12</i>&nbsp;import java.util.stream.Collectors;
+<i>13</i>&nbsp;
+<i>14</i>&nbsp;/**
+<i>15</i>&nbsp; * @author Qi Zhang
+<i>16</i>&nbsp; * The implementation of TaskCategoryService
+<i>17</i>&nbsp; * Use Cases: TMGP4-43, TMGP4-39
+<i>18</i>&nbsp; */
+<i>19</i>&nbsp;@Service
+<b class="fc"><i>20</i>&nbsp;public class TaskCategoryServiceImpl implements TaskCategoryService {</b>
+<i>21</i>&nbsp;    @Autowired
+<i>22</i>&nbsp;    TaskCategoryRepository taskCategoryRepository;
+<i>23</i>&nbsp;
+<i>24</i>&nbsp;    @Override
+<i>25</i>&nbsp;    public TaskCategory createCategory(String name, String owner, boolean isPublic) {
+<b class="fc"><i>26</i>&nbsp;        if (name == null || owner == null) {</b>
+<b class="nc"><i>27</i>&nbsp;            return null;</b>
+<i>28</i>&nbsp;        }
+<b class="fc"><i>29</i>&nbsp;        Collection&lt;TaskCategory&gt; existingCategories = taskCategoryRepository.findByOwner(owner);</b>
+<b class="fc"><i>30</i>&nbsp;        if (existingCategories != null &amp;&amp; !existingCategories.isEmpty() &amp;&amp; !existingCategories.stream().filter(c -&gt; name.equals(c.getName())).collect(Collectors.toSet()).isEmpty()) {</b>
+<b class="fc"><i>31</i>&nbsp;            return null;</b>
+<i>32</i>&nbsp;        }
+<i>33</i>&nbsp;
+<b class="fc"><i>34</i>&nbsp;        Collection&lt;TaskCategory&gt; existingPublicCategories = taskCategoryRepository.findByIsPublic(true);</b>
+<b class="fc"><i>35</i>&nbsp;        if (existingPublicCategories != null &amp;&amp; !existingPublicCategories.isEmpty() &amp;&amp; !existingPublicCategories.stream().filter(c -&gt; name.equals(c.getName())).collect(Collectors.toSet()).isEmpty()) {</b>
+<b class="fc"><i>36</i>&nbsp;            return null;</b>
+<i>37</i>&nbsp;        }
+<i>38</i>&nbsp;
+<b class="fc"><i>39</i>&nbsp;        TaskCategory taskCategory = new TaskCategory(name, owner, isPublic);</b>
+<b class="fc"><i>40</i>&nbsp;        taskCategoryRepository.save(taskCategory);</b>
+<b class="fc"><i>41</i>&nbsp;        return taskCategory;</b>
+<i>42</i>&nbsp;    }
+<i>43</i>&nbsp;
+<i>44</i>&nbsp;    @Override
+<i>45</i>&nbsp;    public Collection&lt;TaskCategory&gt; getCategoriesByOwner(String owner) {
+<b class="fc"><i>46</i>&nbsp;        if (owner == null) {</b>
+<b class="nc"><i>47</i>&nbsp;            return Collections.emptyList();</b>
+<i>48</i>&nbsp;        }
+<b class="fc"><i>49</i>&nbsp;        return taskCategoryRepository.findByOwner(owner);</b>
+<i>50</i>&nbsp;    }
+<i>51</i>&nbsp;
+<i>52</i>&nbsp;    @Override
+<i>53</i>&nbsp;    public Collection&lt;TaskCategory&gt; getAllPublicCategories() {
+<b class="fc"><i>54</i>&nbsp;        return taskCategoryRepository.findByIsPublic(true);</b>
+<i>55</i>&nbsp;    }
+<i>56</i>&nbsp;
+<i>57</i>&nbsp;    @Override
+<i>58</i>&nbsp;    public Collection&lt;TaskCategory&gt; getAllAccessibleCategories(String owner) {
+<b class="fc"><i>59</i>&nbsp;        if (owner == null) {</b>
+<b class="nc"><i>60</i>&nbsp;            return Collections.emptyList();</b>
+<i>61</i>&nbsp;        }
+<b class="fc"><i>62</i>&nbsp;        return taskCategoryRepository.findAllAccessibleCategories(owner);</b>
+<i>63</i>&nbsp;    }
+<i>64</i>&nbsp;
+<i>65</i>&nbsp;    @Override
+<i>66</i>&nbsp;    public Optional&lt;TaskCategory&gt; getCategory(int id) {
+<b class="fc"><i>67</i>&nbsp;        return taskCategoryRepository.findById(id);</b>
+<i>68</i>&nbsp;    }
+<i>69</i>&nbsp;
+<i>70</i>&nbsp;    @Override
+<i>71</i>&nbsp;    public Collection&lt;TaskCategory&gt; getCategories(Collection&lt;Integer&gt; ids) {
+<b class="fc"><i>72</i>&nbsp;        return taskCategoryRepository.findAllById(ids);</b>
+<i>73</i>&nbsp;    }
+<i>74</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-04-21 20:23</div>
+</div>
+</body>
+</html>

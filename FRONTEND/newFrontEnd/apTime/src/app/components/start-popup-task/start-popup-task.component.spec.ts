@@ -16,7 +16,6 @@ import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
 import { StartPopupTaskComponent } from './start-popup-task.component';
-import {environment} from '../../../environments/environment';
 import {
   MatFormFieldModule,
   MatInputModule,
@@ -57,7 +56,7 @@ describe('StartPopupTaskComponent', () => {
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       declarations: [ StartPopupTaskComponent ]
     })
-    .compileComponents();
+        .compileComponents();
   }));
 
   beforeEach(() => {
@@ -75,15 +74,14 @@ describe('StartPopupTaskComponent', () => {
   // This test verifies the call to the service for getCategory within onNoClick - No Error
   it('This test verifies the call to the service getCategory within onNoClick - No Error', () => {
     expect(component.onNoClick).toBeTruthy();
-    const categoryMineRequest = httpMock.expectOne(environment.baseUrl+'/category/');
+    const categoryMineRequest = httpMock.expectOne('http://localhost:8001/category/');
     categoryMineRequest.flush([]);
-    httpMock.verify();*/
   });
 
   // This test verifies the call to the function getCategory within onNoClick - Error
   it('This test verifies the call to the service getCategory within onNoClick - Error ', () => {
     expect(component.onNoClick).toBeTruthy();
-    const categoryMineRequest = httpMock.expectOne(environment.baseUrl+'/category/');
+    const categoryMineRequest = httpMock.expectOne('http://localhost:8001/category/');
     categoryMineRequest.error(new ErrorEvent('Generated testing error'));
     httpMock.verify();
   });
@@ -134,6 +132,17 @@ describe('StartPopupTaskComponent', () => {
       expect(spy).toHaveBeenCalled();
     });
   }));
+
+  // This test verifies that the function onAcceptClick has been defined and been called.
+  it('This test verifies that the the function onAcceptClick has been defined and been called',
+      async(() => {
+        const spy = spyOn(component, 'onAcceptClick').and.callThrough();
+        component.suggestedDate = new Date();
+        component.suggestedDuration = 30;
+        component.onAcceptClick();
+        fixture.whenStable().then(() => {
+          expect(spy).toBeDefined();
+          expect(spy).toHaveBeenCalled();
+        });
+      }));
 });
-
-
