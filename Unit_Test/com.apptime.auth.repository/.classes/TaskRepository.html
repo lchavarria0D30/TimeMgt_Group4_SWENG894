@@ -1,0 +1,82 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: TaskRepository</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">com.apptime.auth.repository</a> ]
+</div>
+
+<h1>Coverage Summary for Class: TaskRepository (com.apptime.auth.repository)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+</tr>
+  <tr>
+    <td class="name">TaskRepository$MockitoMock$601468024</td>
+  </tr>
+  <tr>
+    <td class="name">TaskRepository$MockitoMock$601468024$auxiliary$OLyWe6SY</td>
+  </tr>
+  <tr>
+    <td class="name">TaskRepository$MockitoMock$601468024$auxiliary$zUo5KtfW</td>
+  </tr>
+<tr>
+  <td class="name"><strong>total</strong></td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package com.apptime.auth.repository;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import java.util.*;
+<i>4</i>&nbsp;
+<i>5</i>&nbsp;import com.apptime.auth.model.TaskState;
+<i>6</i>&nbsp;import org.springframework.data.jpa.repository.JpaRepository;
+<i>7</i>&nbsp;
+<i>8</i>&nbsp;import com.apptime.auth.model.Task;
+<i>9</i>&nbsp;import org.springframework.data.jpa.repository.Query;
+<i>10</i>&nbsp;
+<i>11</i>&nbsp;/**
+<i>12</i>&nbsp; * @author Bashiir Mohamed
+<i>13</i>&nbsp; * this class represent jpa Task repository
+<i>14</i>&nbsp; */
+<i>15</i>&nbsp;public interface TaskRepository extends JpaRepository&lt;Task, Long&gt;{
+<i>16</i>&nbsp;	
+<i>17</i>&nbsp;	//find task by username
+<i>18</i>&nbsp;	 List&lt;Task&gt; findByUserName(String user);
+<i>19</i>&nbsp;	//view task details
+<i>20</i>&nbsp;	Task findByIdAndUserName(Long id, String userName);
+<i>21</i>&nbsp;	Task findByUserNameAndState(String userName, TaskState state);
+<i>22</i>&nbsp;
+<i>23</i>&nbsp;	Task deleteById(long id);
+<i>24</i>&nbsp;	@Query(value = &quot;select u from Task u where u.scheduledstart BETWEEN :start AND :end and u.userName = :name&quot;)
+<i>25</i>&nbsp;    Set&lt;Task&gt; getTasksStartedLaterThan( Date start, Date end, String name);
+<i>26</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-04-21 20:23</div>
+</div>
+</body>
+</html>

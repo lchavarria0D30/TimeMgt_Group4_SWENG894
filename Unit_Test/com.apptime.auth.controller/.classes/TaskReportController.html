@@ -1,0 +1,157 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: TaskReportController</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">com.apptime.auth.controller</a> ]
+</div>
+
+<h1>Coverage Summary for Class: TaskReportController (com.apptime.auth.controller)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">TaskReportController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (3/ 3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    86.4%
+  </span>
+  <span class="absValue">
+    (19/ 22)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package com.apptime.auth.controller;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import com.apptime.auth.model.Task;
+<i>4</i>&nbsp;import com.apptime.auth.model.TaskReport;
+<i>5</i>&nbsp;import com.apptime.auth.model.TaskState;
+<i>6</i>&nbsp;import com.apptime.auth.model.to.Report;
+<i>7</i>&nbsp;import com.apptime.auth.service.TaskManagerService;
+<i>8</i>&nbsp;import com.apptime.auth.service.TaskReportService;
+<i>9</i>&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+<i>10</i>&nbsp;import org.springframework.http.HttpStatus;
+<i>11</i>&nbsp;import org.springframework.http.ResponseEntity;
+<i>12</i>&nbsp;import org.springframework.security.core.Authentication;
+<i>13</i>&nbsp;import org.springframework.web.bind.annotation.GetMapping;
+<i>14</i>&nbsp;import org.springframework.web.bind.annotation.PathVariable;
+<i>15</i>&nbsp;import org.springframework.web.bind.annotation.RequestMapping;
+<i>16</i>&nbsp;import org.springframework.web.bind.annotation.RequestParam;
+<i>17</i>&nbsp;import org.springframework.web.bind.annotation.RestController;
+<i>18</i>&nbsp;
+<i>19</i>&nbsp;import java.util.Collection;
+<i>20</i>&nbsp;import java.util.HashMap;
+<i>21</i>&nbsp;import java.util.List;
+<i>22</i>&nbsp;import java.util.Map;
+<i>23</i>&nbsp;import java.util.stream.Collectors;
+<i>24</i>&nbsp;
+<i>25</i>&nbsp;/**
+<i>26</i>&nbsp; * @author Qi Zhang
+<i>27</i>&nbsp; * This is the entry for TaskReport APIs
+<i>28</i>&nbsp; * Use Case: TMGP4-26, TMGP4-31, TMGP4-35
+<i>29</i>&nbsp; */
+<i>30</i>&nbsp;@RestController
+<i>31</i>&nbsp;@RequestMapping(value = &quot;/report&quot;)
+<b class="fc"><i>32</i>&nbsp;public class TaskReportController extends AbstractionAuthenticationController {</b>
+<i>33</i>&nbsp;
+<i>34</i>&nbsp;    @Autowired
+<i>35</i>&nbsp;    private TaskReportService service;
+<i>36</i>&nbsp;
+<i>37</i>&nbsp;    @Autowired
+<i>38</i>&nbsp;    private TaskManagerService taskManagerService;
+<i>39</i>&nbsp;
+<i>40</i>&nbsp;    @GetMapping
+<i>41</i>&nbsp;    public ResponseEntity&lt;Collection&lt;Report&gt;&gt; getReports(@RequestParam(required = false) String startDate, @RequestParam(required = false) String endDate, Authentication authentication) {
+<b class="fc"><i>42</i>&nbsp;        String username = getUsername(authentication);</b>
+<b class="fc"><i>43</i>&nbsp;        if (username == null || username.isEmpty()) {</b>
+<b class="nc"><i>44</i>&nbsp;            return new ResponseEntity&lt;&gt;(HttpStatus.UNAUTHORIZED);</b>
+<i>45</i>&nbsp;        }
+<b class="fc"><i>46</i>&nbsp;        List&lt;TaskReport&gt; reports = service.getReports(username, startDate, endDate);</b>
+<b class="fc"><i>47</i>&nbsp;        List&lt;Long&gt; taskIdList = reports.stream().map(TaskReport::getTaskId).collect(Collectors.toList());</b>
+<b class="fc"><i>48</i>&nbsp;        List&lt;Task&gt; tasks = taskManagerService.getTasks(taskIdList);</b>
+<b class="fc"><i>49</i>&nbsp;        Map&lt;Long, Task&gt; taskMap = new HashMap&lt;&gt;();</b>
+<b class="fc"><i>50</i>&nbsp;        for (Task task : tasks) {</b>
+<b class="fc"><i>51</i>&nbsp;            taskMap.put(task.getId(), task);</b>
+<b class="fc"><i>52</i>&nbsp;        }</b>
+<b class="fc"><i>53</i>&nbsp;        return new ResponseEntity&lt;&gt;(service.getReports(username, startDate, endDate).stream().map(report -&gt; Report.parse(report, taskMap.get(report.getTaskId()))).collect(Collectors.toList()), HttpStatus.OK);</b>
+<i>54</i>&nbsp;    }
+<i>55</i>&nbsp;
+<i>56</i>&nbsp;    @GetMapping(value = &quot;/task/{taskId}&quot;)
+<i>57</i>&nbsp;    public ResponseEntity&lt;Report&gt; getByTask(@PathVariable Long taskId, Authentication authentication) {
+<b class="fc"><i>58</i>&nbsp;        String username = getUsername(authentication);</b>
+<b class="fc"><i>59</i>&nbsp;        if (username == null || username.isEmpty()) {</b>
+<b class="nc"><i>60</i>&nbsp;            return new ResponseEntity&lt;&gt;(HttpStatus.UNAUTHORIZED);</b>
+<i>61</i>&nbsp;        }
+<i>62</i>&nbsp;
+<b class="fc"><i>63</i>&nbsp;        Task task = taskManagerService.getTask(taskId, username);</b>
+<b class="fc"><i>64</i>&nbsp;        if (task == null || task.getState() != TaskState.COMPLETED) {</b>
+<b class="fc"><i>65</i>&nbsp;            return new ResponseEntity&lt;&gt;(HttpStatus.NOT_FOUND);</b>
+<i>66</i>&nbsp;        }
+<i>67</i>&nbsp;
+<b class="fc"><i>68</i>&nbsp;        TaskReport taskReport = service.findByTaskId(taskId);</b>
+<b class="fc"><i>69</i>&nbsp;        if (taskReport == null || !username.equals(taskReport.getOwner())) {</b>
+<b class="nc"><i>70</i>&nbsp;            return new ResponseEntity&lt;&gt;(HttpStatus.NOT_FOUND);</b>
+<i>71</i>&nbsp;        }
+<b class="fc"><i>72</i>&nbsp;        return new ResponseEntity&lt;&gt;(Report.parse(taskReport, task), HttpStatus.OK);</b>
+<i>73</i>&nbsp;    }
+<i>74</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-04-21 20:23</div>
+</div>
+</body>
+</html>

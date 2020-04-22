@@ -135,4 +135,15 @@ describe('NotificationsComponent', () => {
       });
     }
   }));
+
+  // This test verifies that the function cssClass is defined and called
+  it('This test verifies that the function cssClass returns value', () => {
+    expect(component).toBeTruthy('component is defined');
+    if (!component) {
+
+      return null;
+    }
+    expect(component.cssClass).toBeTruthy(
+          'function removeNote() exist on component');
+    });
 });

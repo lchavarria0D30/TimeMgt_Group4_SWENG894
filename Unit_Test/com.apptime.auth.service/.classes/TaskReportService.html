@@ -1,0 +1,74 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: TaskReportService</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">com.apptime.auth.service</a> ]
+</div>
+
+<h1>Coverage Summary for Class: TaskReportService (com.apptime.auth.service)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+</tr>
+  <tr>
+    <td class="name">TaskReportService$MockitoMock$2063099165</td>
+  </tr>
+  <tr>
+    <td class="name">TaskReportService$MockitoMock$2063099165$auxiliary$5oXbxEyR</td>
+  </tr>
+  <tr>
+    <td class="name">TaskReportService$MockitoMock$2063099165$auxiliary$UlkkEzkm</td>
+  </tr>
+<tr>
+  <td class="name"><strong>total</strong></td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package com.apptime.auth.service;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import com.apptime.auth.model.Task;
+<i>4</i>&nbsp;import com.apptime.auth.model.TaskReport;
+<i>5</i>&nbsp;
+<i>6</i>&nbsp;import java.util.List;
+<i>7</i>&nbsp;
+<i>8</i>&nbsp;/**
+<i>9</i>&nbsp; * @author Qi Zhang
+<i>10</i>&nbsp; * This is the Service interface for TaskReport
+<i>11</i>&nbsp; * Use Case: TMGP4-26, TMGP4-31, TMGP4-35
+<i>12</i>&nbsp; */
+<i>13</i>&nbsp;public interface TaskReportService {
+<i>14</i>&nbsp;    TaskReport generateReport(Task task);
+<i>15</i>&nbsp;    List&lt;TaskReport&gt; getReports(String owner);
+<i>16</i>&nbsp;    List&lt;TaskReport&gt; getReports(String owner, String startDate, String endDate);
+<i>17</i>&nbsp;    TaskReport findByTaskId(long id);
+<i>18</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-04-21 20:23</div>
+</div>
+</body>
+</html>

@@ -12,10 +12,11 @@ import {CustomMaterialModule} from '../../modules/material.module';
 import {AmplifyService} from 'aws-amplify-angular';
 import { BrowserDynamicTestingModule, platformBrowserDynamicTesting } from '@angular/platform-browser-dynamic/testing';
 import {RouterTestingModule} from '@angular/router/testing';
-import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
+import {CUSTOM_ELEMENTS_SCHEMA, } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReportComponent } from './report.component';
-import { MatDatepickerInputEvent } from '@angular/material/datepicker';
+import {MatDatepickerInputEvent} from '@angular/material/datepicker';
+import {MatNativeDateModule} from '@angular/material/core';
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
 import {
   MatFormFieldModule,
@@ -25,14 +26,16 @@ import {
   MAT_DIALOG_DATA,
   MatSelectModule
 } from '@angular/material';
-import {DialogData} from "../tasks/tasks.component";
+
 
 
 describe('ReportComponent', () => {
   let component: ReportComponent;
   let fixture: ComponentFixture<ReportComponent>;
   let httpMock: HttpTestingController;
+
   let matDate: MatDatepickerInputEvent<Date>;
+
 
   const dialogMock = {
     close: () => { }
@@ -53,6 +56,7 @@ describe('ReportComponent', () => {
         MatFormFieldModule,
         MatInputModule,
         MatDialogModule,
+        MatNativeDateModule
       ],
       providers: [AmplifyService,
         {
@@ -96,16 +100,39 @@ describe('ReportComponent', () => {
     });
   }));
 
-  /*// This test verifies that the the function getReport has been defined and been called.
+  // This test verifies that the the function addStart has been defined and been called.
   it('should test that the function addStart is able to be defined and called', async(() => {
     const taskName = 'TestString';
-    const start = new Date();
+    // const start = new Date();
     const spy = spyOn(component, 'addStart').and.callThrough();
-    component.addStart(taskName, matDate);
+    // component.start = new Date();
+    const mat2Date: any = { value : new Date() };
+
+    component.addStart(taskName, mat2Date);
+
     component.start.getDate();
     fixture.whenStable().then(() => {
       expect(spy).toBeDefined();
       expect(spy).toHaveBeenCalled();
     });
-  }));*/
+  }));
+
+  // This test verifies that the the function addEnd has been defined and been called.
+  it('should test that the function addEnd is able to be defined and called', async(() => {
+    const taskName = 'TestString';
+    // const start = new Date();
+    const spy = spyOn(component, 'addEnd').and.callThrough();
+    component.start = new Date();
+    const endDate = new Date();
+    endDate.setDate(component.start.getDate() + 5);
+    const mat2Date: any = { value : endDate };
+
+    component.addEnd(taskName, mat2Date);
+
+    component.start.getDate();
+    fixture.whenStable().then(() => {
+      expect(spy).toBeDefined();
+      expect(spy).toHaveBeenCalled();
+    });
+  }));
 });

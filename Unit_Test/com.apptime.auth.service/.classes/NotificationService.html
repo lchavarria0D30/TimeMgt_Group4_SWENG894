@@ -1,0 +1,95 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: NotificationService</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">com.apptime.auth.service</a> ]
+</div>
+
+<h1>Coverage Summary for Class: NotificationService (com.apptime.auth.service)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+</tr>
+  <tr>
+    <td class="name">NotificationService$MockitoMock$701710293</td>
+  </tr>
+  <tr>
+    <td class="name">NotificationService$MockitoMock$701710293$auxiliary$9T2Kprwr</td>
+  </tr>
+  <tr>
+    <td class="name">NotificationService$MockitoMock$701710293$auxiliary$CrdPDuH1</td>
+  </tr>
+<tr>
+  <td class="name"><strong>total</strong></td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package com.apptime.auth.service;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import com.apptime.auth.model.Notification;
+<i>4</i>&nbsp;import com.apptime.auth.model.Task;
+<i>5</i>&nbsp;import com.apptime.auth.model.TaskReport;
+<i>6</i>&nbsp;
+<i>7</i>&nbsp;import java.util.List;
+<i>8</i>&nbsp;
+<i>9</i>&nbsp;/**
+<i>10</i>&nbsp; * @author Qi Zhang
+<i>11</i>&nbsp; * Service Interface for Notification
+<i>12</i>&nbsp; * Use Case: TMGP4-40, TMGP4-38
+<i>13</i>&nbsp; */
+<i>14</i>&nbsp;public interface NotificationService {
+<i>15</i>&nbsp;    String TYPE_FOR_TASK = &quot;task&quot;;
+<i>16</i>&nbsp;    String TYPE_FOR_EXCEEDED_TASK = &quot;exceeded_task&quot;;
+<i>17</i>&nbsp;    String TYPE_FOR_TASK_REPORT = &quot;task_report&quot;;
+<i>18</i>&nbsp;
+<i>19</i>&nbsp;    String CONTENT_PATTERN_FOR_TASK = &quot;The task (%s) should be started at %s.&quot;;
+<i>20</i>&nbsp;    String CONTENT_PATTERN_FOR_EXCEEDED_TASK = &quot;The task (%s) is overdue. It should be done at %s.&quot;;
+<i>21</i>&nbsp;
+<i>22</i>&nbsp;    String CONTENT_PATTERN_FOR_TASK_REPORT_ON_TIME = &quot;The task (%s) is done on time.&quot;;
+<i>23</i>&nbsp;    String CONTENT_PATTERN_FOR_TASK_REPORT_EARLIER = &quot;The task (%s) is done %s before the scheduled end time.&quot;;
+<i>24</i>&nbsp;    String CONTENT_PATTERN_FOR_TASK_REPORT_LATER = &quot;The task (%s) is done %s after the scheduled end time.&quot;;
+<i>25</i>&nbsp;
+<i>26</i>&nbsp;    long SNOOZE_TIME_IN_MIL_SEC = (long) 1000 * 60 * 5;
+<i>27</i>&nbsp;    long REMIND_TIME_BEFORE_START_IN_MIL_SEC = (long) 1000 * 60 * 10;
+<i>28</i>&nbsp;    long REMIND_TIME_AFTER_ESTIMATED_END_IN_MIL_SEC = (long) 1000 * 60 * 5;
+<i>29</i>&nbsp;
+<i>30</i>&nbsp;    List&lt;Notification&gt; retrieveUndeliveredNotifications(String owner);
+<i>31</i>&nbsp;    boolean snoozeNotification(int id, String owner);
+<i>32</i>&nbsp;    boolean deleteNotification(int id, String owner);
+<i>33</i>&nbsp;
+<i>34</i>&nbsp;    boolean createNotificationForTask(Task task);
+<i>35</i>&nbsp;    boolean updateNotificationForTask(Task task);
+<i>36</i>&nbsp;    boolean deleteNotificationForTask(Task task);
+<i>37</i>&nbsp;
+<i>38</i>&nbsp;    boolean createNotificationForTaskReport(TaskReport report);
+<i>39</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-04-21 20:23</div>
+</div>
+</body>
+</html>

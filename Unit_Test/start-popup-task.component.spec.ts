@@ -56,7 +56,7 @@ describe('StartPopupTaskComponent', () => {
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       declarations: [ StartPopupTaskComponent ]
     })
-    .compileComponents();
+        .compileComponents();
   }));
 
   beforeEach(() => {
@@ -132,6 +132,17 @@ describe('StartPopupTaskComponent', () => {
       expect(spy).toHaveBeenCalled();
     });
   }));
+
+  // This test verifies that the function onAcceptClick has been defined and been called.
+  it('This test verifies that the the function onAcceptClick has been defined and been called',
+      async(() => {
+        const spy = spyOn(component, 'onAcceptClick').and.callThrough();
+        component.suggestedDate = new Date();
+        component.suggestedDuration = 30;
+        component.onAcceptClick();
+        fixture.whenStable().then(() => {
+          expect(spy).toBeDefined();
+          expect(spy).toHaveBeenCalled();
+        });
+      }));
 });
-
-

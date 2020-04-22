@@ -25,9 +25,11 @@ import {
   MAT_DIALOG_DATA,
   MatSelectModule
 } from '@angular/material';
+import {Category} from '../components/task-category/Category';
 
 
 describe('CategoryService', () => {
+  let cat: Category;
 
   beforeEach(async(() => {
     TestBed.resetTestEnvironment();
@@ -83,4 +85,12 @@ describe('CategoryService', () => {
     spyOn(service, 'create').and.callThrough();
     expect(service.create).toBeTruthy();
   }));
+
+  it('should define create', async(() => {
+    const service: CategoryService = TestBed.get(CategoryService);
+    spyOn(service, 'create').and.callThrough();
+    service.create('MockUrl', cat);
+    expect(service.create).toBeDefined();
+  }));
+
 });
