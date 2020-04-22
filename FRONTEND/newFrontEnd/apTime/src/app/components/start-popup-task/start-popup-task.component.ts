@@ -129,7 +129,7 @@ export class StartPopupTaskComponent implements OnInit {
     const diffMins = (Math.abs(this.suggestedDate.getTime() - this.today.getTime()) % 3600000) / 60000;
 
     this.hours = Math.floor(diffHours);
-    this.minutes = diffMins;
+    this.minutes = Math.floor(diffMins);
 
     this.dialogTitle = 'Starts at:  ';
     this.suggView = false;
