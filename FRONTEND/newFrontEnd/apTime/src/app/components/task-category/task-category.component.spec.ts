@@ -99,7 +99,7 @@ describe('TaskCategoryComponent', () => {
     const spy = spyOn(component, 'createCat').and.callThrough();
     const isPublic = new FormControl();
     component.isPublic.valueOf();
-    tick(50000);
+    tick(10000000);
     fixture.whenStable().then(() => {
       expect(spy).toBeDefined();
       expect(spy).toHaveBeenCalled();
