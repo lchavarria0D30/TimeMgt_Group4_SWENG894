@@ -39,11 +39,13 @@ export class DeleteTaskDialogComponent implements OnInit  {
     const headers = { Authorization: 'Bearer ' + this.sessionService.getToken()};
 
     this.http.delete(environment.baseUrl+'/tasks/task/' + this.data.id, { headers }).subscribe({
-      next: data => console.log(data),
+      next: data => {
+        console.log(data);
+        this.dialogRef.close();
+      },
       error: error => console.error('There was an error!', error)
     });
 
-    this.dialogRef.close();
   }
 
   ngOnInit() {
