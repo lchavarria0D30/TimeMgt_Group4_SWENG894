@@ -68,7 +68,7 @@
 
 <div mat-dialog-actions align="end" class="header-text" *ngIf="!suggView">
     <button mat-flat-button color="suggest" (click) ="onSuggClick()" [disabled]=" !hoursFormControl.valid || !minutesFormControl.valid ||
-            !nameFormControl.valid" > <span class="header-text"> View Suggestions </span>  </button>
+            !nameFormControl.valid || selectedCategory == ''" > <span class="header-text"> View Suggestions </span>  </button>
     <button mat-flat-button color="primary" (click) ="onYesClick()" [disabled]=" !hoursFormControl.valid || !minutesFormControl.valid ||
   !nameFormControl.valid" > <span class="header-text">Start Task </span></button>
 </div>
