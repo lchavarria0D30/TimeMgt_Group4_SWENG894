@@ -26,8 +26,6 @@ import {
 } from '@angular/material';
 import {By} from '@angular/platform-browser';
 
-
-
 describe('ConfirmTaskDialogComponent', () => {
   let component: ConfirmTaskDialogComponent;
   let fixture: ComponentFixture<ConfirmTaskDialogComponent>;
@@ -147,7 +145,6 @@ describe('ConfirmTaskDialogComponent', () => {
 
   // This test verifies the function onPauseClick is defined and called.
   it('should Define and Call the function onPauseClick', async(() => {
-    const num = 12;
     const spy = spyOn(component, 'onPauseClick').and.callThrough();
     component.onPauseClick();
     fixture.whenStable().then(() => {
@@ -158,7 +155,6 @@ describe('ConfirmTaskDialogComponent', () => {
 
   // This test verifies the function onDoneClick is defined and called.
   it('should Define and Call the function onDoneClick', async(() => {
-    const num = 12;
     const spy = spyOn(component, 'onDoneClick').and.callThrough();
     component.onDoneClick();
     fixture.whenStable().then(() => {
@@ -167,4 +163,3 @@ describe('ConfirmTaskDialogComponent', () => {
     });
   }));
 });
-

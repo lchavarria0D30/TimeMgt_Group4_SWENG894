@@ -1,0 +1,87 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: TaskReportRepository</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">com.apptime.auth.repository</a> ]
+</div>
+
+<h1>Coverage Summary for Class: TaskReportRepository (com.apptime.auth.repository)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+</tr>
+  <tr>
+    <td class="name">TaskReportRepository$MockitoMock$888258826</td>
+  </tr>
+  <tr>
+    <td class="name">TaskReportRepository$MockitoMock$888258826$auxiliary$CSKgJQNl</td>
+  </tr>
+  <tr>
+    <td class="name">TaskReportRepository$MockitoMock$888258826$auxiliary$dsKoRzLy</td>
+  </tr>
+<tr>
+  <td class="name"><strong>total</strong></td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package com.apptime.auth.repository;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import com.apptime.auth.model.TaskReport;
+<i>4</i>&nbsp;import org.springframework.data.jpa.repository.JpaRepository;
+<i>5</i>&nbsp;import org.springframework.data.jpa.repository.Query;
+<i>6</i>&nbsp;import org.springframework.data.repository.query.Param;
+<i>7</i>&nbsp;
+<i>8</i>&nbsp;import java.util.Date;
+<i>9</i>&nbsp;import java.util.List;
+<i>10</i>&nbsp;
+<i>11</i>&nbsp;/**
+<i>12</i>&nbsp; * @author Qi Zhang
+<i>13</i>&nbsp; * This is the repository for TaskReport
+<i>14</i>&nbsp; * Use Case: TMGP4-26, TMGP4-31, TMGP4-35
+<i>15</i>&nbsp; */
+<i>16</i>&nbsp;public interface TaskReportRepository extends JpaRepository&lt;TaskReport, Integer&gt; {
+<i>17</i>&nbsp;    List&lt;TaskReport&gt; findByOwner(String owner);
+<i>18</i>&nbsp;
+<i>19</i>&nbsp;    @Query(value = &quot;SELECT r.* FROM task_report r LEFT JOIN task t ON r.task_id = t.id WHERE r.owner = :owner AND t.actual_end &gt;= :startTime&quot;, nativeQuery = true)
+<i>20</i>&nbsp;    List&lt;TaskReport&gt; findByOwnerAfterDate(@Param(&quot;owner&quot;) String owner, @Param(&quot;startTime&quot;) Date startTime);
+<i>21</i>&nbsp;
+<i>22</i>&nbsp;    @Query(value = &quot;SELECT r.* FROM task_report r LEFT JOIN task t ON r.task_id = t.id WHERE r.owner = :owner AND t.actual_end &lt; :endTime&quot;, nativeQuery = true)
+<i>23</i>&nbsp;    List&lt;TaskReport&gt; findByOwnerBeforeDate(@Param(&quot;owner&quot;) String owner, @Param(&quot;endTime&quot;) Date endTime);
+<i>24</i>&nbsp;
+<i>25</i>&nbsp;    @Query(value = &quot;SELECT r.* FROM task_report r LEFT JOIN task t ON r.task_id = t.id WHERE r.owner = :owner AND t.actual_end &gt;= :startTime AND t.actual_end &lt; :endTime&quot;, nativeQuery = true)
+<i>26</i>&nbsp;    List&lt;TaskReport&gt; findByOwnerInTimeRange(@Param(&quot;owner&quot;) String owner, @Param(&quot;startTime&quot;) Date startTime, @Param(&quot;endTime&quot;) Date endTime);
+<i>27</i>&nbsp;
+<i>28</i>&nbsp;    TaskReport findByTaskId(long taskId);
+<i>29</i>&nbsp;
+<i>30</i>&nbsp;    void deleteByTaskId(long taskId);
+<i>31</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-04-21 20:23</div>
+</div>
+</body>
+</html>

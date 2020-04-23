@@ -6,7 +6,7 @@
  *
  *  Unit Test - Frontend
  */
-import {async, ComponentFixture, getTestBed, TestBed} from '@angular/core/testing';
+import {async, ComponentFixture, fakeAsync, getTestBed, TestBed, tick} from '@angular/core/testing';
 import { MatIconModule} from '@angular/material/icon';
 import {CustomMaterialModule} from '../../modules/material.module';
 import {AmplifyService} from 'aws-amplify-angular';
@@ -14,7 +14,7 @@ import { BrowserDynamicTestingModule, platformBrowserDynamicTesting } from '@ang
 import {RouterTestingModule} from '@angular/router/testing';
 import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {EMPTY} from 'rxjs';
+import {EMPTY, } from 'rxjs';
 import { TasksComponent } from './tasks.component';
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
 import {
@@ -26,6 +26,14 @@ import {
   MAT_DIALOG_DATA,
   MatSelectModule
 } from '@angular/material';
+import {DashboardComponent} from '../dashboard/dashboard.component';
+import {CreateTaskDialogComponent} from '../create-task-dialog/create-task-dialog.component';
+import {DeleteTaskDialogComponent} from '../delete-task-dialog/delete-task-dialog.component';
+import {EditTaskDialogComponent} from '../edit-task-dialog/edit-task-dialog.component';
+import {StartTaskDialogComponent} from '../start-task-dialog/start-task-dialog.component';
+import {ConfirmTaskDialogComponent} from '../confirm-task-dialog/confirm-task-dialog.component';
+import {StartPopupTaskComponent} from '../start-popup-task/start-popup-task.component';
+
 
 
 
@@ -33,6 +41,7 @@ describe('TasksComponent', () => {
   let component: TasksComponent;
   let fixture: ComponentFixture<TasksComponent>;
   let httpMock: HttpTestingController;
+
 
   const dialogMock = {
     close: () => { }
@@ -59,8 +68,21 @@ describe('TasksComponent', () => {
       },
         {provide: MAT_DIALOG_DATA, useValue: []}],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
-      declarations: [TasksComponent],
+      declarations: [ TasksComponent,
+        DashboardComponent,
+        CreateTaskDialogComponent,
+        DeleteTaskDialogComponent,
+        EditTaskDialogComponent,
+        StartTaskDialogComponent,
+        ConfirmTaskDialogComponent,
+        StartPopupTaskComponent]
     })
+        .overrideModule(BrowserDynamicTestingModule, { set: { entryComponents: [ CreateTaskDialogComponent,
+              DeleteTaskDialogComponent,
+              EditTaskDialogComponent,
+              StartTaskDialogComponent,
+              ConfirmTaskDialogComponent,
+              StartPopupTaskComponent] } })
         .compileComponents();
   }));
 
@@ -139,4 +161,43 @@ describe('TasksComponent', () => {
       expect(component.openDialog).toHaveBeenCalledTimes(0);
     });
   }));
+
+  // This test verifies that the function openEditDialog is called and defined.
+  it('should be defined and called - openEditDialog', fakeAsync(() => {
+    component.tasks = [2, 3, 5];
+    const spy = spyOn(component, 'openEditDialog').and.callThrough();
+    component.dialog.open(EditTaskDialogComponent);
+    component.openEditDialog(1, 2);
+    tick(50000);
+    fixture.whenStable().then(() => {
+      expect(spy).toBeDefined();
+      expect(spy).toHaveBeenCalled();
+    });
+  }));
+
+  // This test verifies that the function openConfirmDialog is called and degined.
+  it('should be defined and called - openConfirmDialog', fakeAsync(() => {
+    const spy = spyOn(component, 'openConfirmDialog').and.callThrough();
+    component.dialog.open(ConfirmTaskDialogComponent);
+    component.openConfirmDialog(1, 'Test', true);
+    tick(50000);
+    fixture.whenStable().then(() => {
+      expect(spy).toBeDefined();
+      expect(spy).toBeTruthy();
+    });
+  }));
+
+  // This test verifies that the function openDeleteDialog is called and defined.
+  it('should be defined and called - openDeleteDialog', fakeAsync(() => {
+    const spy = spyOn(component, 'openDeleteDialog').and.callThrough();
+    component.dialog.open(DeleteTaskDialogComponent);
+    component.openDeleteDialog(1, 'TestDelete');
+    tick(50000);
+    fixture.whenStable().then(() => {
+      expect(spy).toBeDefined();
+      expect(spy).toBeTruthy();
+    });
+  }));
 });
+
+

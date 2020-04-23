@@ -1,0 +1,341 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: TaskManager</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">com.apptime.auth.controller</a> ]
+</div>
+
+<h1>Coverage Summary for Class: TaskManager (com.apptime.auth.controller)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">TaskManager</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    94.1%
+  </span>
+  <span class="absValue">
+    (16/ 17)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    83.7%
+  </span>
+  <span class="absValue">
+    (72/ 86)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package com.apptime.auth.controller;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import java.security.Principal;
+<i>4</i>&nbsp;import java.text.ParseException;
+<i>5</i>&nbsp;import java.text.SimpleDateFormat;
+<i>6</i>&nbsp;import java.util.*;
+<i>7</i>&nbsp;
+<i>8</i>&nbsp;import com.apptime.auth.model.*;
+<i>9</i>&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+<i>10</i>&nbsp;import org.springframework.beans.factory.annotation.Value;
+<i>11</i>&nbsp;import org.springframework.http.HttpStatus;
+<i>12</i>&nbsp;import org.springframework.http.ResponseEntity;
+<i>13</i>&nbsp;import org.springframework.security.core.context.SecurityContextHolder;
+<i>14</i>&nbsp;import org.springframework.web.bind.annotation.*;
+<i>15</i>&nbsp;
+<i>16</i>&nbsp;import com.apptime.auth.service.TaskManagerService;
+<i>17</i>&nbsp;
+<i>18</i>&nbsp;/**
+<i>19</i>&nbsp; * @author Bashiir Mohamed
+<i>20</i>&nbsp; * This class is the controller for task managment api for each use.
+<i>21</i>&nbsp; * it contains all funtionlity for managing taks.
+<i>22</i>&nbsp; */
+<i>23</i>&nbsp;@RestController
+<i>24</i>&nbsp;@RequestMapping(value = &quot;/tasks&quot;)
+<b class="fc"><i>25</i>&nbsp;public class TaskManager {</b>
+<i>26</i>&nbsp;	private static final String DATE_PATTERN = &quot;yyyy-MM-dd&quot;;
+<i>27</i>&nbsp;
+<i>28</i>&nbsp;	@Autowired
+<i>29</i>&nbsp;	TaskManagerService taskService;
+<i>30</i>&nbsp;
+<i>31</i>&nbsp;	/**
+<i>32</i>&nbsp;	 *
+<i>33</i>&nbsp;	 * @param p the current authenticated user.
+<i>34</i>&nbsp;	 * @return List of tasks owned by the user.
+<i>35</i>&nbsp;	 * @throws ParseException json conversion Exception
+<i>36</i>&nbsp;	 */
+<i>37</i>&nbsp;	@GetMapping(value = &quot;/&quot;)
+<i>38</i>&nbsp;	public ResponseEntity&lt;List&lt;Task&gt;&gt; getTasks(Principal p) {
+<b class="fc"><i>39</i>&nbsp;		String user = getPrinciple(p).getName();</b>
+<b class="fc"><i>40</i>&nbsp;		List&lt;Task&gt; tasks = taskService.findUserTasks(user);</b>
+<b class="fc"><i>41</i>&nbsp;		return new ResponseEntity&lt;List&lt;Task&gt;&gt;(removeCategoryOwner(tasks), HttpStatus.OK);</b>
+<i>42</i>&nbsp;	}
+<i>43</i>&nbsp;
+<i>44</i>&nbsp;	private List&lt;Task&gt; removeCategoryOwner(List&lt;Task&gt; tasks) {
+<b class="fc"><i>45</i>&nbsp;		if (tasks != null) {</b>
+<b class="fc"><i>46</i>&nbsp;			tasks.forEach(this::removeCategoryOwner);</b>
+<i>47</i>&nbsp;		}
+<b class="fc"><i>48</i>&nbsp;		return tasks;</b>
+<i>49</i>&nbsp;	}
+<i>50</i>&nbsp;
+<i>51</i>&nbsp;	private Set&lt;Task&gt; removeCategoryOwner(Set&lt;Task&gt; tasks) {
+<b class="fc"><i>52</i>&nbsp;		if (tasks != null) {</b>
+<b class="fc"><i>53</i>&nbsp;			tasks.forEach(this::removeCategoryOwner);</b>
+<i>54</i>&nbsp;		}
+<b class="fc"><i>55</i>&nbsp;		return tasks;</b>
+<i>56</i>&nbsp;	}
+<i>57</i>&nbsp;
+<i>58</i>&nbsp;	private Task removeCategoryOwner(Task task) {
+<b class="fc"><i>59</i>&nbsp;		if (task == null || task.getCategories() == null) {</b>
+<b class="fc"><i>60</i>&nbsp;			return task;</b>
+<i>61</i>&nbsp;		}
+<i>62</i>&nbsp;
+<b class="fc"><i>63</i>&nbsp;		for (TaskCategory category : task.getCategories()) {</b>
+<b class="nc"><i>64</i>&nbsp;			category.setOwner(null);</b>
+<b class="nc"><i>65</i>&nbsp;		}</b>
+<b class="fc"><i>66</i>&nbsp;		return task;</b>
+<i>67</i>&nbsp;	}
+<i>68</i>&nbsp;
+<i>69</i>&nbsp;	/**
+<i>70</i>&nbsp;	 *
+<i>71</i>&nbsp;	 * @param taskId request task id.
+<i>72</i>&nbsp;	 * @param p current authenticated user(principle)
+<i>73</i>&nbsp;	 * @return single list with the given @id or @http.status.noFound.
+<i>74</i>&nbsp;	 * @throws ParseException json conversion Exception
+<i>75</i>&nbsp;	 */
+<i>76</i>&nbsp;	@GetMapping(value = &quot;/task/{id}&quot;)
+<i>77</i>&nbsp;	public ResponseEntity&lt;Task&gt; getTask(@PathVariable(&quot;id&quot;) int taskId, Principal p) {
+<b class="fc"><i>78</i>&nbsp;		Task task = taskService.getTask(taskId);</b>
+<b class="fc"><i>79</i>&nbsp;		if (task != null &amp;&amp; task.getUserName().equals(getPrinciple(p).getName())) {</b>
+<b class="fc"><i>80</i>&nbsp;			return new ResponseEntity&lt;Task&gt;(removeCategoryOwner(task), HttpStatus.OK);</b>
+<i>81</i>&nbsp;		} else {
+<b class="fc"><i>82</i>&nbsp;			return new ResponseEntity&lt;&gt;(HttpStatus.NOT_FOUND);</b>
+<i>83</i>&nbsp;		}
+<i>84</i>&nbsp;	}
+<i>85</i>&nbsp;
+<i>86</i>&nbsp;
+<i>87</i>&nbsp;	@PostMapping(&quot;/due/start&quot;)
+<i>88</i>&nbsp;	public ResponseEntity&lt;Set&lt;Task&gt;&gt; showAddedSince(@RequestBody FormatedDate start, Principal p) {
+<b class="fc"><i>89</i>&nbsp;		Set&lt;Task&gt;  tasks = null;</b>
+<i>90</i>&nbsp;		try {
+<b class="fc"><i>91</i>&nbsp;			tasks = taskService.getTasksStartedLaterThan(parseDate(start.getDate()), getPrinciple(p).getName());</b>
+<b class="nc"><i>92</i>&nbsp;		} catch (ParseException e) {</b>
+<b class="nc"><i>93</i>&nbsp;			return new ResponseEntity&lt;&gt;(HttpStatus.BAD_REQUEST);</b>
+<b class="fc"><i>94</i>&nbsp;		}</b>
+<i>95</i>&nbsp;
+<b class="fc"><i>96</i>&nbsp;		if (tasks == null || tasks.isEmpty()) {</b>
+<b class="fc"><i>97</i>&nbsp;			return new ResponseEntity&lt;&gt;(Collections.emptySet(), HttpStatus.OK);</b>
+<i>98</i>&nbsp;
+<i>99</i>&nbsp;		} else {
+<b class="fc"><i>100</i>&nbsp;			return new ResponseEntity&lt;&gt;(removeCategoryOwner(tasks), HttpStatus.OK);</b>
+<i>101</i>&nbsp;		}
+<i>102</i>&nbsp;	}
+<i>103</i>&nbsp;
+<i>104</i>&nbsp;	private Date parseDate(String str) throws ParseException {
+<b class="fc"><i>105</i>&nbsp;		SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_PATTERN);</b>
+<b class="fc"><i>106</i>&nbsp;		return dateFormat.parse(str);</b>
+<i>107</i>&nbsp;	}
+<i>108</i>&nbsp;
+<i>109</i>&nbsp;	/**
+<i>110</i>&nbsp;	 *
+<i>111</i>&nbsp;	 * @param task task data to be created
+<i>112</i>&nbsp;	 * @param p current authenticated user(principle)
+<i>113</i>&nbsp;	 * @return the currently created task
+<i>114</i>&nbsp;	 */
+<i>115</i>&nbsp;	@PostMapping(&quot;/newtask&quot;)
+<i>116</i>&nbsp;	public ResponseEntity&lt;Object&gt; createTask(@RequestBody Task task, Principal p) {
+<i>117</i>&nbsp;		//.out.println(&quot;frontend sent Date : &quot;+ task.getScheduledstart().toString());
+<b class="fc"><i>118</i>&nbsp;		SimpleDateFormat gmtDateFormat = new SimpleDateFormat(&quot;yyyy-MM-dd HH:mm:ss&quot;);</b>
+<b class="fc"><i>119</i>&nbsp;		gmtDateFormat.setTimeZone(TimeZone.getTimeZone(&quot;GMT&quot;));</b>
+<i>120</i>&nbsp;		try {
+<b class="fc"><i>121</i>&nbsp;			task.setScheduledstart(gmtDateFormat.parse(gmtDateFormat.format(task.getScheduledstart())));</b>
+<b class="nc"><i>122</i>&nbsp;		} catch (ParseException e){</b>
+<b class="nc"><i>123</i>&nbsp;			return new ResponseEntity&lt;Object&gt;( HttpStatus.BAD_REQUEST);</b>
+<b class="fc"><i>124</i>&nbsp;		}</b>
+<b class="fc"><i>125</i>&nbsp;		String user = getPrinciple(p).getName();</b>
+<b class="fc"><i>126</i>&nbsp;		if(taskService.getTask(task.getId())==null) {</b>
+<b class="fc"><i>127</i>&nbsp;			Task result = taskService.createTask(task,user);</b>
+<b class="fc"><i>128</i>&nbsp;			return new ResponseEntity&lt;Object&gt;(removeCategoryOwner(result), HttpStatus.OK);</b>
+<i>129</i>&nbsp;		}
+<b class="nc"><i>130</i>&nbsp;		return new ResponseEntity&lt;Object&gt;(&quot;{status: didn&#39;t create }&quot;, HttpStatus.NOT_FOUND);</b>
+<i>131</i>&nbsp;	}
+<i>132</i>&nbsp;
+<i>133</i>&nbsp;	/**
+<i>134</i>&nbsp;	 *
+<i>135</i>&nbsp;	 * @param task the task to be updated.
+<i>136</i>&nbsp;	 * @param p current authenticated user(principle)
+<i>137</i>&nbsp;	 * @return returns the task that was updated
+<i>138</i>&nbsp;	 */
+<i>139</i>&nbsp;	@PutMapping(&quot;/task&quot;)
+<i>140</i>&nbsp;	public ResponseEntity&lt;Task&gt; updateTask(@RequestBody Task task, Principal p) {
+<b class="fc"><i>141</i>&nbsp;		Task old = taskService.getTask(task.getId());</b>
+<b class="fc"><i>142</i>&nbsp;		if(old==null){</b>
+<b class="nc"><i>143</i>&nbsp;			return new ResponseEntity&lt;&gt;(HttpStatus.NOT_FOUND);</b>
+<i>144</i>&nbsp;		}
+<b class="fc"><i>145</i>&nbsp;		if(old.getState() != TaskState.CREATED){</b>
+<b class="fc"><i>146</i>&nbsp;			return new ResponseEntity&lt;&gt;(HttpStatus.BAD_REQUEST);</b>
+<i>147</i>&nbsp;		}
+<b class="fc"><i>148</i>&nbsp;		if(!old.getUserName().equals(getPrinciple(p).getName())){</b>
+<b class="nc"><i>149</i>&nbsp;			return new ResponseEntity&lt;&gt;(HttpStatus.UNAUTHORIZED);</b>
+<i>150</i>&nbsp;		}
+<b class="fc"><i>151</i>&nbsp;		task.setState(TaskState.CREATED);</b>
+<b class="fc"><i>152</i>&nbsp;		task.setUserName(getPrinciple(p).getName());</b>
+<b class="fc"><i>153</i>&nbsp;		Task updatedTask = taskService.updateTask(removeCategoryOwner(task), getPrinciple(p).getName());</b>
+<b class="fc"><i>154</i>&nbsp;		return new ResponseEntity&lt;&gt;(updatedTask, HttpStatus.OK);</b>
+<i>155</i>&nbsp;	}
+<i>156</i>&nbsp;
+<i>157</i>&nbsp;	/**
+<i>158</i>&nbsp;	 *
+<i>159</i>&nbsp;	 * @param id @id of the @task to be deleted.
+<i>160</i>&nbsp;	 * @param p current authenticated user(principle)
+<i>161</i>&nbsp;	 * @return returns the @ deleted task T where T.id = @id
+<i>162</i>&nbsp;	 */
+<i>163</i>&nbsp;	@DeleteMapping(&quot;/task/{id}&quot;)
+<i>164</i>&nbsp;	public ResponseEntity&lt;Task&gt; deleteTask(@PathVariable Long id, Principal p) {
+<b class="fc"><i>165</i>&nbsp;		Task task = taskService.getTask(id);</b>
+<b class="fc"><i>166</i>&nbsp;		if(task==null){</b>
+<b class="nc"><i>167</i>&nbsp;			return new ResponseEntity&lt;&gt;(HttpStatus.NOT_FOUND);</b>
+<i>168</i>&nbsp;		}
+<b class="fc"><i>169</i>&nbsp;		if(task.getState() != TaskState.CREATED){</b>
+<b class="fc"><i>170</i>&nbsp;			return new ResponseEntity&lt;&gt;(HttpStatus.BAD_REQUEST);</b>
+<i>171</i>&nbsp;		}
+<b class="fc"><i>172</i>&nbsp;		if(!task.getUserName().equals(getPrinciple(p).getName())){</b>
+<b class="nc"><i>173</i>&nbsp;			return new ResponseEntity&lt;&gt;(HttpStatus.UNAUTHORIZED);</b>
+<i>174</i>&nbsp;		}
+<i>175</i>&nbsp;
+<b class="fc"><i>176</i>&nbsp;		return new ResponseEntity&lt;&gt;(removeCategoryOwner(taskService.deleteTask(id)), HttpStatus.OK);</b>
+<i>177</i>&nbsp;	}
+<i>178</i>&nbsp;
+<i>179</i>&nbsp;	/**
+<i>180</i>&nbsp;	 *
+<i>181</i>&nbsp;	 * @param id
+<i>182</i>&nbsp;	 * @param p
+<i>183</i>&nbsp;	 * @return
+<i>184</i>&nbsp;	 */
+<i>185</i>&nbsp;	@PostMapping(&quot;/task/{id}/start&quot;)
+<i>186</i>&nbsp;	public ResponseEntity&lt;?&gt; start(@PathVariable Long id, Principal p){
+<b class="fc"><i>187</i>&nbsp;		String userName = getPrinciple(p).getName();</b>
+<b class="fc"><i>188</i>&nbsp;		Task task = taskService.getTask(id,userName);</b>
+<b class="fc"><i>189</i>&nbsp;		if (task == null ) {</b>
+<b class="fc"><i>190</i>&nbsp;			return new ResponseEntity&lt;TaskError&gt;( new TaskError(ErrorType.Task_Not_Found, null), HttpStatus.NOT_FOUND);</b>
+<i>191</i>&nbsp;		}
+<i>192</i>&nbsp;		//check for currently other active tasks
+<b class="fc"><i>193</i>&nbsp;		Task active = taskService.getTask(TaskState.ACTIVE, userName);</b>
+<b class="fc"><i>194</i>&nbsp;		if(active != null){</b>
+<b class="fc"><i>195</i>&nbsp;			return new ResponseEntity&lt;TaskError&gt;(new TaskError(ErrorType.Concurrent_Active_Task_Not_Allowed, removeCategoryOwner(active)),HttpStatus.BAD_REQUEST);</b>
+<i>196</i>&nbsp;		}
+<b class="fc"><i>197</i>&nbsp;		if(!isAuthorized(p,task)){</b>
+<b class="nc"><i>198</i>&nbsp;			return new ResponseEntity&lt;TaskError&gt;(new TaskError(ErrorType.unauthorized_Action, null),HttpStatus.UNAUTHORIZED);</b>
+<i>199</i>&nbsp;		}
+<b class="fc"><i>200</i>&nbsp;		return new ResponseEntity&lt;TaskState&gt;(taskService.start(id), HttpStatus.OK);</b>
+<i>201</i>&nbsp;	}
+<i>202</i>&nbsp;
+<i>203</i>&nbsp;	/**
+<i>204</i>&nbsp;	 *
+<i>205</i>&nbsp;	 * @param id
+<i>206</i>&nbsp;	 * @param p
+<i>207</i>&nbsp;	 * @return
+<i>208</i>&nbsp;	 */
+<i>209</i>&nbsp;	@PostMapping(&quot;/task/{id}/pause&quot;)
+<i>210</i>&nbsp;	public ResponseEntity&lt;?&gt; pause(@PathVariable Long id, Principal p){
+<b class="fc"><i>211</i>&nbsp;		String userName = getPrinciple(p).getName();</b>
+<b class="fc"><i>212</i>&nbsp;		Task task = taskService.getTask(id,userName);</b>
+<b class="fc"><i>213</i>&nbsp;		if (task == null ) {</b>
+<b class="fc"><i>214</i>&nbsp;			return new ResponseEntity&lt;TaskError&gt;( new TaskError(ErrorType.Task_Not_Found, null), HttpStatus.NOT_FOUND);</b>
+<i>215</i>&nbsp;		}
+<b class="fc"><i>216</i>&nbsp;		if(!isAuthorized(p,task)){</b>
+<b class="nc"><i>217</i>&nbsp;			return new ResponseEntity&lt;TaskError&gt;(new TaskError(ErrorType.unauthorized_Action, null),HttpStatus.UNAUTHORIZED);</b>
+<i>218</i>&nbsp;		}
+<b class="fc"><i>219</i>&nbsp;		return new ResponseEntity&lt;TaskState&gt;(taskService.pause(id), HttpStatus.OK);</b>
+<i>220</i>&nbsp;	}
+<i>221</i>&nbsp;
+<i>222</i>&nbsp;	/**
+<i>223</i>&nbsp;	 *
+<i>224</i>&nbsp;	 * @param id
+<i>225</i>&nbsp;	 * @param p
+<i>226</i>&nbsp;	 * @return
+<i>227</i>&nbsp;	 */
+<i>228</i>&nbsp;	@PostMapping(&quot;/task/{id}/complete&quot;)
+<i>229</i>&nbsp;	public ResponseEntity&lt;?&gt; complete(@PathVariable Long id, Principal p){
+<b class="fc"><i>230</i>&nbsp;		Task task = taskService.getTask(id);</b>
+<b class="fc"><i>231</i>&nbsp;		if (task == null ) {</b>
+<b class="fc"><i>232</i>&nbsp;			return new ResponseEntity&lt;TaskError&gt;( new TaskError(ErrorType.Task_Not_Found, null), HttpStatus.NOT_FOUND);</b>
+<i>233</i>&nbsp;		}
+<b class="fc"><i>234</i>&nbsp;		if(!isAuthorized(p,task)){</b>
+<b class="fc"><i>235</i>&nbsp;			return new ResponseEntity&lt;TaskError&gt;(new TaskError(ErrorType.unauthorized_Action, null),HttpStatus.UNAUTHORIZED);</b>
+<i>236</i>&nbsp;		}
+<b class="fc"><i>237</i>&nbsp;		return new ResponseEntity&lt;TaskState&gt;(taskService.complete(id), HttpStatus.OK);</b>
+<i>238</i>&nbsp;	}
+<i>239</i>&nbsp;
+<i>240</i>&nbsp;	@GetMapping(&quot;/predict&quot;)
+<i>241</i>&nbsp;	public ResponseEntity&lt;?&gt; getPrediction(@RequestParam int duration, @RequestParam int categoryId ){
+<b class="nc"><i>242</i>&nbsp;		return new ResponseEntity&lt;Prediction&gt; (taskService.getPrediction(duration,categoryId), HttpStatus.OK);</b>
+<i>243</i>&nbsp;	}
+<i>244</i>&nbsp;
+<i>245</i>&nbsp;	/**
+<i>246</i>&nbsp;	 *
+<i>247</i>&nbsp;	 * @param p current authenticated user(principle)
+<i>248</i>&nbsp;	 * @return rturns returns current authenticated user
+<i>249</i>&nbsp;	 * this method is private
+<i>250</i>&nbsp;	 */
+<i>251</i>&nbsp;	private Principal getPrinciple(Principal p) {
+<b class="fc"><i>252</i>&nbsp;		return p != null ? p : SecurityContextHolder.getContext().getAuthentication();</b>
+<i>253</i>&nbsp;	}
+<i>254</i>&nbsp;
+<i>255</i>&nbsp;	private Boolean isAuthorized(Principal p, Task task){
+<b class="fc"><i>256</i>&nbsp;		return task.getUserName().equals(getPrinciple(p).getName());</b>
+<i>257</i>&nbsp;	}
+<i>258</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-04-21 20:23</div>
+</div>
+</body>
+</html>

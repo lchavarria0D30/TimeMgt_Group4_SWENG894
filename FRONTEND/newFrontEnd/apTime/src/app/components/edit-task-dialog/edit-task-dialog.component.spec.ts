@@ -1,4 +1,4 @@
-/** Use Case Linked Issue: TMGP4-32
+/** Linked Issue: TMGP4-32
  *
  * Test Case Linked Issue: TMGP4-233
  *
@@ -91,7 +91,7 @@ describe('EditTaskDialogComponent', () => {
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       declarations: [ EditTaskDialogComponent ]
     })
-    .compileComponents();
+        .compileComponents();
   }));
 
   beforeEach(() => {
@@ -117,37 +117,40 @@ describe('EditTaskDialogComponent', () => {
 
   // This test verifies that the the function onYesClick and the function WrongDate is called when an error is present.
   it('should call onYesClick and the function WrongDate is called when an error is present ' +
-      'and that it does not send any information to the URL', async(() => {
-    // set the dates so that the scheduled end date is before the start
-    component.data.ssDate = new Date();
-    component.data.ssTime = '01:00 PM';
-    component.data.seDate = new Date( );
-    component.data.seDate.setDate(component.data.ssDate.getDate() + 5);
-
-    component.data.seTime = '01:30 PM';
+      'and that it does not send any information to the URL', () => {
     expect(component.onYesClick).toBeTruthy();
-    // run the onYesClick method
-    // component.onYesClick();
 
-    fixture.whenStable().then(() => {
-      // first check that the isWrongDate flag is set correctly
-      expect(component.isWrongDate).toBeFalsy();
-    });
+    // set the dates so that the scheduled end date is before the start
+    component.task = component.data.task;
+    component.task.ssDate = new Date();
+    component.task.ssTime = '01:00 PM';
+    component.task.seDate = new Date();
+    component.task.seDate.setDate(component.task.ssDate.getDate() + 5);
+
+    component.task.seTime = '01:30 PM';
+
+    // run the onYesClick method
+    component.onYesClick();
+
+    // first check that the isWrongDate flag is set correctly
+    expect(component.isWrongDate).toBeFalsy();
 
     // second check that the httpClient did post, to create new task
-   // const categoryMineRequest = httpMock.expectOne('http://localhost:8001/tasks/task');
-  }));
+    httpMock.expectOne('http://localhost:8001/tasks/task');
 
-  /*// This test verifies when onYesClick is creates a new task (with wrong date)
+  });
+
+  // This test verifies when onYesClick is creates a new task (with wrong date)
   it('This test verifies when onYesClick is creates a new task (with wrong date)', () => {
     expect(component.onYesClick).toBeTruthy();
 
     // set the dates so that the scheduled end date is before the start
-    component.data.ssDate = new Date();
-    component.data.ssTime = '01:00 PM';
-    component.data.seDate = new Date();
+    component.task = component.data.task;
+    component.task.ssDate = new Date();
+    component.task.ssTime = '01:00 PM';
+    component.task.seDate = new Date();
 
-    component.data.seTime = '11:00 AM';
+    component.task.seTime = '12:00 AM';
 
     // run the onYesClick method
     component.onYesClick();
@@ -155,30 +158,27 @@ describe('EditTaskDialogComponent', () => {
     // first check that the isWrongDate flag is set correctly
     expect(component.isWrongDate).toBeTruthy();
 
-  });*/
+  });
 
-  /*// This test verifies that the the function onYesClick has been defined and been called.
+  // This test verifies that the the function onYesClick has been defined and been called.
   it('should onSuggClick is called and that the function WrongDate is called when an error is present, ' +
       'and that it does not send any information to the URL', () => {
     expect(component.onSuggClick).toBeTruthy();
 
     // set the dates so that the scheduled end date is before the start
-    component.data.ssDate = new Date();
-    component.data.ssTime = '01:00 PM';
-    component.data.seDate = new Date( );
-    component.data.seDate.setDate(component.data.ssDate.getDate() + 5);
+    component.task = component.data.task;
+    component.task.ssDate = new Date();
+    component.task.ssTime = '01:00 PM';
+    component.task.seDate = new Date( );
+    component.task.seDate.setDate(component.task.ssDate.getDate() + 5);
 
-    component.data.seTime = '01:30 PM';
+    component.task.seTime = '01:30 PM';
 
     // run the onYesClick method
     component.onSuggClick();
 
     // first check that the isWrongDate flag is set correctly
     expect(component.isWrongDate).toBeFalsy();
-
-    // second check that the httpClient did post, to create new task
-    const categoryMineRequest = httpMock.expectOne('http://localhost:8001/tasks/predict');
-
   });
 
   // // should onSuggClick create new task (with wrong date)
@@ -186,11 +186,12 @@ describe('EditTaskDialogComponent', () => {
     expect(component.onSuggClick).toBeTruthy();
 
     // set the dates so that the scheduled end date is before the start
-    component.data.ssDate = new Date();
-    component.data.ssTime = '01:00 PM';
-    component.data.seDate = new Date();
+    component.task = component.data.task;
+    component.task.ssDate = new Date();
+    component.task.ssTime = '01:00 PM';
+    component.task.seDate = new Date();
 
-    component.data.seTime = '11:00 AM';
+    component.task.seTime = '11:00 AM';
 
     // run the onYesClick method
     component.onSuggClick();
@@ -198,19 +199,16 @@ describe('EditTaskDialogComponent', () => {
     // first check that the isWrongDate flag is set correctly
     expect(component.isWrongDate).toBeTruthy();
 
-  });*/
+  });
 
-  // This test verifies that the function onBackClick contains the expected Title
-  it(' This test verifies that the function onBackClick contains the expected Title ' +
-      'and is called', async(() => {
-    const spy = spyOn(component, 'onBackClick').and.callThrough();
-    component.dialogTitle.valueOf();
+  // should call onBackClick
+  it('should call onBackClick', () => {
+    expect(component.onBackClick).toBeTruthy();
+
+    // run the onBackClick method
     component.onBackClick();
-    fixture.whenStable().then(() => {
-      expect(component.dialogTitle).toContain('Edit Task');
-      expect(spy).toHaveBeenCalled();
-    });
-  }));
+
+  });
 
   // This test verifies that the the function dateConversion has been defined and been called.
   it('should test that the function dateConversion is able to be defined and called', () => {
@@ -236,6 +234,20 @@ describe('EditTaskDialogComponent', () => {
   it('This test verifies that the the function getCategory has been defined and been called', async(() => {
     const spy = spyOn(component, 'getCategory').and.callThrough();
     component.getCategory();
+    fixture.whenStable().then(() => {
+      expect(spy).toBeDefined();
+      expect(spy).toHaveBeenCalled();
+    });
+  }));
+
+  // This test verifies that the function onAcceptClick has been defined and been called.
+  it('This test verifies that the the function onAcceptClick has been defined and been called',
+      async(() => {
+    const spy = spyOn(component, 'onAcceptClick').and.callThrough();
+    component.scheduledEnd = new Date();
+    component.scheduledStart = new Date();
+    component.suggestedDuration = 30;
+    component.onAcceptClick();
     fixture.whenStable().then(() => {
       expect(spy).toBeDefined();
       expect(spy).toHaveBeenCalled();

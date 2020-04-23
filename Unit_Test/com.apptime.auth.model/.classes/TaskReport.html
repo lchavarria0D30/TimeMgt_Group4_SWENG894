@@ -1,0 +1,251 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: TaskReport</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">com.apptime.auth.model</a> ]
+</div>
+
+<h1>Coverage Summary for Class: TaskReport (com.apptime.auth.model)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">TaskReport</td>
+<td class="coverageStat">
+  <span class="percent">
+    87.5%
+  </span>
+  <span class="absValue">
+    (21/ 24)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    64.6%
+  </span>
+  <span class="absValue">
+    (31/ 48)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">TaskReport$HibernateProxy$GKZ6AFi9</td>
+  </tr>
+<tr>
+  <td class="name"><strong>total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    87.5%
+  </span>
+  <span class="absValue">
+    (21/ 24)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    64.6%
+  </span>
+  <span class="absValue">
+    (31/ 48)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package com.apptime.auth.model;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import javax.persistence.Entity;
+<i>4</i>&nbsp;import javax.persistence.GeneratedValue;
+<i>5</i>&nbsp;import javax.persistence.Id;
+<i>6</i>&nbsp;import java.time.Duration;
+<i>7</i>&nbsp;import java.util.Date;
+<i>8</i>&nbsp;import java.util.Objects;
+<i>9</i>&nbsp;
+<i>10</i>&nbsp;/**
+<i>11</i>&nbsp; * @author Qi Zhang
+<i>12</i>&nbsp; * This is the PO for TaskReport
+<i>13</i>&nbsp; * Use Case: TMGP4-26, TMGP4-31, TMGP4-35
+<i>14</i>&nbsp; */
+<i>15</i>&nbsp;@Entity
+<b class="fc"><i>16</i>&nbsp;public class TaskReport {</b>
+<i>17</i>&nbsp;    @Id
+<i>18</i>&nbsp;    @GeneratedValue
+<i>19</i>&nbsp;    private int id;
+<i>20</i>&nbsp;
+<i>21</i>&nbsp;    private long taskId;
+<i>22</i>&nbsp;
+<i>23</i>&nbsp;    private String owner;
+<i>24</i>&nbsp;
+<i>25</i>&nbsp;    private TaskReportType type;
+<i>26</i>&nbsp;
+<i>27</i>&nbsp;    private Duration difference;
+<i>28</i>&nbsp;
+<i>29</i>&nbsp;    private Duration scheduledDuration;
+<i>30</i>&nbsp;
+<i>31</i>&nbsp;    private Duration actualDuration;
+<i>32</i>&nbsp;
+<i>33</i>&nbsp;    private int efficiency;
+<i>34</i>&nbsp;
+<i>35</i>&nbsp;    private Date actualStartDate;
+<i>36</i>&nbsp;
+<i>37</i>&nbsp;    private Date actualEndDate;
+<i>38</i>&nbsp;
+<i>39</i>&nbsp;    public int getId() {
+<b class="fc"><i>40</i>&nbsp;        return id;</b>
+<i>41</i>&nbsp;    }
+<i>42</i>&nbsp;
+<i>43</i>&nbsp;    public void setId(int id) {
+<b class="fc"><i>44</i>&nbsp;        this.id = id;</b>
+<b class="fc"><i>45</i>&nbsp;    }</b>
+<i>46</i>&nbsp;
+<i>47</i>&nbsp;    public long getTaskId() {
+<b class="fc"><i>48</i>&nbsp;        return taskId;</b>
+<i>49</i>&nbsp;    }
+<i>50</i>&nbsp;
+<i>51</i>&nbsp;    public void setTaskId(long taskId) {
+<b class="fc"><i>52</i>&nbsp;        this.taskId = taskId;</b>
+<b class="fc"><i>53</i>&nbsp;    }</b>
+<i>54</i>&nbsp;
+<i>55</i>&nbsp;    public String getOwner() {
+<b class="fc"><i>56</i>&nbsp;        return owner;</b>
+<i>57</i>&nbsp;    }
+<i>58</i>&nbsp;
+<i>59</i>&nbsp;    public void setOwner(String owner) {
+<b class="fc"><i>60</i>&nbsp;        this.owner = owner;</b>
+<b class="fc"><i>61</i>&nbsp;    }</b>
+<i>62</i>&nbsp;
+<i>63</i>&nbsp;    public TaskReportType getType() {
+<b class="fc"><i>64</i>&nbsp;        return type;</b>
+<i>65</i>&nbsp;    }
+<i>66</i>&nbsp;
+<i>67</i>&nbsp;    public void setType(TaskReportType type) {
+<b class="fc"><i>68</i>&nbsp;        this.type = type;</b>
+<b class="fc"><i>69</i>&nbsp;    }</b>
+<i>70</i>&nbsp;
+<i>71</i>&nbsp;    public Duration getDifference() {
+<b class="fc"><i>72</i>&nbsp;        return difference;</b>
+<i>73</i>&nbsp;    }
+<i>74</i>&nbsp;
+<i>75</i>&nbsp;    public void setDifference(Duration difference) {
+<b class="fc"><i>76</i>&nbsp;        this.difference = difference;</b>
+<b class="fc"><i>77</i>&nbsp;    }</b>
+<i>78</i>&nbsp;
+<i>79</i>&nbsp;    public Duration getScheduledDuration() {
+<b class="fc"><i>80</i>&nbsp;        return scheduledDuration;</b>
+<i>81</i>&nbsp;    }
+<i>82</i>&nbsp;
+<i>83</i>&nbsp;    public void setScheduledDuration(Duration scheduledDuration) {
+<b class="fc"><i>84</i>&nbsp;        this.scheduledDuration = scheduledDuration;</b>
+<b class="fc"><i>85</i>&nbsp;    }</b>
+<i>86</i>&nbsp;
+<i>87</i>&nbsp;    public Duration getActualDuration() {
+<b class="fc"><i>88</i>&nbsp;        return actualDuration;</b>
+<i>89</i>&nbsp;    }
+<i>90</i>&nbsp;
+<i>91</i>&nbsp;    public void setActualDuration(Duration actualDuration) {
+<b class="fc"><i>92</i>&nbsp;        this.actualDuration = actualDuration;</b>
+<b class="fc"><i>93</i>&nbsp;    }</b>
+<i>94</i>&nbsp;
+<i>95</i>&nbsp;    public int getEfficiency() {
+<b class="fc"><i>96</i>&nbsp;        return efficiency;</b>
+<i>97</i>&nbsp;    }
+<i>98</i>&nbsp;
+<i>99</i>&nbsp;    public void setEfficiency(int efficiency) {
+<b class="fc"><i>100</i>&nbsp;        this.efficiency = efficiency;</b>
+<b class="fc"><i>101</i>&nbsp;    }</b>
+<i>102</i>&nbsp;
+<i>103</i>&nbsp;    public Date getActualStartDate() {
+<b class="fc"><i>104</i>&nbsp;        return actualStartDate;</b>
+<i>105</i>&nbsp;    }
+<i>106</i>&nbsp;
+<i>107</i>&nbsp;    public void setActualStartDate(Date actualStartDate) {
+<b class="fc"><i>108</i>&nbsp;        this.actualStartDate = actualStartDate;</b>
+<b class="fc"><i>109</i>&nbsp;    }</b>
+<i>110</i>&nbsp;
+<i>111</i>&nbsp;    public Date getActualEndDate() {
+<b class="fc"><i>112</i>&nbsp;        return actualEndDate;</b>
+<i>113</i>&nbsp;    }
+<i>114</i>&nbsp;
+<i>115</i>&nbsp;    public void setActualEndDate(Date actualEndDate) {
+<b class="fc"><i>116</i>&nbsp;        this.actualEndDate = actualEndDate;</b>
+<b class="fc"><i>117</i>&nbsp;    }</b>
+<i>118</i>&nbsp;
+<i>119</i>&nbsp;    @Override
+<i>120</i>&nbsp;    public boolean equals(Object o) {
+<b class="nc"><i>121</i>&nbsp;        if (this == o) return true;</b>
+<b class="nc"><i>122</i>&nbsp;        if (o == null || getClass() != o.getClass()) return false;</b>
+<b class="nc"><i>123</i>&nbsp;        TaskReport report = (TaskReport) o;</b>
+<b class="nc"><i>124</i>&nbsp;        return getId() == report.getId() &amp;&amp;</b>
+<b class="nc"><i>125</i>&nbsp;                getTaskId() == report.getTaskId() &amp;&amp;</b>
+<b class="nc"><i>126</i>&nbsp;                getEfficiency() == report.getEfficiency() &amp;&amp;</b>
+<b class="nc"><i>127</i>&nbsp;                Objects.equals(getOwner(), report.getOwner()) &amp;&amp;</b>
+<b class="nc"><i>128</i>&nbsp;                getType() == report.getType() &amp;&amp;</b>
+<b class="nc"><i>129</i>&nbsp;                Objects.equals(getDifference(), report.getDifference()) &amp;&amp;</b>
+<b class="nc"><i>130</i>&nbsp;                Objects.equals(getScheduledDuration(), report.getScheduledDuration()) &amp;&amp;</b>
+<b class="nc"><i>131</i>&nbsp;                Objects.equals(getActualDuration(), report.getActualDuration()) &amp;&amp;</b>
+<b class="nc"><i>132</i>&nbsp;                Objects.equals(getActualStartDate(), report.getActualStartDate()) &amp;&amp;</b>
+<b class="nc"><i>133</i>&nbsp;                Objects.equals(getActualEndDate(), report.getActualEndDate());</b>
+<i>134</i>&nbsp;    }
+<i>135</i>&nbsp;
+<i>136</i>&nbsp;    @Override
+<i>137</i>&nbsp;    public int hashCode() {
+<b class="nc"><i>138</i>&nbsp;        return Objects</b>
+<b class="nc"><i>139</i>&nbsp;                .hash(getId(), getTaskId(), getOwner(), getType(), getDifference(), getScheduledDuration(),</b>
+<b class="nc"><i>140</i>&nbsp;                        getActualDuration(), getEfficiency(), getActualStartDate(), getActualEndDate());</b>
+<i>141</i>&nbsp;    }
+<i>142</i>&nbsp;
+<i>143</i>&nbsp;    @Override
+<i>144</i>&nbsp;    public String toString() {
+<b class="nc"><i>145</i>&nbsp;        return &quot;TaskReport{&quot; +</b>
+<i>146</i>&nbsp;                &quot;id=&quot; + id +
+<i>147</i>&nbsp;                &quot;, taskId=&quot; + taskId +
+<i>148</i>&nbsp;                &quot;, owner=&#39;&quot; + owner + &#39;\&#39;&#39; +
+<i>149</i>&nbsp;                &quot;, type=&quot; + type +
+<i>150</i>&nbsp;                &quot;, difference=&quot; + difference +
+<i>151</i>&nbsp;                &quot;, scheduledDuration=&quot; + scheduledDuration +
+<i>152</i>&nbsp;                &quot;, actualDuration=&quot; + actualDuration +
+<i>153</i>&nbsp;                &quot;, efficiency=&quot; + efficiency +
+<i>154</i>&nbsp;                &quot;, actualStartDate=&quot; + actualStartDate +
+<i>155</i>&nbsp;                &quot;, actualEndDate=&quot; + actualEndDate +
+<i>156</i>&nbsp;                &#39;}&#39;;
+<i>157</i>&nbsp;    }
+<i>158</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-04-21 20:23</div>
+</div>
+</body>
+</html>

@@ -8,14 +8,12 @@
 import {async, ComponentFixture, getTestBed, TestBed} from '@angular/core/testing';
 import { MatIconModule} from '@angular/material/icon';
 import {CustomMaterialModule} from '../../modules/material.module';
-import {EMPTY} from 'rxjs';
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
 import {AmplifyService} from 'aws-amplify-angular';
 import {BrowserDynamicTestingModule, platformBrowserDynamicTesting} from '@angular/platform-browser-dynamic/testing';
 import {RouterTestingModule} from '@angular/router/testing';
 import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {DialogData} from '../tasks/tasks.component';
 import {
   MatFormFieldModule,
   MatInputModule,
