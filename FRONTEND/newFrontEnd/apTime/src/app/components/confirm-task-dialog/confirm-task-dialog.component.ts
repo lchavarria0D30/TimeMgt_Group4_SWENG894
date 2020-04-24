@@ -40,14 +40,12 @@ export class ConfirmTaskDialogComponent implements OnInit {
 
     this.pauseTask(this.id);
 
-    this.dialogRef.close();
   }
 
   onDoneClick(): void {
 
     this.completeTask(this.id);
 
-    this.dialogRef.close();
   }
 
 
@@ -65,7 +63,8 @@ export class ConfirmTaskDialogComponent implements OnInit {
 
     this.http.post(environment.baseUrl+'/tasks/task/' + i + '/pause', body, { headers }).subscribe({
       next: data => {
-        console.log(data)
+        console.log(data);
+        this.dialogRef.close();
       },
       error: error => console.error('There was an error!', error)
     });
@@ -79,7 +78,8 @@ export class ConfirmTaskDialogComponent implements OnInit {
 
     this.http.post(environment.baseUrl+'/tasks/task/' + i + '/complete', body, { headers }).subscribe({
       next: data => {
-        console.log(data)
+        console.log(data);
+        this.dialogRef.close();
       },
       error: error => console.error('There was an error!', error)
     });
