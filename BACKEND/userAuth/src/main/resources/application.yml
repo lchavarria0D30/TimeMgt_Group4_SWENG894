@@ -36,7 +36,7 @@ spring:
       ddl-auto: create-drop
   datasource:
     platform: postgres
-    url: jdbc:postgresql://aa4gunc5mrmbny.cfbbfychwenn.us-east-2.rds.amazonaws.com:5432/ebdb
+    url: jdbc:postgresql://aa3zwn3os93c4n.cfbbfychwenn.us-east-2.rds.amazonaws.com:5432/ebdb
     username: authdb
     password: password
     driverClassName: org.postgresql.Driver
