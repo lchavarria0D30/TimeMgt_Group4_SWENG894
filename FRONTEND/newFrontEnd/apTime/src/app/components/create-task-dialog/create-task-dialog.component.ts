@@ -102,11 +102,13 @@ export class CreateTaskDialogComponent implements OnInit {
 
 
       this.http.post(environment.baseUrl+'/tasks/newtask', body, { headers }).subscribe({
-        next: data => console.log('new task created'),
+        next: data => {
+          console.log('new task created')
+          this.dialogRef.close();
+        },
         error: error => console.error('There was an error!', error)
       });
 
-      this.dialogRef.close();
     }
 
   }
